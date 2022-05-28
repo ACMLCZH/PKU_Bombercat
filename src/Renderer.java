@@ -3,12 +3,14 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.text.AbstractDocument.BranchElement;
 
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.nio.file.PathMatcher;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
@@ -71,11 +73,21 @@ public class Renderer extends JFrame
 	static final int BLOCK_UNIT = 25;
 	static final int WINWIDTH = 22 * 25 + 200;
 	static final int WINHEIGHT = 22 * 25 + 100;
+	static final int GAMEWIDTH = 22 * 25;
+	static final int GAMEHEIGHT = 22 * 25;
+	static final int INFOPERPAGE = 10;
 
 	private JPanel gameScene = new JPanel();
+	private JPanel pnAnimate = new JPanel();
+	private JLabel lblCountDown = new JLabel("", JLabel.CENTER);
 
 	private JPanel titleScene = new JPanel();
 	private JLabel lblTitle = new JLabel("");
+	private int curInfoPage = 0;
+	private int infoPages = 0;
+	private int infoNumLine = 0;
+	// private ArrayList<String> infoText = new ArrayList<>();
+	private ArrayList<StringBuffer> infoText = new ArrayList<>();
 	private JButton btnInfo = new JButton();
 	private JButton btnStart = new JButton();
 	private JButton btnQuit = new JButton();
@@ -86,10 +98,10 @@ public class Renderer extends JFrame
 	private JButton btnInfoBack = new JButton();
 	private JTextArea txtInfo = new JTextArea();
 	
-	public void render(Map mp, BasePlayer[] ps, Bomb[] bs) 	// This array will be changed.
+	public void render(Map mp, BasePlayer[] ps, Bomb[] bs, BasePlayer infoPlayer)
 	{
-		Arrays.<BasePlayer>sort(ps);
-		Arrays.<Bomb>sort(bs);
+		Arrays.<BasePlayer>sort(ps); 		// This array will be changed.
+		Arrays.<Bomb>sort(bs); 				// This array will be changed.
 		Graphics g = gameScene.getGraphics();
 		SwingUtilities.invokeLater(() -> {
 			g.drawImage(mp.getGround(), 0, 0, this);
@@ -129,17 +141,39 @@ public class Renderer extends JFrame
 	private void addPanel(JPanel scene, Component[] comps, boolean vis)
 	{
 		scene.setVisible(vis);
+		scene.setLayout(null);
 		scene.setBounds(0, 0, WINWIDTH, WINHEIGHT);
 		for (Component comp: comps) scene.add(comp);
 		getContentPane().add(scene);
 	}
 
+	private void readyAnimation()
+	{
+		pnAnimate.setVisible(true);
+		lblCountDown.setText("3");
+		Thread.sleep(1000);
+		lblCountDown.setText("2");
+		Thread.sleep(1000);
+		lblCountDown.setText("1");
+		Thread.sleep(1000);
+		lblCountDown.setText("Start!");
+		Thread.sleep(1000);
+		lblCountDown.setText("");
+		pnAnimate.setVisible(false);
+	}
 	private void gameEnd()
 	{
 		SwingUtilities.invokeLater(() -> {
 			gameScene.setVisible(false);
 			titleScene.setVisible(true);
 		});
+	}
+
+	private void infoShow() {txtInfo.setText(infoText.get(curInfoPage).toString());}
+	private void infoInitial()
+	{
+		curInfoPage = 0;
+		infoShow();
 	}
 	
 	public Renderer()
@@ -153,6 +187,7 @@ public class Renderer extends JFrame
 			btnInfo.addActionListener((e) -> {
 				SwingUtilities.invokeLater(() -> {
 					titleScene.setVisible(false);
+					infoInitial();
 					infoScene.setVisible(true);
 				});
 			});
@@ -168,7 +203,42 @@ public class Renderer extends JFrame
 			btnQuit.addActionListener((e) -> {System.exit(0);});
 			addPanel(titleScene, new Component[] {lblTitle, btnInfo, btnStart, btnQuit}, true);
 
-			addPanel(gameScene, new Component[] {}, false);
+			lblCountDown.setForeground(Color.ORANGE);
+			lblCountDown.setFont(new Font("黑体", Font.BOLD, 60));
+			lblCountDown.setSize(200, 200);
+			pnAnimate.setBounds(0, 0, GAMEWIDTH, GAMEHEIGHT);
+			pnAnimate.setVisible(false);
+			pnAnimate.setBackground(new Color(255, 255, 255, 100));
+			pnAnimate.setLayout(new BorderLayout());
+			pnAnimate.add(BorderLayout.CENTER, lblCountDown);
+			addPanel(gameScene, new Component[] {pnAnimate}, false);
+
+			BufferedReader infoInput = new BufferedReader(new FileReader("./res/text/info.txt"));
+			String line = null;
+			while ((line = infoInput.readLine()) != null)
+			{
+				if (infoNumLine == 0) {++infoPages; infoText.add(new StringBuffer(""));}
+				infoText.get(infoPages - 1).append(line + "\n");
+				if (++infoNumLine == INFOPERPAGE) infoNumLine = 0;
+			}
+			// infoPages = infoNumLine / INFOPERPAGE;
+			infoInput.close();
+			btnInfoLeft.addActionListener((e) -> {
+				SwingUtilities.invokeLater(() -> {
+					if (curInfoPage > 0) {--curInfoPage; infoShow();}
+				});
+			});
+			btnInfoRight.addActionListener((e) -> {
+				SwingUtilities.invokeLater(() -> {
+					if (curInfoPage < infoPages - 1) {++curInfoPage; infoShow();}
+				});
+			});
+			btnInfoBack.addActionListener((e) -> {
+				SwingUtilities.invokeLater(() -> {
+					infoScene.setVisible(false);
+					titleScene.setVisible(true);
+				});
+			});
 			addPanel(infoScene, new Component[] {btnInfoLeft, btnInfoRight, btnInfoBack, txtInfo}, false);
 		});
 	}
