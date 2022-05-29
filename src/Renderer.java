@@ -25,14 +25,15 @@ class Map //implements Serializable
 	{
 		public FailureReadMapException(Throwable cause) {super("读取地图失败！", cause);}
 	}
-	static final int GROUND = 0;
-	static final int DESTROYABLE = 1;
-	static final int UNBREAKABLE = 2;
+	static final int GROUND = 0, DESTROYABLE = 1, UNBREAKABLE = 2;
+	static final int BOMB = 3, HORIFLOW = 4, VERTFLOW = 5, CROSSFLOW = 6;
+	static final int BOMBITEM = 7, FLOWITEM = 8, SPEEDITEM = 9;
 	static final int WIDTH = 22;			// 实际可活动范围为 20 * 20
 	static final int HEIGHT = 22;
-	private Image ground = null;
-	private Image destroyable = null;
-	private Image unbreakable = null;
+	private Image[] textures = new Image[3];
+	// private Image ground = null;
+	// private Image destroyable = null;
+	// private Image unbreakable = null;
 	public int[][] mp;
 	
 	public Map(String type, int id) throws FailureReadMapException
@@ -53,13 +54,17 @@ class Map //implements Serializable
 			throw new FailureReadMapException(ex);
 		}
 		
-		this.ground = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
-		this.destroyable = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_destroyable.png");
-		this.unbreakable = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
+		this.textures[GROUND] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
+		this.textures[DESTROYABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_destroyable.png");
+		this.textures[UNBREAKABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
+		// this.ground = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
+		// this.destroyable = 
+		// this.unbreakable = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
 	}
-	public Image getGround() {return this.ground;}
-	public Image getDestroyable() {return this.destroyable;}
-	public Image getUnbreakable() {return this.unbreakable;}
+	public Image getTexture(int idx) {return textures[idx];}
+	// public Image getGround() {return this.ground;}
+	// public Image getDestroyable() {return this.destroyable;}
+	// public Image getUnbreakable() {return this.unbreakable;}
 	// public int getWidth() {return this.width;}
 	// public int getHeight() {return this.height;}
 
@@ -70,16 +75,17 @@ public class Renderer extends JFrame
 	// private String mapType = null;
 	// private int mapID = -1;
 	// private Map map = null;
-	static final int BLOCK_UNIT = 25;
-	static final int WINWIDTH = 22 * 25 + 200;
-	static final int WINHEIGHT = 22 * 25 + 100;
-	static final int GAMEWIDTH = 22 * 25;
-	static final int GAMEHEIGHT = 22 * 25;
+	static final int BLOCK_UNIT = 40;
+	static final int WINWIDTH = 17 * BLOCK_UNIT + 200;
+	static final int WINHEIGHT = 17 * BLOCK_UNIT + 100;
+	static final int GAMEWIDTH = 17 * BLOCK_UNIT;
+	static final int GAMEHEIGHT = 17 * BLOCK_UNIT;
 	static final int INFOPERPAGE = 10;
 
 	private JPanel gameScene = new JPanel();
 	private JPanel pnAnimate = new JPanel();
 	private JLabel lblCountDown = new JLabel("", JLabel.CENTER);
+	private Image[] textures = new Image[10];
 
 	private JPanel titleScene = new JPanel();
 	private JLabel lblTitle = new JLabel("");
@@ -123,12 +129,11 @@ public class Renderer extends JFrame
 					switch (mp.mp[i][j])
 					{
 						case Map.GROUND:  break;
-						case Map.DESTROYABLE:
-							g.drawImage(mp.getDestroyable(), nowx - mp.getDestroyable().getWidth(this), nowy - mp.getDestroyable().getHeight(this), this);
-							break;
-						case Map.UNBREAKABLE:
-							g.drawImage(mp.getUnbreakable(), nowx - mp.getUnbreakable().getWidth(this), nowy - mp.getUnbreakable().getHeight(this), this);
-							break;
+						case Map.DESTROYABLE: case Map.UNBREAKABLE:
+							putTexture(g, nowx, nowy, mp.getTexture(mp.mp[i][j])); break;
+						case Map.BOMB: case Map.VERTFLOW: case Map.HORIFLOW: case Map.CROSSFLOW:
+						case Map.BOMBITEM: case Map.FLOWITEM: case Map.SPEEDITEM:
+							putTexture(g, nowx, nowy, textures[mp.mp[i][j]]); break;
 						default: throw new Map.OutOfMapIndexException();
 					}
 					nowy += BLOCK_UNIT;
@@ -138,6 +143,10 @@ public class Renderer extends JFrame
 		});
 	}
 
+	private void putTexture(Graphics g, int rx, int ry, Image img)
+	{
+		g.drawImage(img, rx - img.getWidth(this), ry - img.getHeight(this), this);
+	}
 	private void addPanel(JPanel scene, Component[] comps, boolean vis)
 	{
 		scene.setVisible(vis);
@@ -201,6 +210,13 @@ public class Renderer extends JFrame
 				});
 			});
 			btnQuit.addActionListener((e) -> {System.exit(0);});
+			this.textures[Map.BOMB] = Toolkit.getDefaultToolkit().getImage("./res/texture/bomb.png");
+			this.textures[Map.HORIFLOW] = Toolkit.getDefaultToolkit().getImage("./res/texture/horiflow.png");
+			this.textures[Map.VERTFLOW] = Toolkit.getDefaultToolkit().getImage("./res/texture/vertflow.png");
+			this.textures[Map.CROSSFLOW] = Toolkit.getDefaultToolkit().getImage("./res/texture/crossflow.png");
+			this.textures[Map.BOMBITEM] = Toolkit.getDefaultToolkit().getImage("./res/texture/bombitem.png");
+			this.textures[Map.FLOWITEM] = Toolkit.getDefaultToolkit().getImage("./res/texture/flowitem.png");
+			this.textures[Map.SPEEDITEM] = Toolkit.getDefaultToolkit().getImage("./res/texture/speeditem.png");
 			addPanel(titleScene, new Component[] {lblTitle, btnInfo, btnStart, btnQuit}, true);
 
 			lblCountDown.setForeground(Color.ORANGE);
@@ -223,6 +239,7 @@ public class Renderer extends JFrame
 			}
 			// infoPages = infoNumLine / INFOPERPAGE;
 			infoInput.close();
+			// btnInfoLeft.setBounds(x, y, );
 			btnInfoLeft.addActionListener((e) -> {
 				SwingUtilities.invokeLater(() -> {
 					if (curInfoPage > 0) {--curInfoPage; infoShow();}
