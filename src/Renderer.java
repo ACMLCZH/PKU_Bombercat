@@ -110,7 +110,7 @@ public class Renderer extends JFrame
 		Arrays.<Bomb>sort(bs); 				// This array will be changed.
 		Graphics g = gameScene.getGraphics();
 		SwingUtilities.invokeLater(() -> {
-			g.drawImage(mp.getGround(), 0, 0, this);
+			g.drawImage(mp.getTexture(Map.GROUND), 0, 0, this);
 			int nowx = BLOCK_UNIT;
 			int curP = 0, curB = 0;
 			for (int i = 0; i < Map.HEIGHT; ++i)
@@ -122,16 +122,16 @@ public class Renderer extends JFrame
 					g.drawImage(pImg, ps[curP].getRight() - pImg.getWidth(this), ps[curP].getBottom() - pImg.getHeight(this), this);
 					++ curP;
 				}
-				while (curB < bs.length && nowy > bs[curB].getPosY() * BLOCK_UNIT)
-					g.drawImage(bs[curB++].getFigureImage(), nowx - BLOCK_UNIT, nowy - BLOCK_UNIT, this);
+				// while (curB < bs.length && nowy > bs[curB].getPosY() * BLOCK_UNIT)
+				// 	g.drawImage(bs[curB++].getFigureImage(), nowx - BLOCK_UNIT, nowy - BLOCK_UNIT, this);
 				for (int j = 0; j < Map.WIDTH; ++j)
 				{
 					switch (mp.mp[i][j])
 					{
-						case Map.GROUND:  break;
+						case Map.GROUND: case Map.BOMB: break;
 						case Map.DESTROYABLE: case Map.UNBREAKABLE:
 							putTexture(g, nowx, nowy, mp.getTexture(mp.mp[i][j])); break;
-						case Map.BOMB: case Map.VERTFLOW: case Map.HORIFLOW: case Map.CROSSFLOW:
+						case Map.VERTFLOW: case Map.HORIFLOW: case Map.CROSSFLOW:
 						case Map.BOMBITEM: case Map.FLOWITEM: case Map.SPEEDITEM:
 							putTexture(g, nowx, nowy, textures[mp.mp[i][j]]); break;
 						default: throw new Map.OutOfMapIndexException();
@@ -191,6 +191,7 @@ public class Renderer extends JFrame
 			setTitle("PP堂");
 			setLayout(null);
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
+			setResizable(false);
 
 			lblTitle.setBounds(100, 100, 100, 100);
 			btnInfo.addActionListener((e) -> {
@@ -210,13 +211,13 @@ public class Renderer extends JFrame
 				});
 			});
 			btnQuit.addActionListener((e) -> {System.exit(0);});
-			this.textures[Map.BOMB] = Toolkit.getDefaultToolkit().getImage("./res/texture/bomb.png");
-			this.textures[Map.HORIFLOW] = Toolkit.getDefaultToolkit().getImage("./res/texture/horiflow.png");
-			this.textures[Map.VERTFLOW] = Toolkit.getDefaultToolkit().getImage("./res/texture/vertflow.png");
-			this.textures[Map.CROSSFLOW] = Toolkit.getDefaultToolkit().getImage("./res/texture/crossflow.png");
-			this.textures[Map.BOMBITEM] = Toolkit.getDefaultToolkit().getImage("./res/texture/bombitem.png");
-			this.textures[Map.FLOWITEM] = Toolkit.getDefaultToolkit().getImage("./res/texture/flowitem.png");
-			this.textures[Map.SPEEDITEM] = Toolkit.getDefaultToolkit().getImage("./res/texture/speeditem.png");
+			this.textures[Map.BOMB] = new ImageIcon("./res/texture/scene/bomb.png").getImage();
+			this.textures[Map.HORIFLOW] = new ImageIcon("./res/texture/scene/horiflow.png").getImage();
+			this.textures[Map.VERTFLOW] = new ImageIcon("./res/texture/scene/vertflow.png").getImage();
+			this.textures[Map.CROSSFLOW] = new ImageIcon("./res/texture/scene/crossflow.png").getImage();
+			this.textures[Map.BOMBITEM] = new ImageIcon("./res/texture/scene/bombitem.png").getImage();
+			this.textures[Map.FLOWITEM] = new ImageIcon("./res/texture/scene/flowitem.png").getImage();
+			this.textures[Map.SPEEDITEM] = new ImageIcon("./res/texture/scene/speeditem.png").getImage();
 			addPanel(titleScene, new Component[] {lblTitle, btnInfo, btnStart, btnQuit}, true);
 
 			lblCountDown.setForeground(Color.ORANGE);
