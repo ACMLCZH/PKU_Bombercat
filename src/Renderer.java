@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.text.AbstractDocument.BranchElement;
 
+import BaseObject.Bomb;
+
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
