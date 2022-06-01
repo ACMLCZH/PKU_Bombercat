@@ -73,11 +73,27 @@ public class Test extends JFrame
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Graphics g = getContentPane().getGraphics();
 		
-		System.out.println(new File("./res/texture/forest_ground.png").exists());
-		Image img = new ImageIcon("./res/texture/forest_ground.png").getImage();
+		System.out.println(new File("./res/texture/scene/forest_ground.png").exists());
+		Image img = new ImageIcon("./res/texture/scene/forest_ground.png").getImage();
 		// Image bimg = Toolkit.getDefaultToolkit().getImage("./res/texture/bomb1.png");
-		Image bimg = new ImageIcon("./res/texture/bomb1.png").getImage();
-		Image kimg = new ImageIcon("./res/texture/forest_destroyable.png").getImage();
+		Image[] bimg = new Image[] {
+			new ImageIcon("./res/texture/scene/bomb1.png").getImage(),
+			new ImageIcon("./res/texture/scene/bomb2.png").getImage(),
+			new ImageIcon("./res/texture/scene/bomb3.png").getImage()
+		};
+		Image[] fimg = new Image[] {
+			new ImageIcon("./res/texture/scene/crossflow.png").getImage(),
+			new ImageIcon("./res/texture/scene/horiflow.png").getImage(),
+			new ImageIcon("./res/texture/scene/vertflow.png").getImage()
+		};
+		Image[] pimg = new Image[] {
+			new ImageIcon("./res/texture/character/char1_left.png").getImage(),
+			new ImageIcon("./res/texture/character/char1_right.png").getImage(),
+			new ImageIcon("./res/texture/character/char1_up.png").getImage(),
+			new ImageIcon("./res/texture/character/char1_down.png").getImage()
+		};
+		Image kimg = new ImageIcon("./res/texture/scene/forest_destroyable.png").getImage();
+		Image uimg = new ImageIcon("./res/texture/scene/forest_unbreakable.png").getImage();
 		System.out.println(img.getWidth(this));
 		SwingUtilities.invokeLater(() -> {
 			g.drawImage(img, 0, 0, this);
@@ -88,6 +104,20 @@ public class Test extends JFrame
 			g.drawImage(kimg, 80, 35, this);
 			g.drawImage(kimg, 40, 75, this);
 			g.drawImage(kimg, 80, 75, this);
+			g.drawImage(uimg, 40, 115, this);
+			g.drawImage(uimg, 80, 115, this);
+			g.drawImage(uimg, 40, 155, this);
+			g.drawImage(uimg, 80, 155, this);
+			g.drawImage(bimg[0], 120, 120, this);
+			g.drawImage(bimg[1], 160, 120, this);
+			g.drawImage(bimg[2], 200, 120, this);
+			g.drawImage(fimg[0], 240, 120, this);
+			g.drawImage(fimg[1], 280, 120, this);
+			g.drawImage(fimg[2], 240, 160, this);
+			g.drawImage(pimg[0], 320, 120, this);
+			g.drawImage(pimg[1], 320, 160, this);
+			g.drawImage(pimg[2], 320, 200, this);
+			g.drawImage(pimg[3], 320, 240, this);
 		});
 	}
 	public static void main(String[] args)

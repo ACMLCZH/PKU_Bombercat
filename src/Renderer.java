@@ -1,3 +1,4 @@
+import javax.security.auth.Destroyable;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.text.AbstractDocument.BranchElement;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
 
-class Map //implements Serializable
+class GameMap //implements Serializable
 {
 	public static class OutOfMapIndexException extends Exception
 	{
@@ -27,18 +28,28 @@ class Map //implements Serializable
 	{
 		public FailureReadMapException(Throwable cause) {super("读取地图失败！", cause);}
 	}
+	enum MapElement {
+		Ground("ground", 0), Destroyable("destroyable", 1), Unbreakable("unbreakable", 2),
+		Bomb("bomb", 3), Horiflow("horiflow", 4), Vertflow("vertflow", 5), Crossflow("crossflow", 6),
+		Bombitem("bombitem", 7), flowitem("flowitem", 8), Speeditem("speeditem", 9);
+		private String s;
+		private int num;
+		private MapElement(String s, int num) {this.s = s; this.num = num;}
+		public String toString() {return this.s;}
+		public boolean equals(int x) {return this.num == x;}
+	}
 	static final int GROUND = 0, DESTROYABLE = 1, UNBREAKABLE = 2;
 	static final int BOMB = 3, HORIFLOW = 4, VERTFLOW = 5, CROSSFLOW = 6;
 	static final int BOMBITEM = 7, FLOWITEM = 8, SPEEDITEM = 9;
-	static final int WIDTH = 22;			// 实际可活动范围为 20 * 20
-	static final int HEIGHT = 22;
+	static final int WIDTH = 15;			// 实际可活动范围为 15 * 15
+	static final int HEIGHT = 15;
 	private Image[] textures = new Image[3];
 	// private Image ground = null;
 	// private Image destroyable = null;
 	// private Image unbreakable = null;
 	public int[][] mp;
 	
-	public Map(String type, int id) throws FailureReadMapException
+	public GameMap(String type, int id) throws FailureReadMapException
 	{
 		try
 		{
@@ -105,8 +116,10 @@ public class Renderer extends JFrame
 	private JButton btnInfoRight = new JButton();
 	private JButton btnInfoBack = new JButton();
 	private JTextArea txtInfo = new JTextArea();
+
+	private Game g = null;
 	
-	public void render(Map mp, BasePlayer[] ps, Bomb[] bs, BasePlayer infoPlayer)
+	public void render(GameMap mp, BasePlayer[] ps, Bomb[] bs, BasePlayer infoPlayer)
 	{
 		Arrays.<BasePlayer>sort(ps); 		// This array will be changed.
 		Arrays.<Bomb>sort(bs); 				// This array will be changed.
@@ -187,8 +200,9 @@ public class Renderer extends JFrame
 		infoShow();
 	}
 	
-	public Renderer()
+	public Renderer(Game g)
 	{
+		this.g = g;
 		SwingUtilities.invokeLater(() -> {
 			setTitle("PP堂");
 			setLayout(null);
@@ -207,19 +221,12 @@ public class Renderer extends JFrame
 				SwingUtilities.invokeLater(() -> {
 					titleScene.setVisible(false);
 					gameScene.setVisible(true);
-					Game g = new Game();
+					Game g = new Game(this);
 					readyAnimation();
 					g.start();
 				});
 			});
 			btnQuit.addActionListener((e) -> {System.exit(0);});
-			this.textures[Map.BOMB] = new ImageIcon("./res/texture/scene/bomb.png").getImage();
-			this.textures[Map.HORIFLOW] = new ImageIcon("./res/texture/scene/horiflow.png").getImage();
-			this.textures[Map.VERTFLOW] = new ImageIcon("./res/texture/scene/vertflow.png").getImage();
-			this.textures[Map.CROSSFLOW] = new ImageIcon("./res/texture/scene/crossflow.png").getImage();
-			this.textures[Map.BOMBITEM] = new ImageIcon("./res/texture/scene/bombitem.png").getImage();
-			this.textures[Map.FLOWITEM] = new ImageIcon("./res/texture/scene/flowitem.png").getImage();
-			this.textures[Map.SPEEDITEM] = new ImageIcon("./res/texture/scene/speeditem.png").getImage();
 			addPanel(titleScene, new Component[] {lblTitle, btnInfo, btnStart, btnQuit}, true);
 
 			lblCountDown.setForeground(Color.ORANGE);
