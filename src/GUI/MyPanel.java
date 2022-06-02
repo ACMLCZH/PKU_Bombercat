@@ -12,7 +12,8 @@ public abstract class MyPanel extends JPanel
 {
 	static final int SCENEWIDTH = GAMEWIDTH;
 	static final int SCENEHEIGHT = GAMEHEIGHT + 20;
-	MainRenderer mainWindow;
+	protected MainRenderer mainWindow;
+	
 	public MyPanel(MainRenderer mainWindow) {super(); this.mainWindow = mainWindow;}
 	protected void addPanel(Component[] comps, boolean vis)
 	{

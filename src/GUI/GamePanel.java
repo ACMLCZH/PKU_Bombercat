@@ -12,14 +12,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class GamePanel extends MyPanel
+public class GamePanel extends JLayeredPane
 {
 	public static final int GAMEWIDTH = GameMap.WIDTH * BLOCK_UNIT;
 	public static final int GAMEHEIGHT = GameMap.HEIGHT * BLOCK_UNIT;
 	// private JPanel gameScene = new JPanel();
+	private JButton btnBack = new JButton();
+	private JButton btnSound = new JButton();
+	private JPanel pnGame = new JPanel();
 	private JPanel pnAnimate = new JPanel();
 	private JLabel lblCountDown = new JLabel("", JLabel.CENTER);
-	public GamePanel(MainRenderer mainWindow) {super(mainWindow);}
+	private MainRenderer mainWindow;
+
+	public GamePanel(MainRenderer mainWindow) {super(); this.mainWindow = mainWindow;}
 	
 	private void putTexture(Graphics g, int rx, int ry, Image img)
 	{
@@ -51,13 +56,15 @@ public class GamePanel extends MyPanel
 		pnAnimate.setBackground(new Color(255, 255, 255, 100));
 		pnAnimate.setLayout(new BorderLayout());
 		pnAnimate.add(BorderLayout.CENTER, lblCountDown);
-		addPanel(new Component[]{pnAnimate}, false);
+
+		add(pnAnimate, 3);
 	}
 
 	@Override
 	public void paint(Graphics g)
 	{
 		// Graphics g = gameScene.getGraphics();
+		super.paint(g);
 		SwingUtilities.invokeLater(() -> {
 			BasePlayer[] ps = mainWindow.getGame().getPlayers();
 			BasePlayer infoPlayer = mainWindow.getGame().getInfoPlayer();

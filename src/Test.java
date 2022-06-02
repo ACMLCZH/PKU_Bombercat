@@ -18,8 +18,8 @@ class Map //implements Serializable
 	static final int GROUND = 0, DESTROYABLE = 1, UNBREAKABLE = 2;
 	static final int BOMB = 3, HORIFLOW = 4, VERTFLOW = 5, CROSSFLOW = 6;
 	static final int BOMBITEM = 7, FLOWITEM = 8, SPEEDITEM = 9;
-	static final int WIDTH = 22;			// 实际可活动范围为 20 * 20
-	static final int HEIGHT = 22;
+	static final int WIDTH = 15;			// 实际可活动范围为 20 * 20
+	static final int HEIGHT = 15;
 	private Image[] textures = new Image[3];
 	// private Image ground = null;
 	// private Image destroyable = null;
@@ -71,10 +71,15 @@ public class Test extends JFrame
 		setBounds(100, 100, 680 + 14, 680 + 37);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Graphics g = getContentPane().getGraphics();
+		JPanel pn1 = new JPanel();
+		pn1.setBounds(20, 20, 600, 600);
+		getContentPane().add(pn1);
+		JButton btn = new JButton("哈哈");
+		pn1.add(btn);
+		Graphics g = pn1.getGraphics();
 		
-		System.out.println(new File("./res/texture/scene/forest_ground.png").exists());
-		Image img = new ImageIcon("./res/texture/scene/forest_ground.png").getImage();
+		System.out.println(new File("./res/texture/map/forest_ground.png").exists());
+		Image img = new ImageIcon("./res/texture/map/forest_ground.png").getImage();
 		// Image bimg = Toolkit.getDefaultToolkit().getImage("./res/texture/bomb1.png");
 		Image[] bimg = new Image[] {
 			new ImageIcon("./res/texture/scene/bomb1.png").getImage(),
@@ -92,8 +97,8 @@ public class Test extends JFrame
 			new ImageIcon("./res/texture/character/char1_up.png").getImage(),
 			new ImageIcon("./res/texture/character/char1_down.png").getImage()
 		};
-		Image kimg = new ImageIcon("./res/texture/scene/forest_destroyable.png").getImage();
-		Image uimg = new ImageIcon("./res/texture/scene/forest_unbreakable.png").getImage();
+		Image kimg = new ImageIcon("./res/texture/map/forest_destroyable.png").getImage();
+		Image uimg = new ImageIcon("./res/texture/map/forest_unbreakable.png").getImage();
 		System.out.println(img.getWidth(this));
 		SwingUtilities.invokeLater(() -> {
 			g.drawImage(img, 0, 0, this);
