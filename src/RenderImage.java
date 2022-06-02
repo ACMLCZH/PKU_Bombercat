@@ -4,12 +4,12 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 
-public class RenderID
+public class RenderImage
 {
 	public static final String sceneDir = "./res/texture/scene/";
 	public static final String mapDir = "./res/texture/map/";
 	public static final String charDir = "./res/texture/character/";
-	public static final Map<String, Image> getID = new HashMap<>(){{
+	public static final Map<String, Image> getImage = new HashMap<>(){{
 		put("bomb_1", new ImageIcon(sceneDir + "bomb1.png").getImage());
 		put("bomb_2", new ImageIcon(sceneDir + "bomb2.png").getImage());
 		put("bomb_3", new ImageIcon(sceneDir + "bomb3.png").getImage());

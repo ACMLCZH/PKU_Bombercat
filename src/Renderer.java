@@ -4,6 +4,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.text.AbstractDocument.BranchElement;
 
 import BaseObject.Bomb;
+import BasePlayer.BasePlayer;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -28,7 +29,7 @@ class GameMap //implements Serializable
 	{
 		public FailureReadMapException(Throwable cause) {super("读取地图失败！", cause);}
 	}
-	enum MapElement {
+	static enum MapElement {
 		Ground("ground", 0), Destroyable("destroyable", 1), Unbreakable("unbreakable", 2),
 		Bomb("bomb", 3), Horiflow("horiflow", 4), Vertflow("vertflow", 5), Crossflow("crossflow", 6),
 		Bombitem("bombitem", 7), flowitem("flowitem", 8), Speeditem("speeditem", 9);
@@ -36,14 +37,16 @@ class GameMap //implements Serializable
 		private int num;
 		private MapElement(String s, int num) {this.s = s; this.num = num;}
 		public String toString() {return this.s;}
+		public int toInt() {return this.num;}
 		public boolean equals(int x) {return this.num == x;}
 	}
-	static final int GROUND = 0, DESTROYABLE = 1, UNBREAKABLE = 2;
-	static final int BOMB = 3, HORIFLOW = 4, VERTFLOW = 5, CROSSFLOW = 6;
-	static final int BOMBITEM = 7, FLOWITEM = 8, SPEEDITEM = 9;
-	static final int WIDTH = 15;			// 实际可活动范围为 15 * 15
-	static final int HEIGHT = 15;
-	private Image[] textures = new Image[3];
+	// static final int GROUND = 0, DESTROYABLE = 1, UNBREAKABLE = 2;
+	// static final int BOMB = 3, HORIFLOW = 4, VERTFLOW = 5, CROSSFLOW = 6;
+	// static final int BOMBITEM = 7, FLOWITEM = 8, SPEEDITEM = 9;
+	public static final int WIDTH = 15;			// 实际可活动范围为 15 * 15
+	public static final int HEIGHT = 15;
+	private String type = null;
+	// private Image[] textures = new Image[3];
 	// private Image ground = null;
 	// private Image destroyable = null;
 	// private Image unbreakable = null;
@@ -51,6 +54,7 @@ class GameMap //implements Serializable
 	
 	public GameMap(String type, int id) throws FailureReadMapException
 	{
+		this.type = type;
 		try
 		{
 			Scanner mapInput = new Scanner(new FileInputStream("./res/map/" + type + "_" + id + ".txt"));
@@ -67,14 +71,15 @@ class GameMap //implements Serializable
 			throw new FailureReadMapException(ex);
 		}
 		
-		this.textures[GROUND] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
-		this.textures[DESTROYABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_destroyable.png");
-		this.textures[UNBREAKABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
+		// this.textures[GROUND] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
+		// this.textures[DESTROYABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_destroyable.png");
+		// this.textures[UNBREAKABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
 		// this.ground = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
 		// this.destroyable = 
 		// this.unbreakable = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
 	}
 	public Image getTexture(int idx) {return textures[idx];}
+	public String getType() {return this.type;}
 	// public Image getGround() {return this.ground;}
 	// public Image getDestroyable() {return this.destroyable;}
 	// public Image getUnbreakable() {return this.unbreakable;}
@@ -89,10 +94,10 @@ public class Renderer extends JFrame
 	// private int mapID = -1;
 	// private Map map = null;
 	static final int BLOCK_UNIT = 40;
-	static final int WINWIDTH = 17 * BLOCK_UNIT + 200;
-	static final int WINHEIGHT = 17 * BLOCK_UNIT + 100;
-	static final int GAMEWIDTH = 17 * BLOCK_UNIT;
-	static final int GAMEHEIGHT = 17 * BLOCK_UNIT;
+	static final int WINWIDTH = GameMap.WIDTH * BLOCK_UNIT + 200;
+	static final int WINHEIGHT = GameMap.HEIGHT * BLOCK_UNIT + 100;
+	static final int GAMEWIDTH = GameMap.WIDTH * BLOCK_UNIT;
+	static final int GAMEHEIGHT = GameMap.HEIGHT * BLOCK_UNIT;
 	static final int INFOPERPAGE = 10;
 
 	private JPanel gameScene = new JPanel();
@@ -125,7 +130,7 @@ public class Renderer extends JFrame
 		Arrays.<Bomb>sort(bs); 				// This array will be changed.
 		Graphics g = gameScene.getGraphics();
 		SwingUtilities.invokeLater(() -> {
-			g.drawImage(mp.getTexture(Map.GROUND), 0, 0, this);
+			g.drawImage(RenderImage.getImage.get(mp.getType() + "_" + GameMap.MapElement.Ground), 0, 0, this);
 			int nowx = BLOCK_UNIT;
 			int curP = 0, curB = 0;
 			for (int i = 0; i < Map.HEIGHT; ++i)
@@ -133,12 +138,15 @@ public class Renderer extends JFrame
 				int nowy = BLOCK_UNIT;
 				while (curP < ps.length && nowy >= ps[curP].getBottom())
 				{
-					Image pImg = ps[curP].getFigureImage();
+					Image pImg = RenderImage.getImage.get(ps[curP].getName() + "_" + ps[curP].getDirection());
 					g.drawImage(pImg, ps[curP].getRight() - pImg.getWidth(this), ps[curP].getBottom() - pImg.getHeight(this), this);
 					++ curP;
 				}
-				// while (curB < bs.length && nowy > bs[curB].getPosY() * BLOCK_UNIT)
-				// 	g.drawImage(bs[curB++].getFigureImage(), nowx - BLOCK_UNIT, nowy - BLOCK_UNIT, this);
+				while (curB < bs.length && nowy > bs[curB].getPosY() * BLOCK_UNIT)
+				{
+					Image bImg = RenderImage.getImage.get(bs[curB++].getName() + "_" + ps[curP].getDirection());
+					g.drawImage(bImg, nowx - BLOCK_UNIT, nowy - BLOCK_UNIT, this);
+				}
 				for (int j = 0; j < Map.WIDTH; ++j)
 				{
 					switch (mp.mp[i][j])
@@ -204,7 +212,7 @@ public class Renderer extends JFrame
 	{
 		this.g = g;
 		SwingUtilities.invokeLater(() -> {
-			setTitle("PP堂");
+			setTitle("泡泡堂 in PKU");
 			setLayout(null);
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			setResizable(false);
@@ -221,13 +229,13 @@ public class Renderer extends JFrame
 				SwingUtilities.invokeLater(() -> {
 					titleScene.setVisible(false);
 					gameScene.setVisible(true);
-					Game g = new Game(this);
+					// Game g = new Game(this);
+					g.commandQueue.push(() -> {g.start();});
 					readyAnimation();
-					g.start();
 				});
 			});
 			btnQuit.addActionListener((e) -> {System.exit(0);});
-			addPanel(titleScene, new Component[] {lblTitle, btnInfo, btnStart, btnQuit}, true);
+			addPanel(titleScene, new Component[]{lblTitle, btnInfo, btnStart, btnQuit}, true);
 
 			lblCountDown.setForeground(Color.ORANGE);
 			lblCountDown.setFont(new Font("黑体", Font.BOLD, 60));
@@ -237,7 +245,7 @@ public class Renderer extends JFrame
 			pnAnimate.setBackground(new Color(255, 255, 255, 100));
 			pnAnimate.setLayout(new BorderLayout());
 			pnAnimate.add(BorderLayout.CENTER, lblCountDown);
-			addPanel(gameScene, new Component[] {pnAnimate}, false);
+			addPanel(gameScene, new Component[]{pnAnimate}, false);
 
 			BufferedReader infoInput = new BufferedReader(new FileReader("./res/text/info.txt"));
 			String line = null;
@@ -266,7 +274,7 @@ public class Renderer extends JFrame
 					titleScene.setVisible(true);
 				});
 			});
-			addPanel(infoScene, new Component[] {btnInfoLeft, btnInfoRight, btnInfoBack, txtInfo}, false);
+			addPanel(infoScene, new Component[]{btnInfoLeft, btnInfoRight, btnInfoBack, txtInfo}, false);
 		});
 	}
 }

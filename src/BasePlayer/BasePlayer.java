@@ -1,6 +1,6 @@
 package BasePlayer;
 
-import Game;
+// import Game;
 
 
 public class BasePlayer {
