@@ -1,7 +1,6 @@
 package GUI;
 
-// import GamePanel;
-import main.Game;
+import render.MainRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,26 +14,25 @@ public class TitlePanel extends MyPanel
 	private JButton btnInfo = new JButton();
 	private JButton btnStart = new JButton();
 	private JButton btnQuit = new JButton();
-	public TitlePanel(JFrame mainWindow) {super(mainWindow);}
-	public void toLayout(Game g, GamePanel gameScene, InfoPanel infoScene)
+	public TitlePanel(MainRenderer mainWindow) {super(mainWindow);}
+	public void toLayout() // Game g, GamePanel gameScene, InfoPanel infoScene
 	{
 		lblTitle.setBounds(100, 100, 100, 100);
 		setButton(btnInfo, 50, 400, 80, "icon_start");
 		btnStart.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
-				gameScene.setVisible(true);
+				// mainWindow.getGameScene().setVisible(true);
 				// Game g = new Game(this);
-				g.commandQueue.push(() -> {g.start();});
-				gameScene.readyAnimation();
+				mainWindow.getSelectPanel().setVisible(true);
 			});
 		});
 		setButton(btnInfo, 150, 400, 80, "icon_info");
 		btnInfo.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
-				infoScene.infoInitial();
-				infoScene.setVisible(true);
+				mainWindow.getInfoScene().infoInitial();
+				mainWindow.getInfoScene().setVisible(true);
 			});
 		});
 		setButton(btnQuit, 250, 400, 80, "icon_quit");

@@ -1,18 +1,19 @@
 package GUI;
 
 import render.RenderImage;
+import render.MainRenderer;
 import static GUI.GamePanel.GAMEWIDTH;
 import static GUI.GamePanel.GAMEHEIGHT;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MyPanel extends JPanel
+public abstract class MyPanel extends JPanel
 {
 	static final int SCENEWIDTH = GAMEWIDTH;
 	static final int SCENEHEIGHT = GAMEHEIGHT + 20;
-	JFrame mainWindow;
-	public MyPanel(JFrame mainWindow) {super(); this.mainWindow = mainWindow;}
+	MainRenderer mainWindow;
+	public MyPanel(MainRenderer mainWindow) {super(); this.mainWindow = mainWindow;}
 	protected void addPanel(Component[] comps, boolean vis)
 	{
 		setVisible(vis);
@@ -20,8 +21,8 @@ public class MyPanel extends JPanel
 		setBounds(0, 0, SCENEWIDTH, SCENEHEIGHT);
 		for (Component comp: comps) add(comp);
 		this.mainWindow.getContentPane().add(this);
-	}	
-	protected static void setButton(JButton btn, int x, int y, int len, String iconName)
+	}
+	protected static void setButton(JButton btn, int len, String iconName)
 	{
 		ImageIcon icon = RenderImage.getIcon(iconName);
 		icon.setImage(icon.getImage().getScaledInstance(len, len, Image.SCALE_DEFAULT));
@@ -32,6 +33,12 @@ public class MyPanel extends JPanel
 		btn.setBorder(null);			// 除去边框
 		btn.setFocusPainted(false);			// 除去焦点的框
 		btn.setContentAreaFilled(false);		// 除去默认的背景填充
-		btn.setBounds(x, y, len, len);
+		btn.setSize(len, len);
 	}
+	protected static void setButton(JButton btn, int x, int y, int len, String iconName)
+	{
+		setButton(btn, len, iconName);
+		btn.setLocation(x, y);
+	}
+	public abstract void toLayout();
 }

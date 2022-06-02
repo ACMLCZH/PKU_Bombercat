@@ -1,6 +1,9 @@
 package GUI;
 
 import javax.swing.*;
+
+import render.MainRenderer;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.io.BufferedReader;
@@ -20,20 +23,26 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 	private int infoNumLine = 0;
 	private ArrayList<StringBuffer> infoText = new ArrayList<>();
 
-	public InfoPanel(JFrame mainWindow) {super(mainWindow);}
+	public InfoPanel(MainRenderer mainWindow) {super(mainWindow);}
 	public void infoShow() {txtInfo.setText(infoText.get(curInfoPage).toString());}
 	public void infoInitial() {curInfoPage = 0; infoShow();}
-	public void toLayout(TitlePanel titleScene) throws IOException
+	public void toLayout()
 	{
-		BufferedReader infoInput = new BufferedReader(new FileReader("./res/text/info.txt"));
-		String line = null;
-		while ((line = infoInput.readLine()) != null)
-		{
-			if (infoNumLine == 0) {++infoPages; infoText.add(new StringBuffer(""));}
-			infoText.get(infoPages - 1).append(line + "\n");
-			if (++infoNumLine == INFOPERPAGE) infoNumLine = 0;
+		BufferedReader infoInput;
+		try {
+			infoInput = new BufferedReader(new FileReader("./res/text/info.txt"));
+			String line = null;
+			while ((line = infoInput.readLine()) != null)
+			{
+				if (infoNumLine == 0) {++infoPages; infoText.add(new StringBuffer(""));}
+				infoText.get(infoPages - 1).append(line + "\n");
+				if (++infoNumLine == INFOPERPAGE) infoNumLine = 0;
+			}
+			infoInput.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			System.exit(0);
 		}
-		infoInput.close();
 		txtInfo.setBounds(50, 50, 500, 300);
 		txtInfo.setEditable(false);
 		txtInfo.setBackground(new Color(0, 0, 0, 0));
@@ -53,7 +62,7 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 		btnInfoBack.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
-				titleScene.setVisible(true);
+				mainWindow.getTitleScene().setVisible(true);
 			});
 		});
 		addPanel(new Component[]{btnInfoLeft, btnInfoRight, btnInfoBack, txtInfo}, false);
