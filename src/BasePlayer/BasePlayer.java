@@ -1,6 +1,6 @@
 package BasePlayer;
 
-// import Game;
+import main.Game;
 
 
 public class BasePlayer {
