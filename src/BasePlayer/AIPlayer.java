@@ -2,7 +2,11 @@ package BasePlayer;
 
 
 public class AIPlayer extends BasePlayer{
-    //TODO
+    public AIPlayer(int HP, Indirect dir, String name) {
+		super(HP, dir, name);
+	}
+
+	//TODO
     void mainloop() {
         
     }

@@ -1,10 +1,10 @@
 package GUI;
 
+import main.Game;
 import render.MainRenderer;
 import render.RenderImage;
 
 import javax.swing.*;
-import javax.xml.transform.Templates;
 
 import java.awt.*;
 import java.util.Map;
@@ -83,11 +83,17 @@ public class SelectPanel extends MyPanel
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
 				String selChar = ((JRadioButton)btnGrpChar.getSelection()).getText();
-				String selScene = toScene.get(((JRadioButton)btnGrpChar.getSelection()).getText());
+				String selScene = toScene.get(((JRadioButton)btnGrpScene.getSelection()).getText());
 				int selMode = toMode.get(((JRadioButton)btnGrpMode.getSelection()).getText());
 				mainWindow.getGameScene().setVisible(true);
-				mainWindow.getGame().commandQueue.push(() -> {mainWindow.getGame().start(selChar, selScene, selMode);});
-				mainWindow.getGameScene().readyAnimation();
+				try {
+					mainWindow.getGame().commandQueue.put(() -> {
+						mainWindow.getGame().start(selChar, selScene, selMode);
+						mainWindow.getGameScene().readyAnimation();
+					});
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
 			});
 		});
 		JPanel line4 = setFlowPanel(new Component[]{btnOK});
