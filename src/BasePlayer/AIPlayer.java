@@ -6,7 +6,6 @@ public class AIPlayer extends BasePlayer{
 		super(HP, dir, name);
 	}
 
-	//TODO
     void mainloop() {
         
     }

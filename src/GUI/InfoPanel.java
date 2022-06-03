@@ -7,8 +7,9 @@ import render.MainRenderer;
 import java.awt.*;
 import java.util.ArrayList;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class InfoPanel extends MyPanel		/* 说明文档 */
 {
@@ -30,10 +31,11 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 	{
 		BufferedReader infoInput;
 		try {
-			infoInput = new BufferedReader(new FileReader("./res/text/info.txt"));
+			infoInput = new BufferedReader(new InputStreamReader(new FileInputStream("./res/text/info.txt"), "UTF-8"));
 			String line = null;
 			while ((line = infoInput.readLine()) != null)
 			{
+				System.out.print(line + "\n");
 				if (infoNumLine == 0) {++infoPages; infoText.add(new StringBuffer(""));}
 				infoText.get(infoPages - 1).append(line + "\n");
 				if (++infoNumLine == INFOPERPAGE) infoNumLine = 0;
@@ -58,7 +60,7 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 				if (curInfoPage < infoPages - 1) {++curInfoPage; infoShow();}
 			});
 		});
-		setButton(btnInfoRight, 450, 400, 50, "icon_quit");
+		setButton(btnInfoBack, 450, 400, 50, "icon_quit");
 		btnInfoBack.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);

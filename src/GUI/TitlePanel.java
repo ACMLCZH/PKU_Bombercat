@@ -8,7 +8,7 @@ import java.awt.*;
 public class TitlePanel extends MyPanel
 {
 	// private JPanel titleScene = new JPanel();
-	private JLabel lblTitle = new JLabel("");
+	private JLabel lblTitle = new JLabel("PKU 泡泡堂");
 	// private JPanel gameScene = null;
 	// private ArrayList<String> infoText = new ArrayList<>();
 	private JButton btnInfo = new JButton();
@@ -17,8 +17,9 @@ public class TitlePanel extends MyPanel
 	public TitlePanel(MainRenderer mainWindow) {super(mainWindow);}
 	public void toLayout() // Game g, GamePanel gameScene, InfoPanel infoScene
 	{
-		lblTitle.setBounds(100, 100, 100, 100);
-		setButton(btnInfo, 50, 400, 80, "icon_start");
+		lblTitle.setBounds(50, 100, 500, 100);
+		lblTitle.setFont(new Font("微软雅黑", Font.BOLD, 80));
+		setButton(btnStart, 50, 400, 100, "icon_start");
 		btnStart.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
@@ -27,7 +28,7 @@ public class TitlePanel extends MyPanel
 				mainWindow.getSelectPanel().setVisible(true);
 			});
 		});
-		setButton(btnInfo, 150, 400, 80, "icon_info");
+		setButton(btnInfo, 170, 400, 100, "icon_info");
 		btnInfo.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
@@ -35,7 +36,7 @@ public class TitlePanel extends MyPanel
 				mainWindow.getInfoScene().setVisible(true);
 			});
 		});
-		setButton(btnQuit, 250, 400, 80, "icon_quit");
+		setButton(btnQuit, 290, 400, 100, "icon_quit");
 		btnQuit.addActionListener((e) -> {System.exit(0);});
 		addPanel(new Component[]{lblTitle, btnInfo, btnStart, btnQuit}, true);
 	}	

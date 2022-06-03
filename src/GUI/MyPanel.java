@@ -10,8 +10,8 @@ import java.awt.*;
 
 public abstract class MyPanel extends JPanel
 {
-	static final int SCENEWIDTH = GAMEWIDTH;
-	static final int SCENEHEIGHT = GAMEHEIGHT + GAMETOPBIAS;
+	public static final int SCENEWIDTH = GAMEWIDTH;
+	public static final int SCENEHEIGHT = GAMEHEIGHT + GAMETOPBIAS;
 	protected MainRenderer mainWindow;
 	
 	public MyPanel(MainRenderer mainWindow) {super(); this.mainWindow = mainWindow;}

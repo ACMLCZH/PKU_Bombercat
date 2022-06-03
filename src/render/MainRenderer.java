@@ -8,6 +8,7 @@ import javax.swing.*;
 // import GameMap.MapElement;
 import GUI.*;
 import main.Game;
+import static GUI.MyPanel.*;
 
 public class MainRenderer extends JFrame
 {
@@ -17,8 +18,8 @@ public class MainRenderer extends JFrame
 	public static final int BLOCK_UNIT = 40;
 	// static final int SCENEWIDTH = GAMEWIDTH;
 	// static final int SCENEHEIGHT = GAMEHEIGHT + 20;
-	// static final int WINWIDTH = SCENEWIDTH + 14;
-	// static final int WINHEIGHT = SCENEHEIGHT + 37;
+	public static final int WINWIDTH = SCENEWIDTH + 14;
+	public static final int WINHEIGHT = SCENEHEIGHT + 37;
 
 	private GamePanel gameScene = new GamePanel(this);
 	private TitlePanel titleScene = new TitlePanel(this);
@@ -75,11 +76,14 @@ public class MainRenderer extends JFrame
 			setLayout(null);
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			setResizable(false);
+			setBounds(100, 100, WINWIDTH, WINHEIGHT);
 
 			titleScene.toLayout();
 			gameScene.toLayout();
 			infoScene.toLayout();
 			selectScene.toLayout();
+
+			setVisible(true);
 		});
 	}
 }
