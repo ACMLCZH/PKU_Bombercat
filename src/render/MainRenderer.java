@@ -1,27 +1,13 @@
 package render;
-import javax.security.auth.Destroyable;
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.text.AbstractDocument.BranchElement;
 
 // import Map;
-import BaseObject.Bomb;
-import BasePlayer.BasePlayer;
-import BaseObject.GameMap;
+// import BaseObject.Bomb;
+// import BasePlayer.BasePlayer;
+// import BaseObject.GameMap;
 // import GameMap.MapElement;
 import GUI.*;
 import main.Game;
-
-import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-
 
 public class MainRenderer extends JFrame
 {
@@ -47,9 +33,9 @@ public class MainRenderer extends JFrame
 	public SelectPanel getSelectPanel() {return this.selectScene;}
 	public Game getGame() {return game;}
 
-	public void render(GameMap mp, BasePlayer[] ps, Bomb[] bs, BasePlayer infoPlayer)
-	{
-	}
+	// public void render(GameMap mp, BasePlayer[] ps, Bomb[] bs, BasePlayer infoPlayer)
+	// {
+	// }
 
 	// private void addPanel(JPanel scene, Component[] comps, boolean vis)
 	// {
@@ -59,27 +45,27 @@ public class MainRenderer extends JFrame
 	// 	for (Component comp: comps) scene.add(comp);
 	// 	getContentPane().add(scene);
 	// }
-	private void setButton(JButton btn, int x, int y, int len, String iconName)
-	{
-		ImageIcon icon = RenderImage.getIcon(iconName);
-		icon.setImage(icon.getImage().getScaledInstance(len, len, Image.SCALE_DEFAULT));
-		btn.setIcon(icon);
-		btn.setMargin(new Insets(0, 0, 0, 0));	// 将边框外的上下左右空间设置为0
-		btn.setIconTextGap(0);		// 将标签中显示的文本和图标之间的间隔量设置为0
-		btn.setBorderPainted(false);			// 不打印边框
-		btn.setBorder(null);			// 除去边框
-		btn.setFocusPainted(false);			// 除去焦点的框
-		btn.setContentAreaFilled(false);		// 除去默认的背景填充
-		btn.setBounds(x, y, len, len);
-	}
+	// private void setButton(JButton btn, int x, int y, int len, String iconName)
+	// {
+	// 	ImageIcon icon = RenderImage.getIcon(iconName);
+	// 	icon.setImage(icon.getImage().getScaledInstance(len, len, Image.SCALE_DEFAULT));
+	// 	btn.setIcon(icon);
+	// 	btn.setMargin(new Insets(0, 0, 0, 0));	// 将边框外的上下左右空间设置为0
+	// 	btn.setIconTextGap(0);		// 将标签中显示的文本和图标之间的间隔量设置为0
+	// 	btn.setBorderPainted(false);			// 不打印边框
+	// 	btn.setBorder(null);			// 除去边框
+	// 	btn.setFocusPainted(false);			// 除去焦点的框
+	// 	btn.setContentAreaFilled(false);		// 除去默认的背景填充
+	// 	btn.setBounds(x, y, len, len);
+	// }
 
-	private void gameEnd()
-	{
-		SwingUtilities.invokeLater(() -> {
-			gameScene.setVisible(false);
-			titleScene.setVisible(true);
-		});
-	}
+	// private void gameEnd()
+	// {
+	// 	SwingUtilities.invokeLater(() -> {
+	// 		gameScene.setVisible(false);
+	// 		titleScene.setVisible(true);
+	// 	});
+	// }
 	
 	public MainRenderer(Game game)
 	{
@@ -93,6 +79,7 @@ public class MainRenderer extends JFrame
 			titleScene.toLayout();
 			gameScene.toLayout();
 			infoScene.toLayout();
+			selectScene.toLayout();
 		});
 	}
 }

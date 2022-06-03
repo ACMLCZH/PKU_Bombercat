@@ -51,6 +51,8 @@ public class RenderImage
 		put("icon_quit", new ImageIcon(iconDir + "quit.png"));
 		put("icon_left", new ImageIcon(iconDir + "left.png"));
 		put("icon_right", new ImageIcon(iconDir + "right.png"));
+		put("icon_sound_on", new ImageIcon(iconDir + "sound_on.png"));
+		put("icon_sound_off", new ImageIcon(iconDir + "sound_off.png"));
 	}};
 	public static Image getImage(String name) {return toIcon.get(name).getImage();}
 	public static ImageIcon getIcon(String name) {return toIcon.get(name);}

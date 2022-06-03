@@ -11,7 +11,7 @@ public class BasePlayer {
 		@Override
 		public String toString() {return s;}
     };
-    private int coolingTime;
+    // private int coolingTime;
     protected int HP;
 	protected Indirect dir;
 	protected String name = null;
