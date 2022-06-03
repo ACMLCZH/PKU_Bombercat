@@ -1,10 +1,7 @@
 package BaseObject;
 
-interface Renderable {
-    int textureId = 0;
-}
 
-public class BaseObject implements Renderable {
+public class BaseObject implements Comparable<BaseObject> {
     static int objNums = 0;
     int id;               // use for sort 
     boolean isPassable;   //
@@ -20,4 +17,18 @@ public class BaseObject implements Renderable {
         objNums += 1;
         id = objNums;
     }
+
+    @Override
+    public int compareTo(BaseObject o) {
+        // TODO Auto-generated method stub
+        int r = this.loc.y - o.loc.y;
+        if(r == 0) 
+            return this.loc.x - o.loc.x;
+        return r;
+    }
+
+    public int getPosY() {
+        return loc.y;
+    }
+
 }

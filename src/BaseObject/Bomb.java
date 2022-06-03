@@ -1,7 +1,7 @@
 package BaseObject;
 
 public class Bomb extends BaseObject{
-    static final int bombTime = 5;  
+    static final int bombTime = 5;  // change if need.
     int timeBeforeBomb;
     int bombRange;
     Bomb(int x, int y) {
@@ -19,5 +19,10 @@ public class Bomb extends BaseObject{
             return true;
         }
         return false;
+    }
+
+    // return the time bomb have placed.
+    int getState() {
+        return bombTime - timeBeforeBomb;
     }
 }
