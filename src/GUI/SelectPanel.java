@@ -86,7 +86,7 @@ public class SelectPanel extends MyPanel
 				String selScene = toScene.get(((JRadioButton)btnGrpChar.getSelection()).getText());
 				int selMode = toMode.get(((JRadioButton)btnGrpMode.getSelection()).getText());
 				mainWindow.getGameScene().setVisible(true);
-				mainWindow.getGame().commandQueue.push(() -> {g.start(selChar, selScene, selMode);});
+				mainWindow.getGame().commandQueue.push(() -> {mainWindow.getGame().start(selChar, selScene, selMode);});
 				mainWindow.getGameScene().readyAnimation();
 			});
 		});

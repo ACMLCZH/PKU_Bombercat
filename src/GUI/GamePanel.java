@@ -6,6 +6,7 @@ import BaseObject.GameMap;
 import BasePlayer.BasePlayer;
 import render.MainRenderer;
 import static render.MainRenderer.BLOCK_UNIT;
+import static GUI.MyPanel.*;
 import render.RenderImage;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ public class GamePanel extends JLayeredPane
 {
 	public static final int GAMEWIDTH = GameMap.WIDTH * BLOCK_UNIT;
 	public static final int GAMEHEIGHT = GameMap.HEIGHT * BLOCK_UNIT;
+	public static final int GAMETOPBIAS = 40;
 	// private JPanel gameScene = new JPanel();
 	private JButton btnBack = new JButton();
 	private JButton btnSound = new JButton();
@@ -48,24 +50,50 @@ public class GamePanel extends JLayeredPane
 
 	public void toLayout()
 	{
+		pnGame.setBounds(0, 0, SCENEWIDTH, SCENEHEIGHT);
+
+		setButton(btnSound, SCENEWIDTH - 70, 5, 30, "icon_sound_on");
+		btnSound.addActionListener((e) -> {
+			SwingUtilities.invokeLater(() -> {
+				mainWindow.getGame().switchSound();
+				if (mainWindow.getGame().isSoundOn())
+					setButton(btnSound, "icon_sound_on");
+				else setButton(btnSound, "icon_sound_off");
+			});
+		});
+		setButton(btnBack, SCENEWIDTH - 35, 5, 30, "icon_quit");
+		btnBack.addActionListener((e) -> {
+			SwingUtilities.invokeLater(() -> {
+				setVisible(false);
+				mainWindow.getTitleScene().setVisible(true);
+				mainWindow.getGame().commandQueue.push(() -> {mainWindow.getGame().end();});
+			});
+		});
+
 		lblCountDown.setForeground(Color.ORANGE);
 		lblCountDown.setFont(new Font("黑体", Font.BOLD, 60));
 		lblCountDown.setSize(200, 200);
-		pnAnimate.setBounds(0, 0, GAMEWIDTH, GAMEHEIGHT);
+		pnAnimate.setBounds(0, GAMETOPBIAS, GAMEWIDTH, GAMEHEIGHT);
 		pnAnimate.setVisible(false);
 		pnAnimate.setBackground(new Color(255, 255, 255, 100));
 		pnAnimate.setLayout(new BorderLayout());
 		pnAnimate.add(BorderLayout.CENTER, lblCountDown);
 
+		setBounds(0, 0, SCENEWIDTH, SCENEHEIGHT);
+		add(pnGame, 1);
+		add(btnSound, 2);
+		add(btnBack, 2);
 		add(pnAnimate, 3);
+		setVisible(false);
 	}
 
 	@Override
-	public void paint(Graphics g)
+	public void paint(Graphics gr)
 	{
 		// Graphics g = gameScene.getGraphics();
-		super.paint(g);
+		super.paint(gr);
 		SwingUtilities.invokeLater(() -> {
+			Graphics g = pnGame.getGraphics();
 			BasePlayer[] ps = mainWindow.getGame().getPlayers();
 			BasePlayer infoPlayer = mainWindow.getGame().getInfoPlayer();
 			Bomb[] bs = mainWindow.getGame().getBombs();
