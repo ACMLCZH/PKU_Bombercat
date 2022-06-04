@@ -27,6 +27,7 @@ public class BasePlayer {
 	public Indirect getDirection() {return dir;}
 	public int getBottom() {return y2;}
 	public int getRight() {return x2;}
+	public int getLeft() {return x1;}
 	public String getName() {return name;}
 
     public boolean move(Game g, Indirect dir) {

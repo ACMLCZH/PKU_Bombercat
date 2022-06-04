@@ -42,6 +42,7 @@ public class RenderImage
 		put("enemy1_left", new ImageIcon(charDir + "enemy1_left.png"));
 		put("enemy1_right", new ImageIcon(charDir + "enemy1_right.png"));
 
+		put("background", new ImageIcon(mapDir + "background.png"));
 		put("forest_ground", new ImageIcon(mapDir + "forest_ground.png"));
 		put("forest_unbreakable", new ImageIcon(mapDir + "forest_unbreakable.png"));
 		put("forest_destroyable", new ImageIcon(mapDir + "forest_destroyable.png"));
