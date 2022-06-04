@@ -6,11 +6,15 @@ public class Barrier extends BaseObject{
         super(isDestroy ? "destroyable" : "unbreakable", x, y);
         isBreakable = isDestroy;
         isPassable = false;
+        durability = 1;
     }
     // use for remove barrier?
     public void interactWithBomb(Bomb bomb) 
     {
-        durability = 0;
-        isPassable = true;
+        if (isBreakable)
+        {
+            durability = 0;
+            isPassable = true;
+        }
     }
 }
