@@ -134,7 +134,7 @@ public class Test extends JFrame
 	}
 	public static void main(String[] args)
 	{
-		// new Test();
+		new Test();
 		ImageIcon ic = new ImageIcon("./res/texture/icon/start.png");
 		
 	}

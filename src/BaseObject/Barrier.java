@@ -11,8 +11,7 @@ public class Barrier extends BaseObject{
     // use for remove barrier?
     public void interactWithBomb(Bomb bomb) 
     {
-        if (isBreakable)
-        {
+        if(isBreakable) {
             durability = 0;
             isPassable = true;
         }
