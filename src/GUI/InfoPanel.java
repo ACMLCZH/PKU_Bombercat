@@ -30,9 +30,9 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 	public void paint(Graphics g)
 	{
 		super.paint(g);
+		// g.drawString(infoText.get(curInfoPage).toString(), 50, 50);
 		txtInfo.setText(infoText.get(curInfoPage).toString());
 	}
-	// public void infoShow() {}
 	public void infoInitial() {curInfoPage = 0;}
 	public void toLayout()
 	{
@@ -55,7 +55,8 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 		txtInfo.setBounds(50, 50, SCENEWIDTH - 100, 400);
 		txtInfo.setFont(infoFont);
 		txtInfo.setEditable(false);
-		txtInfo.setBackground(new Color(0, 0, 0, 0));
+		txtInfo.setOpaque(false);
+		// txtInfo.setBackground(new Color(0, 0, 0, 0));
 		setButton(btnInfoLeft, 400, 500, 50, "icon_left");
 		btnInfoLeft.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {

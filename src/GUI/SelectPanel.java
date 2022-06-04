@@ -14,7 +14,9 @@ class MyRadioButton extends JRadioButton
 {
 	private static final Font selectFont = new Font("黑体", Font.PLAIN, 16);
 	public MyRadioButton(String text) {
-		super(text); setFont(selectFont);
+		super(text);
+		setFont(selectFont);
+		setOpaque(false);
 		setHorizontalAlignment(SwingConstants.CENTER);
 	}
 }
@@ -51,13 +53,12 @@ public class SelectPanel extends MyPanel
 		icon.setImage(RenderImage.getImage(name).getScaledInstance(len, len, Image.SCALE_DEFAULT));
 		JLabel lbl = new JLabel(icon);
 		lbl.setSize(icon.getIconWidth(), icon.getIconHeight());
-
-		System.out.println(icon.getIconWidth() + " " + icon.getIconHeight());
-
+		// System.out.println(icon.getIconWidth() + " " + icon.getIconHeight());
 		JPanel pn = new JPanel();
 		pn.setLayout(new BorderLayout());
 		pn.add(lbl, BorderLayout.CENTER);
 		pn.add(btn, BorderLayout.SOUTH);
+		pn.setOpaque(false);
 		return pn;
 	}
 	private JPanel setFlowPanel(Component[] comps)
@@ -73,7 +74,7 @@ public class SelectPanel extends MyPanel
 		JPanel pn = new JPanel();
 		pn.setLayout(new GridLayout(1, comps.length));
 		for (Component c: comps) pn.add(c);
-		pn.setVisible(true);
+		pn.setOpaque(false);
 		return pn;
 	}
 	private JPanel setSelectLine(String title, Component[] comps)
@@ -86,6 +87,7 @@ public class SelectPanel extends MyPanel
 		pnLine.add(lbl, BorderLayout.WEST);
 		pnLine.add(pnSel, BorderLayout.CENTER);
 		pnLine.setVisible(true);
+		pnLine.setOpaque(false);
 		return pnLine;
 	}
 
@@ -93,6 +95,7 @@ public class SelectPanel extends MyPanel
 	{
 		btnChar1.setSelected(true);
 		btnScene1.setSelected(true);
+		btnMode1.setSelected(true);
 		JPanel line1 = setSelectLine("人物选择", new Component[]{
 			wrapButton(btnChar1, 80, "碎月_left"),
 			wrapButton(btnChar2, 80, "仙草_left"),
@@ -100,7 +103,7 @@ public class SelectPanel extends MyPanel
 		});
 		JPanel line2 = setSelectLine("场景选择", new Component[]{btnScene1, btnScene2});
 		JPanel line3 = setSelectLine("模式选择", new Component[]{btnMode1, btnMode2});
-		setButton(btnOK, 80, "icon_start");
+		setButton(btnOK, 100, "icon_start");
 		btnOK.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
@@ -114,9 +117,10 @@ public class SelectPanel extends MyPanel
 				});
 			});
 		});
-		JPanel line4 = setFlowPanel(new Component[]{btnOK});
+		JPanel line4 = setRowPanel(new Component[]{btnOK});
 		// setBackground(Color.red);
 		// System.out.println("OK!!!!!!!!!!!!!!!");
+		setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
 		addPanel(new Component[]{line1, line2, line3, line4}, false, new GridLayout(4, 1));
 	}
 }

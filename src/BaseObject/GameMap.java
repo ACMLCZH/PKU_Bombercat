@@ -25,11 +25,11 @@ public class GameMap //implements Serializable
 		public int toInt() {return this.num;}
 		// public boolean equals(int x) {return this.num == x;}
 	}
-	public static final MapElement[] toElement = new MapElement[]{
-		MapElement.Ground, MapElement.Destroyable, MapElement.Unbreakable,
-		MapElement.Bomb, MapElement.Horiflow, MapElement.Vertflow, MapElement.Crossflow,
-		MapElement.Bombitem, MapElement.Flowitem, MapElement.Speeditem
-	};
+	// public static final MapElement[] toElement = new MapElement[]{
+	// 	MapElement.Ground, MapElement.Destroyable, MapElement.Unbreakable,
+	// 	MapElement.Bomb, MapElement.Horiflow, MapElement.Vertflow, MapElement.Crossflow,
+	// 	MapElement.Bombitem, MapElement.Flowitem, MapElement.Speeditem
+	// };
 	// static final int GROUND = 0, DESTROYABLE = 1, UNBREAKABLE = 2;
 	// static final int BOMB = 3, HORIFLOW = 4, VERTFLOW = 5, CROSSFLOW = 6;
 	// static final int BOMBITEM = 7, FLOWITEM = 8, SPEEDITEM = 9;
@@ -79,13 +79,6 @@ public class GameMap //implements Serializable
 			// ex.printStackTrace();
 			throw new FailureReadMapException(ex);
 		}
-		
-		// this.textures[GROUND] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
-		// this.textures[DESTROYABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_destroyable.png");
-		// this.textures[UNBREAKABLE] = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
-		// this.ground = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_ground.png");
-		// this.destroyable = 
-		// this.unbreakable = Toolkit.getDefaultToolkit().getImage("./res/texture/" + type + "_unbreakable.png");
 	}
 	// public Image getTexture(int idx) {return textures[idx];}
 	public String getType() {return this.type;}
