@@ -72,7 +72,7 @@ public class MainRenderer extends JFrame
 	{
 		this.game = game;
 		SwingUtilities.invokeLater(() -> {
-			setTitle("泡泡堂 in PKU");
+			setTitle("PKU 泡泡堂");
 			setLayout(null);
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			setResizable(false);

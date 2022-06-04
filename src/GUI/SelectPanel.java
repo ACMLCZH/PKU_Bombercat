@@ -51,6 +51,9 @@ public class SelectPanel extends MyPanel
 		icon.setImage(RenderImage.getImage(name).getScaledInstance(len, len, Image.SCALE_DEFAULT));
 		JLabel lbl = new JLabel(icon);
 		lbl.setSize(icon.getIconWidth(), icon.getIconHeight());
+
+		System.out.println(icon.getIconWidth() + " " + icon.getIconHeight());
+
 		JPanel pn = new JPanel();
 		pn.setLayout(new BorderLayout());
 		pn.add(lbl, BorderLayout.CENTER);

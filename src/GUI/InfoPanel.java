@@ -13,7 +13,8 @@ import java.io.InputStreamReader;
 
 public class InfoPanel extends MyPanel		/* 说明文档 */
 {
-	static final int INFOPERPAGE = 10;
+	public static final int INFOPERPAGE = 20;
+	public static final Font infoFont = new Font("幼圆", Font.PLAIN, 16);
 	// private JPanel infoScene = new JPanel();
 	private JButton btnInfoLeft = new JButton();
 	private JButton btnInfoRight = new JButton();
@@ -25,8 +26,14 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 	private ArrayList<StringBuffer> infoText = new ArrayList<>();
 
 	public InfoPanel(MainRenderer mainWindow) {super(mainWindow);}
-	public void infoShow() {txtInfo.setText(infoText.get(curInfoPage).toString());}
-	public void infoInitial() {curInfoPage = 0; infoShow();}
+	@Override
+	public void paint(Graphics g)
+	{
+		super.paint(g);
+		txtInfo.setText(infoText.get(curInfoPage).toString());
+	}
+	// public void infoShow() {}
+	public void infoInitial() {curInfoPage = 0;}
 	public void toLayout()
 	{
 		BufferedReader infoInput;
@@ -45,22 +52,23 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 			ex.printStackTrace();
 			System.exit(0);
 		}
-		txtInfo.setBounds(50, 50, 500, 300);
+		txtInfo.setBounds(50, 50, SCENEWIDTH - 100, 400);
+		txtInfo.setFont(infoFont);
 		txtInfo.setEditable(false);
 		txtInfo.setBackground(new Color(0, 0, 0, 0));
-		setButton(btnInfoLeft, 400, 400, 50, "icon_left");
+		setButton(btnInfoLeft, 400, 500, 50, "icon_left");
 		btnInfoLeft.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
-				if (curInfoPage > 0) {--curInfoPage; infoShow();}
+				if (curInfoPage > 0) {--curInfoPage; repaint();} //infoShow();}
 			});
 		});
-		setButton(btnInfoRight, 500, 400, 50, "icon_right");
+		setButton(btnInfoRight, 500, 500, 50, "icon_right");
 		btnInfoRight.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
-				if (curInfoPage < infoPages - 1) {++curInfoPage; infoShow();}
+				if (curInfoPage < infoPages - 1) {++curInfoPage; repaint();}
 			});
 		});
-		setButton(btnInfoBack, 450, 400, 50, "icon_quit");
+		setButton(btnInfoBack, 450, 500, 50, "icon_quit");
 		btnInfoBack.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);

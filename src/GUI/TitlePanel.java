@@ -7,6 +7,7 @@ import java.awt.*;
 
 public class TitlePanel extends MyPanel
 {
+	private static final Font titleFont = new Font("幼圆", Font.BOLD, 80);
 	// private JPanel titleScene = new JPanel();
 	private JLabel lblTitle = new JLabel("PKU 泡泡堂");
 	// private JPanel gameScene = null;
@@ -18,7 +19,7 @@ public class TitlePanel extends MyPanel
 	public void toLayout() // Game g, GamePanel gameScene, InfoPanel infoScene
 	{
 		lblTitle.setBounds(50, 100, 500, 100);
-		lblTitle.setFont(new Font("微软雅黑", Font.BOLD, 80));
+		lblTitle.setFont(titleFont);
 		setButton(btnStart, 50, 400, 100, "icon_start");
 		btnStart.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
