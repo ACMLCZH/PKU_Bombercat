@@ -98,14 +98,10 @@ class SPanel extends GUI.MyPanel
 				String selScene = toScene.get(((JRadioButton)btnGrpScene.getSelection()).getText());
 				int selMode = toMode.get(((JRadioButton)btnGrpMode.getSelection()).getText());
 				mainWindow.getGameScene().setVisible(true);
-				try {
-					mainWindow.getGame().commandQueue.put(() -> {
-						mainWindow.getGame().start(selChar, selScene, selMode);
-						mainWindow.getGameScene().readyAnimation();
-					});
-				} catch (InterruptedException ex) {
-					ex.printStackTrace();
-				}
+				mainWindow.getGame().commandQueue.add(() -> {
+					mainWindow.getGame().start(selChar, selScene, selMode);
+					mainWindow.getGameScene().readyAnimation();
+				});
 			});
 		});
 		JPanel line4 = setFlowPanel(new Component[]{btnOK});

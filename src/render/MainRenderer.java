@@ -13,12 +13,7 @@ import static GUI.MyPanel.*;
 
 public class MainRenderer extends JFrame
 {
-	// private String mapType = null;
-	// private int mapID = -1;
-	// private Map map = null;
 	public static final int BLOCK_UNIT = 40;
-	// static final int SCENEWIDTH = GAMEWIDTH;
-	// static final int SCENEHEIGHT = GAMEHEIGHT + 20;
 	public static final int WINWIDTH = SCENEWIDTH + 14;
 	public static final int WINHEIGHT = SCENEHEIGHT + 37;
 

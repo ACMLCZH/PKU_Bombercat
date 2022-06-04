@@ -34,6 +34,7 @@ public class BasePlayer {
 	public int getRight() {return x2;}
 	public int getLeft() {return x1;}
 	public String getName() {return name;}
+	public boolean getInvincible() {return true;}  	// TODO: 判断是否处于无敌状态
 
     public boolean move(Game g, Indirect dir) {
         return false;

@@ -24,6 +24,7 @@ public class RenderImage
 		put("flowitem", new ImageIcon(sceneDir + "flowitem.png"));
 		put("speeditem", new ImageIcon(sceneDir + "speeditem.png"));
 		put("infoarrow", new ImageIcon(sceneDir + "infoarrow.png"));
+		put("invincible", new ImageIcon(sceneDir + "invincible.png"));
 
 		put("碎月_up", new ImageIcon(charDir + "char1_up.png"));
 		put("碎月_down", new ImageIcon(charDir + "char1_down.png"));
@@ -46,6 +47,9 @@ public class RenderImage
 		put("forest_ground", new ImageIcon(mapDir + "forest_ground.png"));
 		put("forest_unbreakable", new ImageIcon(mapDir + "forest_unbreakable.png"));
 		put("forest_destroyable", new ImageIcon(mapDir + "forest_destroyable.png"));
+		put("snowfield_ground", new ImageIcon(mapDir + "snowfield_ground.png"));
+		put("snowfield_unbreakable", new ImageIcon(mapDir + "snowfield_unbreakable.png"));
+		put("snowfield_destroyable", new ImageIcon(mapDir + "snowfield_destroyable.png"));
 
 		put("window_background", new ImageIcon(iconDir + "title.png"));
 		put("icon_start", new ImageIcon(iconDir + "start.png"));

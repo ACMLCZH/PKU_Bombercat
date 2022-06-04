@@ -13,7 +13,7 @@ import render.RenderImage;
 import javax.swing.*;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -40,7 +40,7 @@ public class GamePanel extends JLayeredPane
 	private JPanel pnAnimate = new JPanel();
 	private JLabel lblCountDown = new JLabel("", JLabel.CENTER);
 	private MainRenderer mainWindow;
-	private java.util.List<DrawTask> drawList = new ArrayList<>();
+	private java.util.List<DrawTask> drawList = new Vector<>();
 
 	public GamePanel(MainRenderer mainWindow) {super(); this.mainWindow = mainWindow;}
 	
@@ -112,30 +112,27 @@ public class GamePanel extends JLayeredPane
 		drawList.clear();
 		HumanPlayer infoPlayer = mainWindow.getGame().getInfoPlayer();
 		Set<BasePlayer> ps = mainWindow.getGame().getPlayers();
-		// Set<Bomb> bs = mainWindow.getGame().getBombs();
 		GameMap mp = mainWindow.getGame().getMap();
 		putTexture(RenderImage.getImage("background"), 0, 0, false, false);
 		putTexture(RenderImage.getImage(mp.getType() + "_ground"), 0, 0, false, true);
 		int nowy = 0;
 		Iterator<BasePlayer> pIt = ps.iterator();
 		BasePlayer curP = pIt.hasNext() ? pIt.next() : null;
-		// Iterator<Bomb> bIt = bs.iterator();
-		// Bomb curB = bIt.hasNext() ? bIt.next() : null;
-		// int curP = 0, curB = 0;
 		for (int i = 0; i < GameMap.HEIGHT; ++i)
 		{
-			// int nowx = BLOCK_UNIT;
-			while (curP != null && nowy >= curP.getBottom())
+			while (curP != null && nowy >= curP.getBottom())	// 加载人物
 			{
 				Image pImg = RenderImage.getImage(curP.toString());
 				putTexture(pImg, curP.getLeft(), curP.getBottom(), true, true);
+				if (curP.getInvincible())
+					putTexture(RenderImage.getImage("invincible"), curP.getLeft(), curP.getBottom(), true, true);
 				if (curP == infoPlayer)
 					putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + 15, curP.getBottom() - BLOCK_UNIT, true, true);
 				curP = pIt.hasNext() ? pIt.next() : null;
 			}
-			for (int j = 0; j < GameMap.WIDTH; ++j)
+			for (int j = 0; j < GameMap.WIDTH; ++j)				// 加载场景
 			{
-				BaseObject obj = mp.get(new Coordinate(j, i));
+				BaseObject obj = mp.get(j, i);
 				if (obj == null) continue;
 				Image cImg = null;
 				switch (obj.getName())

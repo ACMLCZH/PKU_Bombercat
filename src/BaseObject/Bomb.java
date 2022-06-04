@@ -7,7 +7,8 @@ import java.util.Set;
 
 import BaseObject.Flow;
 
-public class Bomb extends BaseObject {
+public class Bomb extends BaseObject
+{
     static final int bombTime = 5;  // change if need.
     private int timeBeforeBomb;
     private int bombRange;
@@ -16,7 +17,8 @@ public class Bomb extends BaseObject {
     private long lastUpdated;
     private boolean exploded;
 
-    public Bomb(int x, int y, BasePlayer m, Game g) {
+    public Bomb(int x, int y, BasePlayer m, Game g)
+	{
         super("bomb", x, y);
         master = m;
         game = g;
@@ -28,27 +30,23 @@ public class Bomb extends BaseObject {
         lastUpdated = System.currentTimeMillis();
     }
 
+	@Override
+	public String toString() {return name + "_" + getState();}
+	
+    public int getState() {return bombTime - timeBeforeBomb;}	// return the time bomb have placed.
+
     // use for decrease and return true if bomb.
-    public boolean countDown() {
-        if (exploded)
-            return true;
+    public boolean countDown()
+	{
+        if (exploded) return true;
         long current = System.currentTimeMillis();
         if (current - lastUpdated >= 1000)
         {
             lastUpdated = current;
             timeBeforeBomb -= 1;
-            if(timeBeforeBomb == 0) 
-            {
-                exploded = true;
-                return true;
-            }
+            if (timeBeforeBomb == 0) {exploded = true; return true;}
         }
         return false;
-    }
-
-    // return the time bomb have placed.
-    public int getState() {
-        return bombTime - timeBeforeBomb;
     }
 
     public void explode() 
@@ -57,16 +55,14 @@ public class Bomb extends BaseObject {
         GameMap gameMap = game.getMap();
         Set<Flow> flows = game.getFlows();
         int x = 0, y = 0;
-        for (x = loc.x - bombRange; x <= loc.x + bombRange; x++)
+        for (x = loc.x - bombRange; x <= loc.x + bombRange; ++x)
         {
-            if (x == loc.x)
-                continue;
+            if (x == loc.x) continue;
             y = loc.y;
             if (x >= 0 && x < GameMap.WIDTH)
             {
                 BaseObject obj = gameMap.get(new Coordinate(x, y));
-                if (obj != null)
-                    obj.interactWithBomb(this);
+                if (obj != null) obj.interactWithBomb(this);
                 else
                 {
                     Flow flow = new Flow(x, y, "horiflow");
@@ -75,10 +71,9 @@ public class Bomb extends BaseObject {
                 }
             }
         }
-        for (y = loc.y - bombRange; y <= loc.y + bombRange; y++)
+        for (y = loc.y - bombRange; y <= loc.y + bombRange; ++y)
         {
-            if (y == loc.y)
-                continue;
+            if (y == loc.y) continue;
             x = loc.x;
             if (y >= 0 && y < GameMap.HEIGHT)
             {
