@@ -16,15 +16,15 @@ public class Game
 	public int mode;
 	public Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
 	private GameMap gameMap;
-	private List<BasePlayer> players = new ArrayList<>();
-	private List<Bomb> bombs = new LinkedList<>();
+	private Set<BasePlayer> players = new TreeSet<>();
+	private Set<Bomb> bombs = new TreeSet<>();
 	private HumanPlayer infoPlayer = null;
 	private boolean soundOn = true;
 	private MainRenderer renderer;
 
-	public List<BasePlayer> getPlayers() {return this.players;}
+	public Set<BasePlayer> getPlayers() {return this.players;}
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
-	public List<Bomb> getBombs() {return this.bombs;}
+	public Set<Bomb> getBombs() {return this.bombs;}
 	public GameMap getMap() {return this.gameMap;}
 	public boolean isSoundOn() {return this.soundOn;}
 
@@ -43,15 +43,22 @@ public class Game
 		}
 
 		// 为炸弹做倒计时
-		for (Bomb bomb: bombs)
+		Iterator<Bomb> iter = bombs.iterator();
+		while (iter.hasNext())
 		{
-			bomb.countDown();
-			if (bomb.getState() == 0)
+			Bomb bomb = iter.next();
+			if (bomb.countDown())
 			{
+				// 和其他物体的交互
 				bomb.explode(gameMap);
+				// 删除炸弹
+				iter.remove();
 			}
 		}
+
+		// 计算玩家收到伤害
 		
+
 	}
 	public Game()
 	{
