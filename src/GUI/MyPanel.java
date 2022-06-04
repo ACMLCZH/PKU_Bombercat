@@ -15,18 +15,22 @@ public abstract class MyPanel extends JPanel
 	protected MainRenderer mainWindow;
 	
 	public MyPanel(MainRenderer mainWindow) {super(); this.mainWindow = mainWindow;}
-	protected void addPanel(Component[] comps, boolean vis)
+	protected void addPanel(Component[] comps, boolean vis, LayoutManager mgr)
 	{
-		setVisible(vis);
-		setLayout(null);
+		setLayout(mgr);
 		setBounds(0, 0, SCENEWIDTH, SCENEHEIGHT);
 		for (Component comp: comps) add(comp);
 		this.mainWindow.getContentPane().add(this);
+		setVisible(vis);
 	}
 	protected static void setButton(JButton btn, String iconName)
 	{
-		ImageIcon icon = RenderImage.getIcon(iconName);
-		icon.setImage(icon.getImage().getScaledInstance(btn.getHeight(), btn.getWidth(), Image.SCALE_DEFAULT));
+		ImageIcon icon = new ImageIcon();
+		// RenderImage.getIcon(iconName);
+		icon.setImage(RenderImage.getImage(iconName).getScaledInstance(btn.getHeight(), btn.getWidth(), Image.SCALE_DEFAULT));
+
+		System.out.println(iconName + " " + icon.getIconWidth() + " " + icon.getIconHeight());
+		
 		btn.setIcon(icon);
 	}
 	protected static void setButton(JButton btn, int len, String iconName)

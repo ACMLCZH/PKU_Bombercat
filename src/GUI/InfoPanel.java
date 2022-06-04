@@ -35,7 +35,7 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 			String line = null;
 			while ((line = infoInput.readLine()) != null)
 			{
-				System.out.print(line + "\n");
+				// System.out.print(line + "\n");
 				if (infoNumLine == 0) {++infoPages; infoText.add(new StringBuffer(""));}
 				infoText.get(infoPages - 1).append(line + "\n");
 				if (++infoNumLine == INFOPERPAGE) infoNumLine = 0;
@@ -67,6 +67,6 @@ public class InfoPanel extends MyPanel		/* 说明文档 */
 				mainWindow.getTitleScene().setVisible(true);
 			});
 		});
-		addPanel(new Component[]{btnInfoLeft, btnInfoRight, btnInfoBack, txtInfo}, false);
+		addPanel(new Component[]{btnInfoLeft, btnInfoRight, btnInfoBack, txtInfo}, false, null);
 	}
 }

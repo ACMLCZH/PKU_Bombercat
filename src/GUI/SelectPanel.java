@@ -10,6 +10,15 @@ import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
 
+class MyRadioButton extends JRadioButton
+{
+	private static final Font selectFont = new Font("黑体", Font.PLAIN, 16);
+	public MyRadioButton(String text) {
+		super(text); setFont(selectFont);
+		setHorizontalAlignment(SwingConstants.CENTER);
+	}
+}
+
 public class SelectPanel extends MyPanel
 {
 	private static final Map<String, String> toScene = new HashMap<>() {
@@ -19,26 +28,27 @@ public class SelectPanel extends MyPanel
 		{put("道具模式", Game.PVP); put("挑战模式", Game.PVE);}
 	};
 
-	private JRadioButton btnChar1 = new JRadioButton("碎月");
-	private JRadioButton btnChar2 = new JRadioButton("仙草");
-	private JRadioButton btnChar3 = new JRadioButton("薏米");
-	private JRadioButton btnScene1 = new JRadioButton("草地");
-	private JRadioButton btnScene2 = new JRadioButton("雪地");
-	private JRadioButton btnMode1 = new JRadioButton("道具模式");
-	private JRadioButton btnMode2 = new JRadioButton("挑战模式");
+	private MyRadioButton btnChar1 = new MyRadioButton("碎月");
+	private MyRadioButton btnChar2 = new MyRadioButton("仙草");
+	private MyRadioButton btnChar3 = new MyRadioButton("薏米");
+	private MyRadioButton btnScene1 = new MyRadioButton("草地");
+	private MyRadioButton btnScene2 = new MyRadioButton("雪地");
+	private MyRadioButton btnMode1 = new MyRadioButton("道具模式");
+	private MyRadioButton btnMode2 = new MyRadioButton("挑战模式");
 	private JButton btnOK = new JButton();
 	private ButtonGroup btnGrpChar = new ButtonGroup() {{add(btnChar1); add(btnChar2); add(btnChar3);}};
 	private ButtonGroup btnGrpScene = new ButtonGroup() {{add(btnScene1); add(btnScene2);}};
 	private ButtonGroup btnGrpMode = new ButtonGroup() {{add(btnMode1); add(btnMode2);}};
+	private static final Font titleFont = new Font("黑体", Font.PLAIN, 22);
 	// private ButtonGroup btnGrpChar = 
 	// private ButtonGroup btnGrpScene = 
 
 	public SelectPanel(MainRenderer mainWindow) {super(mainWindow);}
 
-	private JPanel wrapButton(JRadioButton btn, String name)
+	private JPanel wrapButton(JRadioButton btn, int len, String name)
 	{
-		ImageIcon icon = RenderImage.getIcon(name);
-		icon.setImage(icon.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		ImageIcon icon = new ImageIcon();
+		icon.setImage(RenderImage.getImage(name).getScaledInstance(len, len, Image.SCALE_DEFAULT));
 		JLabel lbl = new JLabel(icon);
 		lbl.setSize(icon.getIconWidth(), icon.getIconHeight());
 		JPanel pn = new JPanel();
@@ -52,29 +62,38 @@ public class SelectPanel extends MyPanel
 		JPanel pn = new JPanel();
 		pn.setLayout(new FlowLayout());
 		for (Component c: comps) pn.add(c);
+		pn.setVisible(true);
+		return pn;
+	}
+	private JPanel setRowPanel(Component[] comps)
+	{
+		JPanel pn = new JPanel();
+		pn.setLayout(new GridLayout(1, comps.length));
+		for (Component c: comps) pn.add(c);
+		pn.setVisible(true);
 		return pn;
 	}
 	private JPanel setSelectLine(String title, Component[] comps)
 	{
 		JLabel lbl = new JLabel(title);
-		lbl.setFont(new Font("黑体", Font.PLAIN, 22));
-		JPanel pnSel = setFlowPanel(comps);
+		lbl.setFont(titleFont);
+		JPanel pnSel = setRowPanel(comps);
 		JPanel pnLine = new JPanel();
 		pnLine.setLayout(new BorderLayout());
 		pnLine.add(lbl, BorderLayout.WEST);
 		pnLine.add(pnSel, BorderLayout.CENTER);
+		pnLine.setVisible(true);
 		return pnLine;
 	}
 
-	@Override
 	public void toLayout()
 	{
 		btnChar1.setSelected(true);
 		btnScene1.setSelected(true);
 		JPanel line1 = setSelectLine("人物选择", new Component[]{
-			wrapButton(btnChar1, "碎月_left"),
-			wrapButton(btnChar2, "仙草_left"),
-			wrapButton(btnChar3, "薏米_left")
+			wrapButton(btnChar1, 80, "碎月_left"),
+			wrapButton(btnChar2, 80, "仙草_left"),
+			wrapButton(btnChar3, 80, "薏米_left")
 		});
 		JPanel line2 = setSelectLine("场景选择", new Component[]{btnScene1, btnScene2});
 		JPanel line3 = setSelectLine("模式选择", new Component[]{btnMode1, btnMode2});
@@ -97,7 +116,8 @@ public class SelectPanel extends MyPanel
 			});
 		});
 		JPanel line4 = setFlowPanel(new Component[]{btnOK});
-		setLayout(new GridLayout(4, 1));
-		addPanel(new Component[]{line1, line2, line3, line4}, false);
+		// setBackground(Color.red);
+		// System.out.println("OK!!!!!!!!!!!!!!!");
+		addPanel(new Component[]{line1, line2, line3, line4}, false, new GridLayout(4, 1));
 	}
 }

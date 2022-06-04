@@ -38,6 +38,6 @@ public class TitlePanel extends MyPanel
 		});
 		setButton(btnQuit, 290, 400, 100, "icon_quit");
 		btnQuit.addActionListener((e) -> {System.exit(0);});
-		addPanel(new Component[]{lblTitle, btnInfo, btnStart, btnQuit}, true);
+		addPanel(new Component[]{lblTitle, btnInfo, btnStart, btnQuit}, true, null);
 	}	
 }
