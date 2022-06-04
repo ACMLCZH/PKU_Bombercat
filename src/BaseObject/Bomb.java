@@ -1,6 +1,7 @@
 package BaseObject;
 
 import BasePlayer.BasePlayer;
+import BaseObject.Flow;
 
 public class Bomb extends BaseObject {
     static final int bombTime = 5;  // change if need.
@@ -46,16 +47,36 @@ public class Bomb extends BaseObject {
 
     public void explode(GameMap gameMap) 
     {
-        for (int x = loc.x - bombRange; x <= loc.x + bombRange; x++)
-            for (int y = loc.y - bombRange; y <= loc.y + bombRange; y++)
+        int x = 0, y = 0;
+        for (x = loc.x - bombRange; x <= loc.x + bombRange; x++)
+        {
+            if (x == loc.x)
+                continue;
+            y = loc.y;
+            if (x >= 0 && x < GameMap.WIDTH)
             {
-                if (x >= 0 && x < GameMap.WIDTH && y >= 0 && y < GameMap.HEIGHT)
-                {
-                    BaseObject obj = gameMap.get(new Coordinate(x, y));
-                    if (obj != null)
-                        obj.interactWithBomb(this);
-                }
+                BaseObject obj = gameMap.get(new Coordinate(x, y));
+                if (obj != null)
+                    obj.interactWithBomb(this);
+                else
+                    gameMap.set(new Coordinate(x, y), new Flow(x, y, "horiflow"));
             }
+        }
+        for (y = loc.y - bombRange; y <= loc.y + bombRange; y++)
+        {
+            if (y == loc.y)
+                continue;
+            x = loc.x;
+            if (y >= 0 && y < GameMap.HEIGHT)
+            {
+                BaseObject obj = gameMap.get(new Coordinate(x, y));
+                if (obj != null)
+                    obj.interactWithBomb(this);
+                else
+                    gameMap.set(new Coordinate(x, y), new Flow(x, y, "vertflow"));
+            }
+        }
+        gameMap.set(loc, new Flow(x, y, "crossflow"));
     }
 
     public void interactWithBomb(Bomb bomb)
