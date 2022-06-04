@@ -1,7 +1,6 @@
 package GUI;
 
 import BaseObject.BaseObject;
-import BaseObject.Bomb;
 import BaseObject.GameMap;
 import BaseObject.Coordinate;
 import BasePlayer.BasePlayer;
@@ -12,7 +11,6 @@ import static GUI.MyPanel.*;
 import render.RenderImage;
 
 import javax.swing.*;
-import javax.swing.event.ListDataEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,18 +44,9 @@ public class GamePanel extends JLayeredPane
 
 	public GamePanel(MainRenderer mainWindow) {super(); this.mainWindow = mainWindow;}
 	
-	// private void putTexture(Graphics g, int rx, int ry, Image img)
-	// {
-		
-	// 	g.drawImage(img, rx - img.getWidth(this), ry - img.getHeight(this), this);
-	// }
 	private void putTexture(Image img, int x, int y, boolean yBottom, boolean addTop)
 	{
-		if (yBottom)
-			drawList.add(new DrawTask(img, x, y - img.getHeight(this) + (addTop ? GAMETOPBIAS : 0)));
-		else
-			drawList.add(new DrawTask(img, x, y + (addTop ? GAMETOPBIAS : 0)));
-		// g.drawImage(img, rx - img.getWidth(this), ry - img.getHeight(this), this);
+		drawList.add(new DrawTask(img, x, y - (yBottom ? img.getHeight(this) : 0) + (addTop ? GAMETOPBIAS : 0)));
 	}
 
 	public void readyAnimation()
@@ -125,10 +114,6 @@ public class GamePanel extends JLayeredPane
 		Set<BasePlayer> ps = mainWindow.getGame().getPlayers();
 		// Set<Bomb> bs = mainWindow.getGame().getBombs();
 		GameMap mp = mainWindow.getGame().getMap();
-		// ps.sort(null);
-		// bs.sort(null);
-		// Arrays.<BasePlayer>sort(ps);
-		// Arrays.<Bomb>sort(bs);
 		putTexture(RenderImage.getImage("background"), 0, 0, false, false);
 		putTexture(RenderImage.getImage(mp.getType() + "_ground"), 0, 0, false, true);
 		int nowy = 0;

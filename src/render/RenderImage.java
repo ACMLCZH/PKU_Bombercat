@@ -47,6 +47,7 @@ public class RenderImage
 		put("forest_unbreakable", new ImageIcon(mapDir + "forest_unbreakable.png"));
 		put("forest_destroyable", new ImageIcon(mapDir + "forest_destroyable.png"));
 
+		put("window_background", new ImageIcon(iconDir + "title.png"));
 		put("icon_start", new ImageIcon(iconDir + "start.png"));
 		put("icon_info", new ImageIcon(iconDir + "info.png"));
 		put("icon_quit", new ImageIcon(iconDir + "quit.png"));
