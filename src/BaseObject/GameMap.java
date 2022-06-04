@@ -76,12 +76,12 @@ public class GameMap //implements Serializable
 	// public int getWidth() {return this.width;}
 	// public int getHeight() {return this.height;}
 
-	public BaseObject get(int i, int j)
+	public BaseObject get(Coordinate loc)
 	{
 		return null;
 	}
-	public void set(int i, int j, BaseObject obj)
+	public void set(Coordinate loc, BaseObject obj)
 	{
-		
+
 	}
 }

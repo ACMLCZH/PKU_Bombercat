@@ -7,6 +7,9 @@ public class Bomb extends BaseObject {
     private int timeBeforeBomb;
     private int bombRange;
     private BasePlayer master;
+    private long lastUpdated;
+    private boolean exploded;
+
     public Bomb(int x, int y, BasePlayer m) {
         super("bomb", x, y);
         master = m;
@@ -14,15 +17,24 @@ public class Bomb extends BaseObject {
         timeBeforeBomb = bombTime;
         isBreakable = true;
         isPassable = false;
+        exploded = false;
+        lastUpdated = System.currentTimeMillis();
     }
 
     // use for decrease and return true if bomb.
     public boolean countDown() {
-        assert timeBeforeBomb > 0: "the bomb has been destroyed";
-        timeBeforeBomb -= 1;
-        if(timeBeforeBomb == 0) {
-            destroyed();
+        if (exploded)
             return true;
+        long current = System.currentTimeMillis();
+        if (current - lastUpdated >= 1000)
+        {
+            lastUpdated = current;
+            timeBeforeBomb -= 1;
+            if(timeBeforeBomb == 0) 
+            {
+                exploded = true;
+                return true;
+            }
         }
         return false;
     }
@@ -32,9 +44,24 @@ public class Bomb extends BaseObject {
         return bombTime - timeBeforeBomb;
     }
 
-    public int destroyed() {
-        // 更改player里与bomb相关的属性？
-        // 还是生成一个爆炸事件返回到Game里去？
-        return bombRange;
+    public void explode(GameMap gameMap) 
+    {
+        for (int x = loc.x - bombRange; x <= loc.x + bombRange; x++)
+            for (int y = loc.y - bombRange; y <= loc.y + bombRange; y++)
+            {
+                if (x >= 0 && x < GameMap.WIDTH && y >= 0 && y < GameMap.HEIGHT)
+                {
+                    BaseObject obj = gameMap.get(new Coordinate(x, y));
+                    if (obj != null)
+                        obj.interactWithBomb(this);
+                }
+            }
+    }
+
+    public void interactWithBomb(Bomb bomb)
+    {
+        timeBeforeBomb = 0;
+        lastUpdated = System.currentTimeMillis();
+        exploded = true;
     }
 }
