@@ -17,7 +17,7 @@ public class Bomb extends BaseObject {
     }
 
     // use for decrease and return true if bomb.
-    boolean countDown() {
+    public boolean countDown() {
         assert timeBeforeBomb > 0: "the bomb has been destroyed";
         timeBeforeBomb -= 1;
         if(timeBeforeBomb == 0) {
