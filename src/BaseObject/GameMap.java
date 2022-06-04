@@ -58,7 +58,7 @@ public class GameMap //implements Serializable
 					switch (k) 
 					{
 						case 0: //ground
-							mp[i][j] = new Ground(i, j);
+							mp[i][j] = null;
 							break;
 						case 1: //destroyable
 							mp[i][j] = new Barrier(i, j, true);
@@ -101,8 +101,9 @@ public class GameMap //implements Serializable
 	}
 	public void set(Coordinate loc, BaseObject obj)
 	{
+		BaseObject setmp = mp[loc.x][loc.y];
 		// 不可被破坏的障碍无法被操作
-		if(!obj.isBreakable && !obj.isPassable)
+		if(setmp!= null && !setmp.isBreakable && !setmp.isPassable)
 			return ;
 		mp[loc.x][loc.y] = obj;
 	}

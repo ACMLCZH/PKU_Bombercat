@@ -1,5 +1,5 @@
 package BaseObject;
-
+// 这个对象大概没用，可以考虑删掉
 public class Ground extends BaseObject {
     Ground(int x, int y) {
         super("ground", x, y);
