@@ -29,7 +29,7 @@ public class Game			// 我先写一点，测试用，你看着改
 	public GameMap getMap() {return this.gameMap;}
 	public boolean isSoundOn() {return this.soundOn;}
 
-	public void switchSound() {this.soundOn = !this.soundOn;}
+	public void switchSound() {this.soundOn = !this.soundOn;}//
 
     public Game()
 	{
