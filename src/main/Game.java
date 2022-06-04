@@ -28,7 +28,7 @@ public class Game
 	public GameMap getMap() {return this.gameMap;}
 	public boolean isSoundOn() {return this.soundOn;}
 
-	public void switchSound() {this.soundOn = !this.soundOn;}
+	public void switchSound() {this.soundOn = !this.soundOn;}//
 
     private void mainloop()
 	{
