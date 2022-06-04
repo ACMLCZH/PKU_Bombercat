@@ -40,7 +40,7 @@ public class GameMap //implements Serializable
 	// private Image ground = null;
 	// private Image destroyable = null;
 	// private Image unbreakable = null;
-	public int[][] mp;
+	public BaseObject[][] mp;
 	
 	public GameMap(String type, int id) throws FailureReadMapException
 	{
@@ -48,11 +48,30 @@ public class GameMap //implements Serializable
 		try
 		{
 			Scanner mapInput = new Scanner(new FileInputStream("./res/map/" + type + "_" + id + ".txt"));
-			mp = new int[HEIGHT][];
-			for (int i = 0; i < HEIGHT; ++i) mp[i] = new int[WIDTH];
-			for (int i = 1; i < HEIGHT - 1; ++i)
-				for (int j = 1; j < WIDTH - 1; ++j)
-					mp[i][j] = mapInput.nextInt();
+			mp = new BaseObject[HEIGHT][];
+			for (int i = 0; i < HEIGHT; ++i) mp[i] = new BaseObject[WIDTH];
+			for (int i = 1; i < HEIGHT - 1; ++i) 
+			{
+				for (int j = 1; j < WIDTH - 1; ++j) 
+				{
+					int k = mapInput.nextInt();
+					switch (k) 
+					{
+						case 0: //ground
+							mp[i][j] = new Ground(i, j);
+							break;
+						case 1: //destroyable
+							mp[i][j] = new Barrier(i, j, true);
+							break;
+						case 2: //unbreakable
+							mp[i][j] = new Barrier(i, j, false);
+							break;
+						default:
+							// 初始化的地图应该只有以上三种地形，有道具另说。
+							throw new Exception("the init map have some error.");
+					}
+				}
+			}
 			mapInput.close();
 		}
 		catch (Exception ex)
@@ -78,10 +97,13 @@ public class GameMap //implements Serializable
 
 	public BaseObject get(Coordinate loc)
 	{
-		return null;
+		return mp[loc.x][loc.y];
 	}
 	public void set(Coordinate loc, BaseObject obj)
 	{
-
+		// 不可被破坏的障碍无法被操作
+		if(!obj.isBreakable && !obj.isPassable)
+			return ;
+		mp[loc.x][loc.y] = obj;
 	}
 }
