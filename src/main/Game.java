@@ -1,7 +1,11 @@
 package main;
 
 import render.MainRenderer;
+import BaseObject.Barrier;
+import BaseObject.BaseObject;
 import BaseObject.Bomb;
+import BaseObject.Coordinate;
+import BaseObject.Flow;
 import BaseObject.GameMap;
 import BasePlayer.BasePlayer;
 import BasePlayer.HumanPlayer;
@@ -18,6 +22,8 @@ public class Game
 	private GameMap gameMap;
 	private Set<BasePlayer> players = new TreeSet<>();
 	private Set<Bomb> bombs = new TreeSet<>();
+	private Set<Flow> flows = new TreeSet<>();
+	private Set<Barrier> barriers = new TreeSet<>();
 	private HumanPlayer infoPlayer = null;
 	private boolean soundOn = true;
 	private MainRenderer renderer;
@@ -26,6 +32,8 @@ public class Game
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
 	public Set<Bomb> getBombs() {return this.bombs;}
 	public GameMap getMap() {return this.gameMap;}
+	public Set<Flow> getFlows() {return this.flows;}
+	public Set<Barrier> getBarriers() {return this.barriers;};
 	public boolean isSoundOn() {return this.soundOn;}
 
 	public void switchSound() {this.soundOn = !this.soundOn;}//
@@ -42,23 +50,62 @@ public class Game
 				break;
 		}
 
-		// 为炸弹做倒计时
-		Iterator<Bomb> iter = bombs.iterator();
-		while (iter.hasNext())
+		// 为Flow做倒计时
+		Iterator<Flow> iterFlow = flows.iterator();
+		while (iterFlow.hasNext())
 		{
-			Bomb bomb = iter.next();
+			Flow flow = iterFlow.next();
+			if (flow.countDown())
+			{
+				// 把flow从gameMap里去掉
+				gameMap.set(flow.getLoc(), null);
+				// 把flow从flows里去掉
+				iterFlow.remove();
+			}
+		}
+
+		// 为炸弹做倒计时
+		Iterator<Bomb> iterBomb = bombs.iterator();
+		while (iterBomb.hasNext())
+		{
+			Bomb bomb = iterBomb.next();
 			if (bomb.countDown())
 			{
-				// 和其他物体的交互
-				bomb.explode(gameMap);
-				// 删除炸弹
-				iter.remove();
+				// 和其他物体的交互, 并且把炸弹从gameMap里去掉
+				bomb.explode();
+				// 把炸弹从bombs里去掉
+				iterBomb.remove();
+			}
+		}
+
+		// 去掉被炸掉的Barrier
+		Iterator<Barrier> iterBarrier = barriers.iterator();
+		while (iterBarrier.hasNext())
+		{
+			Barrier barrier = iterBarrier.next();
+			if (barrier.isDestroyed())
+			{
+				// 把barrier从gameMap里去掉
+				gameMap.set(barrier.getLoc(), null);
+				// 把barrier从barriers里去掉
+				iterBarrier.remove();
 			}
 		}
 
 		// 计算玩家收到伤害
-		
-
+		for (BasePlayer player: players)
+		{
+			if (!player.isAlive())
+				continue;
+			Coordinate loc = player.getGridLoc();
+			BaseObject obj = gameMap.get(loc);
+			if (obj != null)
+			{
+				String name = obj.getName();
+				if (name == "crossflow" || name == "vertflow" || name == "horiflow")
+					player.getHurt();
+			}
+		}
 	}
 	public Game()
 	{

@@ -25,6 +25,7 @@ public abstract class BaseObject implements Comparable<BaseObject> {
 
     public int getPosX() {return loc.x;}
     public int getPosY() {return loc.y;}
+    public Coordinate getLoc() {return new Coordinate(loc.x, loc.y);}
 	public String getName() {return this.name;}
     // 其实也可以通过下面这个函数来判断是否可以通过，不过player以像素为单位的话map里需要加点计算来判断？
     public boolean getIsPassable() {return this.isPassable;}

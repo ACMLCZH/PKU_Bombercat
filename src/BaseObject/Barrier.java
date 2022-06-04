@@ -16,4 +16,8 @@ public class Barrier extends BaseObject{
             isPassable = true;
         }
     }
+    public boolean isDestroyed()
+    {
+        return durability > 0;
+    }
 }

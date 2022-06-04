@@ -1,6 +1,10 @@
 package BaseObject;
 
 import BasePlayer.BasePlayer;
+import main.Game;
+
+import java.util.Set;
+
 import BaseObject.Flow;
 
 public class Bomb extends BaseObject {
@@ -8,12 +12,14 @@ public class Bomb extends BaseObject {
     private int timeBeforeBomb;
     private int bombRange;
     private BasePlayer master;
+    private Game game;
     private long lastUpdated;
     private boolean exploded;
 
-    public Bomb(int x, int y, BasePlayer m) {
+    public Bomb(int x, int y, BasePlayer m, Game g) {
         super("bomb", x, y);
         master = m;
+        game = g;
         bombRange = 1;   // 如果有道具影响的话再作更改
         timeBeforeBomb = bombTime;
         isBreakable = true;
@@ -45,8 +51,11 @@ public class Bomb extends BaseObject {
         return bombTime - timeBeforeBomb;
     }
 
-    public void explode(GameMap gameMap) 
+    public void explode() 
     {
+        // 对周围的障碍物造成影响, 并且在范围内创建Flow对象
+        GameMap gameMap = game.getMap();
+        Set<Flow> flows = game.getFlows();
         int x = 0, y = 0;
         for (x = loc.x - bombRange; x <= loc.x + bombRange; x++)
         {
@@ -59,7 +68,11 @@ public class Bomb extends BaseObject {
                 if (obj != null)
                     obj.interactWithBomb(this);
                 else
-                    gameMap.set(new Coordinate(x, y), new Flow(x, y, "horiflow"));
+                {
+                    Flow flow = new Flow(x, y, "horiflow");
+                    flows.add(flow);
+                    gameMap.set(new Coordinate(x, y), flow);
+                }
             }
         }
         for (y = loc.y - bombRange; y <= loc.y + bombRange; y++)
@@ -73,10 +86,16 @@ public class Bomb extends BaseObject {
                 if (obj != null)
                     obj.interactWithBomb(this);
                 else
-                    gameMap.set(new Coordinate(x, y), new Flow(x, y, "vertflow"));
+                {
+                    Flow flow = new Flow(x, y, "vertflow");
+                    flows.add(flow);
+                    gameMap.set(new Coordinate(x, y), flow);
+                }
             }
         }
-        gameMap.set(loc, new Flow(x, y, "crossflow"));
+        Flow flow = new Flow(x, y, "crossflow");
+        flows.add(flow);
+        gameMap.set(loc, flow);
     }
 
     public void interactWithBomb(Bomb bomb)
