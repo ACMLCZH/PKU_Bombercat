@@ -2,6 +2,7 @@ package BaseObject;
 
 import java.io.FileInputStream;
 import java.util.Scanner;
+import BaseObject.BaseObject;
 
 public class GameMap //implements Serializable
 {
@@ -75,4 +76,12 @@ public class GameMap //implements Serializable
 	// public int getWidth() {return this.width;}
 	// public int getHeight() {return this.height;}
 
+	public BaseObject get(int i, int j)
+	{
+		return null;
+	}
+	public void set(int i, int j, BaseObject obj)
+	{
+		
+	}
 }

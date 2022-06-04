@@ -6,34 +6,56 @@ import BaseObject.GameMap;
 import BasePlayer.BasePlayer;
 import BasePlayer.HumanPlayer;
 
-import java.util.Collections;
-// import java.util.Queue;
-import java.util.TreeSet;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.*;;
 
-public class Game			// 我先写一点，测试用，你看着改
+public class Game
 {
 	public static final int PVP = 0, PVE = 1;
 
-	public ArrayBlockingQueue<Runnable> commandQueue = new ArrayBlockingQueue<>(32768);		// 实现一个线程安全队列？
-	private GameMap gameMap = null;
-	private Set<BasePlayer> players = Collections.synchronizedSet(new TreeSet<>());		// 你看看有没有更好的实现线程安全的方法
-	private Set<Bomb> bombs = Collections.synchronizedSet(new TreeSet<>());
+	public int mode;
+	public Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
+	private GameMap gameMap;
+	private List<BasePlayer> players = new ArrayList<>();
+	private List<Bomb> bombs = new LinkedList<>();
 	private HumanPlayer infoPlayer = null;
 	private boolean soundOn = true;
+	private MainRenderer renderer;
 
-	public Set<BasePlayer> getPlayers() {return this.players;}
+	public List<BasePlayer> getPlayers() {return this.players;}
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
-	public Set<Bomb> getBombs() {return this.bombs;}
+	public List<Bomb> getBombs() {return this.bombs;}
 	public GameMap getMap() {return this.gameMap;}
 	public boolean isSoundOn() {return this.soundOn;}
 
 	public void switchSound() {this.soundOn = !this.soundOn;}
 
-    public Game()
+    private void mainloop()
 	{
-		new MainRenderer(this);
+		// 清空任务队列, 执行每个任务
+		while (true)
+		{
+			Runnable cmd = commandQueue.poll();
+			if (cmd != null)
+				cmd.run();
+			else
+				break;
+		}
+
+		// 为炸弹做倒计时
+		for (Bomb bomb: bombs)
+		{
+			bomb.countDown();
+			if (bomb.getState() == 0)
+			{
+				bomb.explode(gameMap);
+			}
+		}
+		
+	}
+	public Game()
+	{
+		renderer = new MainRenderer(this);
 	}
 
 	public void end() {}
