@@ -27,7 +27,7 @@ public class Game
 	private HumanPlayer infoPlayer = null;
 	private boolean soundOn = true;
 	private boolean started = false;
-	private MainRenderer renderer;
+	private MainRenderer renderer = new MainRenderer(this);
 
 	public Set<BasePlayer> getPlayers() {return this.players;}
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
@@ -107,11 +107,10 @@ public class Game
 					player.getHurt();
 			}
 		}
+
+		renderer.repaint();
 	}
-	public Game()
-	{
-		renderer = new MainRenderer(this);
-	}
+	// public Game() {}// renderer = }
 
 	public void end() {}
 	public void start(String selChar, String selScene, int mode)	// 选择的人物，选择的场景，选择的游戏模式
@@ -132,6 +131,7 @@ public class Game
 
 	public static void main(String[] args)
 	{
-		new Game();
+		Game g = new Game();
+		while (true) g.mainloop();
 	}
 }

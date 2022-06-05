@@ -67,6 +67,31 @@ public class GamePanel extends JLayeredPane
 			ex.printStackTrace();
 		}
 	}
+	public void successAnimation()
+	{
+		try {
+			pnAnimate.setVisible(true);
+			lblCountDown.setText("成功通关！");
+			Thread.sleep(3000);
+			lblCountDown.setText("");
+			pnAnimate.setVisible(false);
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}	
+	public void FailAnimation()
+	{
+		try {
+			pnAnimate.setVisible(true);
+			lblCountDown.setText("通关失败！");
+			Thread.sleep(3000);
+			lblCountDown.setText("");
+			pnAnimate.setVisible(false);
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
+
 
 	public void toLayout()
 	{

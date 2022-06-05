@@ -21,7 +21,8 @@ public abstract class MyPanel extends JPanel
 		super.paintComponent(g);
 		// ImageIcon bg = new ImageIcon();
 		// Image bgImg = 
-		g.drawImage(bgImg, 0, 0, this);
+		if (!mainWindow.getGameScene().isVisible())
+			g.drawImage(bgImg, 0, 0, this);
 		// bg.setImage(bgImg.getScaledInstance(bgImg.getWidth(this) * SCENEHEIGHT / bgImg.getHeight(this), SCENEHEIGHT, Image.SCALE_DEFAULT));
 		// JLabel lb = new JLabel(bg);
 		// lb.setSize(SCENEWIDTH, SCENEHEIGHT);
@@ -40,7 +41,6 @@ public abstract class MyPanel extends JPanel
 	protected static void setButton(JButton btn, String iconName)
 	{
 		ImageIcon icon = new ImageIcon();
-		// RenderImage.getIcon(iconName);
 		icon.setImage(RenderImage.getImage(iconName).getScaledInstance(btn.getHeight(), btn.getWidth(), Image.SCALE_DEFAULT));
 		// System.out.println(iconName + " " + icon.getIconWidth() + " " + icon.getIconHeight());
 		btn.setIcon(icon);
