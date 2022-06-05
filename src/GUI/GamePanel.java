@@ -1,5 +1,7 @@
 package GUI;
 
+import static DEBUG.Dbg.msg;
+
 import BaseObject.BaseObject;
 import BaseObject.GameMap;
 import BaseObject.Coordinate;
@@ -54,6 +56,7 @@ public class GamePanel extends JLayeredPane
 		try {
 			pnAnimate.setVisible(true);
 			lblCountDown.setText("3");
+			msg("?!!");
 			Thread.sleep(1000);
 			lblCountDown.setText("2");
 			Thread.sleep(1000);
@@ -92,7 +95,6 @@ public class GamePanel extends JLayeredPane
 		}
 	}
 
-
 	public void toLayout()
 	{
 		pnGame.setBounds(0, 0, SCENEWIDTH, SCENEHEIGHT);
@@ -129,6 +131,7 @@ public class GamePanel extends JLayeredPane
 		add(btnSound, 2);
 		add(btnBack, 2);
 		add(pnAnimate, 3);
+		mainWindow.getContentPane().add(this);
 		setVisible(false);
 	}
 
@@ -183,10 +186,12 @@ public class GamePanel extends JLayeredPane
 	{
 		super.paint(gr);
 		SwingUtilities.invokeLater(() -> {
-			for (DrawTask dt: drawList)
-			{
-				Graphics g = pnGame.getGraphics();
-				g.drawImage(dt.img, dt.loc.x, dt.loc.y, this);
+			synchronized (drawList) {
+				for (DrawTask dt: drawList)
+				{
+					Graphics g = pnGame.getGraphics();
+					g.drawImage(dt.img, dt.loc.x, dt.loc.y, this);
+				}
 			}
 		});
 	}

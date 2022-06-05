@@ -1,11 +1,12 @@
 package GUI;
 
+import static DEBUG.Dbg.msg;
+
 import main.Game;
 import render.MainRenderer;
 import render.RenderImage;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -112,9 +113,10 @@ public class SelectPanel extends MyPanel
 				String selChar = btnGrpChar.getSelection().getActionCommand();
 				String selScene = toScene.get(btnGrpScene.getSelection().getActionCommand());
 				int selMode = toMode.get(btnGrpMode.getSelection().getActionCommand());
-				mainWindow.getGameScene().setVisible(true);
 				mainWindow.getGame().commandQueue.add(() -> {
 					mainWindow.getGame().start(selChar, selScene, selMode);
+					msg("OK!");
+					mainWindow.getGameScene().setVisible(true);
 					mainWindow.getGameScene().readyAnimation();
 				});
 			});
