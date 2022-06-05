@@ -99,4 +99,5 @@ public class Bomb extends BaseObject
         lastUpdated = System.currentTimeMillis();
         exploded = true;
     }
+    public int getBombRange() { return bombRange;}
 }

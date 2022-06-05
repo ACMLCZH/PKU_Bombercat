@@ -11,7 +11,7 @@ import static render.MainRenderer.BLOCK_UNIT;
 public class BasePlayer implements Comparable<BasePlayer>
 {
     public enum Indirect {					// 这个是必要的，最好别改
-        UP("up"), DOWN("down"), LEFT("left"), RIGHT("right");
+        UP("up"), DOWN("down"), LEFT("left"), RIGHT("right"), STOP("stop");
 		private String s;
 		private Indirect(String s) {this.s = s;}
 		@Override
