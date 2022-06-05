@@ -53,7 +53,7 @@ public class GamePanel extends MyPanel
 	{
 		// super.paint(gr);
 		synchronized (drawList) {
-			msg(drawList.size());
+			// msg(drawList.size());
 			for (DrawTask dt: drawList)
 				g.drawImage(dt.img, dt.loc.x, dt.loc.y, this);
 		}
@@ -82,7 +82,7 @@ public class GamePanel extends MyPanel
 				{
 					Image pImg = RenderImage.getImage(curP.toString());
 					putTexture(pImg, curP.getLeft(), curP.getBottom(), true, true);
-					if (curP.getInvincible())
+					if (curP.isInvincible())
 						putTexture(RenderImage.getImage("invincible"), curP.getLeft(), curP.getBottom(), true, true);
 					if (curP == infoPlayer)
 						putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + 15, curP.getBottom() - BLOCK_UNIT, true, true);

@@ -18,8 +18,8 @@ public class BasePlayer implements Comparable<BasePlayer>
 		public String toString() {return s;}
     };
 	public static final int PLAYER_UNIT = BLOCK_UNIT;
-	static final int invincibleTime = 1500; // 收到攻击后无敌1.5s
-	static final int pixelsPerBlock = 40; // 每个格子40个像素
+	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
+	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
 	static final int speed = 2; // 每秒移动多少个格子
 	static final int periodPerMove = (int)(1000.0 / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
     protected int HP;
@@ -34,10 +34,6 @@ public class BasePlayer implements Comparable<BasePlayer>
 	{
 		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT, spawn.y * BLOCK_UNIT);
 		this.p2 = new Coordinate(p1.x + PLAYER_UNIT, p1.y + PLAYER_UNIT);
-		// this.x1 = spawn.x * BLOCK_UNIT;
-		// this.x2 = this.x1 + PLAYER_UNIT;
-		// this.y1 = spawn.y * BLOCK_UNIT;
-		// this.y2 = this.y1 + PLAYER_UNIT;
 		this.HP = HP;
 		this.dir = dir;
 		this.name = name;
@@ -57,10 +53,9 @@ public class BasePlayer implements Comparable<BasePlayer>
 	public int getLeft() {return p1.x;}
 	public int getUp() {return p1.y;}
 	public String getName() {return name;}
-	public boolean getInvincible() 
-	{
-		return true;
-	}
+	public boolean isAlive() {return HP > 0;}
+	public boolean isInvincible(long cur) {return cur - lastHurt >= BasePlayer.invincibleTime;}
+	public boolean isInvincible() {return System.currentTimeMillis() - lastHurt >= BasePlayer.invincibleTime;}
 
     public boolean move(Indirect dir) 
 	{
@@ -69,66 +64,33 @@ public class BasePlayer implements Comparable<BasePlayer>
 		if (current - lastMove < BasePlayer.periodPerMove)
 			return false;
 		// 计算移动后四个角所在像素, 向下取整
-		int x1New = p1.x, x2New = p2.x, y1New = p1.y, y2New = p2.y;
-		if (dir == Indirect.UP)
-		{
-			y1New -= 1;
-			y2New -= 1;
-		}
-		else if (dir == Indirect.DOWN)
-		{
-			y1New += 1;
-			y2New += 1;
-		}
-		else if (dir == Indirect.LEFT)
-		{
-			x1New -= 1;
-			x2New -= 1;
-		}
-		else
-		{
-			x1New += 1;
-			x2New += 1;
-		}
+		Coordinate p1New = new Coordinate(p1);
+		Coordinate p2New = new Coordinate(p2);
+		p1New.step(dir);
+		p2New.step(dir);
 
 		// 计算移动前后所在格子
-		int x1Grid = p1.x / BasePlayer.pixelsPerBlock;
-		int x2Grid = p2.x / BasePlayer.pixelsPerBlock;
-		int y1Grid = p1.y / BasePlayer.pixelsPerBlock;
-		int y2Grid = p2.y / BasePlayer.pixelsPerBlock;
-		int x1NewGrid = x1New / BasePlayer.pixelsPerBlock;
-		int x2NewGrid = x2New / BasePlayer.pixelsPerBlock;
-		int y1NewGrid = y1New / BasePlayer.pixelsPerBlock;
-		int y2NewGrid = y2New / BasePlayer.pixelsPerBlock;
+		Coordinate p1Grid = p1.toGrid(), p2Grid = p2.toGrid();
+		Coordinate p1NewGrid = p1New.toGrid(), p2NewGrid = p2New.toGrid();
 		// 判断是否会超出边界
-		if (x1Grid < 0 || x2Grid >= GameMap.WIDTH || y1Grid < 0 || y2Grid >= GameMap.HEIGHT)
+		if (p1NewGrid.x < 0 || p2NewGrid.x >= GameMap.WIDTH || p1NewGrid.y < 0 || p2NewGrid.y >= GameMap.HEIGHT)
 			return false;
 
 		// 检查碰撞
 		GameMap gameMap = game.getMap();
-		BaseObject obj = null, objNew = null;
-		obj = gameMap.get(new Coordinate(x1Grid, y1Grid));
-		objNew = gameMap.get(new Coordinate(x1NewGrid, y1NewGrid));
-		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
-			return false;
-		obj = gameMap.get(new Coordinate(x2Grid, y1Grid));
-		objNew = gameMap.get(new Coordinate(x2NewGrid, y1NewGrid));
-		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
-			return false;
-		obj = gameMap.get(new Coordinate(x1Grid, y2Grid));
-		objNew = gameMap.get(new Coordinate(x1NewGrid, y2NewGrid));
-		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
-			return false;
-		obj = gameMap.get(new Coordinate(x2Grid, y2Grid));
-		objNew = gameMap.get(new Coordinate(x2NewGrid, y2NewGrid));
-		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
-			return false;
-		
+		Coordinate[][] ca = {
+			{p1Grid, p1NewGrid}, {new Coordinate(p2Grid.x, p1Grid.y), new Coordinate(p2NewGrid.x, p1NewGrid.y)},
+			{new Coordinate(p1Grid.x, p2Grid.y), new Coordinate(p1NewGrid.x, p2NewGrid.y)}, {p2Grid, p2NewGrid}
+		};
+		for (int i = 0; i < 4; ++ i)
+		{
+			BaseObject obj = gameMap.get(ca[i][0]), objNew = gameMap.get(ca[i][1]);
+			if (objNew != null && !objNew.getIsPassable() && objNew != obj) return false;
+		}
+
 		// 移动成功
-		p1.x = x1New;
-		p2.x = x2New;
-		p1.y = y1New;
-		p2.y = y2New;
+		this.p1 = p1New;
+		this.p2 = p2New;
 		this.dir = dir;
 		lastMove = current;
 		return true;
@@ -145,19 +107,10 @@ public class BasePlayer implements Comparable<BasePlayer>
 		return true;
     }
 
-	public boolean isAlive()
-	{
-		return HP > 0;
-	}
-
 	public void getHurt()
 	{
 		long current = System.currentTimeMillis();
-		if (HP > 0 && current - lastHurt >= BasePlayer.invincibleTime)
-		{
-			HP--;
-			lastHurt = current;
-		}
+		if (HP > 0 && isInvincible(current)) {HP--; lastHurt = current;}
 	}
 
 	public Coordinate getGridLoc()
