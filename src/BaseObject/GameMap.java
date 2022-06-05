@@ -68,6 +68,7 @@ public class GameMap //implements Serializable
 	}
 
 	public String getType() {return this.type;}
+	public Coordinate getSpawn(int idx) {return this.spawnPoint[idx];}
 	public BaseObject get(Coordinate loc) {return mp[loc.y][loc.x];}	// 注意loc.x是横向
 	public BaseObject get(int x, int y) {return mp[y][x];}
 	public void set(Coordinate loc, BaseObject obj)

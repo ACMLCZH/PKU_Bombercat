@@ -5,20 +5,23 @@ import BaseObject.Bomb;
 import BaseObject.Coordinate;
 import BaseObject.GameMap;
 import main.Game;
+import static render.MainRenderer.BLOCK_UNIT;
 
 
-public class BasePlayer {
-    enum Indirect {					// 这个是必要的，最好别改
+public class BasePlayer
+{
+    public enum Indirect {					// 这个是必要的，最好别改
         UP("up"), DOWN("down"), LEFT("left"), RIGHT("right");
 		private String s;
 		private Indirect(String s) {this.s = s;}
 		@Override
 		public String toString() {return s;}
     };
-	static int invincibleTime = 1500; // 收到攻击后无敌1.5s
-	static int pixelsPerBlock = 40; // 每个格子40个像素
-	static int speed = 2; // 每秒移动多少个格子
-	static int periodPerMove = (int)(1000.0 / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
+	public static final int PLAYER_UNIT = BLOCK_UNIT;
+	static final int invincibleTime = 1500; // 收到攻击后无敌1.5s
+	static final int pixelsPerBlock = 40; // 每个格子40个像素
+	static final int speed = 2; // 每秒移动多少个格子
+	static final int periodPerMove = (int)(1000.0 / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
     protected int HP;
 	protected Indirect dir;
 	protected String name = null;
@@ -27,8 +30,12 @@ public class BasePlayer {
 	protected long lastMove;
 	protected Game game;
 
-	public BasePlayer(int HP, Indirect dir, String name, Game game)
+	public BasePlayer(int HP, Coordinate spawn, Indirect dir, String name, Game game)
 	{
+		this.x1 = spawn.x * BLOCK_UNIT;
+		this.x2 = this.x1 + PLAYER_UNIT;
+		this.y1 = spawn.y * BLOCK_UNIT;
+		this.y2 = this.y1 + PLAYER_UNIT;
 		this.HP = HP;
 		this.dir = dir;
 		this.name = name;

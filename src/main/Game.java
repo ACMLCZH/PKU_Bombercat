@@ -7,8 +7,8 @@ import BaseObject.Bomb;
 import BaseObject.Coordinate;
 import BaseObject.Flow;
 import BaseObject.GameMap;
-import BasePlayer.BasePlayer;
-import BasePlayer.HumanPlayer;
+import BaseObject.GameMap.FailureReadMapException;
+import BasePlayer.*;
 
 import java.util.*;
 import java.util.concurrent.*;;
@@ -19,13 +19,14 @@ public class Game
 
 	public int mode;
 	public Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
-	private GameMap gameMap;
+	private GameMap gameMap = null;
 	private Set<BasePlayer> players = new TreeSet<>();
 	private Set<Bomb> bombs = new TreeSet<>();
 	private Set<Flow> flows = new TreeSet<>();
 	private Set<Barrier> barriers = new TreeSet<>();
 	private HumanPlayer infoPlayer = null;
 	private boolean soundOn = true;
+	private boolean started = false;
 	private MainRenderer renderer;
 
 	public Set<BasePlayer> getPlayers() {return this.players;}
@@ -35,6 +36,7 @@ public class Game
 	public Set<Flow> getFlows() {return this.flows;}
 	public Set<Barrier> getBarriers() {return this.barriers;};
 	public boolean isSoundOn() {return this.soundOn;}
+	public boolean isStarted() {return this.started;}
 
 	public void switchSound() {this.soundOn = !this.soundOn;}//
 
@@ -44,11 +46,10 @@ public class Game
 		while (true)
 		{
 			Runnable cmd = commandQueue.poll();
-			if (cmd != null)
-				cmd.run();
-			else
-				break;
+			if (cmd != null) cmd.run(); else break;
 		}
+
+		if (!started) return;
 
 		// 为Flow做倒计时
 		Iterator<Flow> iterFlow = flows.iterator();
@@ -115,7 +116,18 @@ public class Game
 	public void end() {}
 	public void start(String selChar, String selScene, int mode)	// 选择的人物，选择的场景，选择的游戏模式
 	{
-
+		int modeBias = mode == PVP ? 1 : 3;
+		try {
+			gameMap = new GameMap(selScene, (int)(Math.random() * 2) + modeBias);
+		} catch (FailureReadMapException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		infoPlayer = new HumanPlayer(HumanPlayer.INIT_HP, gameMap.getSpawn(0), BasePlayer.Indirect.DOWN, selChar, this);
+		players.add(infoPlayer);
+		for (int i = 1; i < 4; ++i)
+			players.add(new AIPlayer(AIPlayer.INIT_HP, gameMap.getSpawn(i), BasePlayer.Indirect.DOWN, "enemy1", this));
+		started = true;
 	}
 
 	public static void main(String[] args)
