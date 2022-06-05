@@ -59,6 +59,8 @@ public class BasePlayer implements Comparable<BasePlayer>
 
     public boolean move(Indirect dir) 
 	{
+		this.dir = dir;		// 不管成没成功都转个向
+
         // 判断move的时间间隔是否满足
 		long current = System.currentTimeMillis();
 		if (current - lastMove < BasePlayer.periodPerMove)
@@ -91,7 +93,6 @@ public class BasePlayer implements Comparable<BasePlayer>
 		// 移动成功
 		this.p1 = p1New;
 		this.p2 = p2New;
-		this.dir = dir;
 		lastMove = current;
 		return true;
     }
