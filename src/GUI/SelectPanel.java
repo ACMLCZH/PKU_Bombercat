@@ -13,8 +13,10 @@ import java.util.HashMap;
 class MyRadioButton extends JRadioButton
 {
 	private static final Font selectFont = new Font("黑体", Font.PLAIN, 16);
-	public MyRadioButton(String text) {
+	public MyRadioButton(String text)
+	{
 		super(text);
+		setActionCommand(text);
 		setFont(selectFont);
 		setOpaque(false);
 		setHorizontalAlignment(SwingConstants.CENTER);
@@ -107,9 +109,9 @@ public class SelectPanel extends MyPanel
 		btnOK.addActionListener((e) -> {
 			SwingUtilities.invokeLater(() -> {
 				setVisible(false);
-				String selChar = ((JRadioButton)btnGrpChar.getSelection()).getText();
-				String selScene = toScene.get(((JRadioButton)btnGrpScene.getSelection()).getText());
-				int selMode = toMode.get(((JRadioButton)btnGrpMode.getSelection()).getText());
+				String selChar = btnGrpChar.getSelection().getActionCommand();
+				String selScene = toScene.get(btnGrpScene.getSelection().getActionCommand());
+				int selMode = toMode.get(btnGrpMode.getSelection().getActionCommand());
 				mainWindow.getGameScene().setVisible(true);
 				mainWindow.getGame().commandQueue.add(() -> {
 					mainWindow.getGame().start(selChar, selScene, selMode);

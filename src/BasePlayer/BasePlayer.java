@@ -8,7 +8,7 @@ import main.Game;
 import static render.MainRenderer.BLOCK_UNIT;
 
 
-public class BasePlayer
+public class BasePlayer implements Comparable<BasePlayer>
 {
     public enum Indirect {					// 这个是必要的，最好别改
         UP("up"), DOWN("down"), LEFT("left"), RIGHT("right");
@@ -25,17 +25,19 @@ public class BasePlayer
     protected int HP;
 	protected Indirect dir;
 	protected String name = null;
-	protected int x1, y1, x2, y2;		// Bounding Box
+	protected Coordinate p1, p2;		// Bounding Box
 	protected long lastHurt;
 	protected long lastMove;
 	protected Game game;
 
 	public BasePlayer(int HP, Coordinate spawn, Indirect dir, String name, Game game)
 	{
-		this.x1 = spawn.x * BLOCK_UNIT;
-		this.x2 = this.x1 + PLAYER_UNIT;
-		this.y1 = spawn.y * BLOCK_UNIT;
-		this.y2 = this.y1 + PLAYER_UNIT;
+		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT, spawn.y * BLOCK_UNIT);
+		this.p2 = new Coordinate(p1.x + PLAYER_UNIT, p1.y + PLAYER_UNIT);
+		// this.x1 = spawn.x * BLOCK_UNIT;
+		// this.x2 = this.x1 + PLAYER_UNIT;
+		// this.y1 = spawn.y * BLOCK_UNIT;
+		// this.y2 = this.y1 + PLAYER_UNIT;
 		this.HP = HP;
 		this.dir = dir;
 		this.name = name;
@@ -44,11 +46,14 @@ public class BasePlayer
 		this.game = game;
 	}
     
+	@Override
+	public int compareTo(BasePlayer p) {return p1.compareTo(p.p1);}
+
 	public Indirect getDirection() {return dir;}
-	public int getBottom() {return y2;}
-	public int getRight() {return x2;}
-	public int getLeft() {return x1;}
-	public int getUp() {return y1;}
+	public int getBottom() {return p2.y;}
+	public int getRight() {return p2.x;}
+	public int getLeft() {return p1.x;}
+	public int getUp() {return p1.y;}
 	public String getName() {return name;}
 	public boolean getInvincible() 
 	{
@@ -62,7 +67,7 @@ public class BasePlayer
 		if (current - lastMove < BasePlayer.periodPerMove)
 			return false;
 		// 计算移动后四个角所在像素, 向下取整
-		int x1New = x1, x2New = x2, y1New = y1, y2New = y2;
+		int x1New = p1.x, x2New = p2.x, y1New = p1.y, y2New = p2.y;
 		if (dir == Indirect.UP)
 		{
 			y1New -= 1;
@@ -85,10 +90,10 @@ public class BasePlayer
 		}
 
 		// 计算移动前后所在格子
-		int x1Grid = x1 / BasePlayer.pixelsPerBlock;
-		int x2Grid = x2 / BasePlayer.pixelsPerBlock;
-		int y1Grid = y1 / BasePlayer.pixelsPerBlock;
-		int y2Grid = y2 / BasePlayer.pixelsPerBlock;
+		int x1Grid = p1.x / BasePlayer.pixelsPerBlock;
+		int x2Grid = p2.x / BasePlayer.pixelsPerBlock;
+		int y1Grid = p1.y / BasePlayer.pixelsPerBlock;
+		int y2Grid = p2.y / BasePlayer.pixelsPerBlock;
 		int x1NewGrid = x1New / BasePlayer.pixelsPerBlock;
 		int x2NewGrid = x2New / BasePlayer.pixelsPerBlock;
 		int y1NewGrid = y1New / BasePlayer.pixelsPerBlock;
@@ -118,10 +123,10 @@ public class BasePlayer
 			return false;
 		
 		// 移动成功
-		x1 = x1New;
-		x2 = x2New;
-		y1 = y1New;
-		y2 = y2New;
+		p1.x = x1New;
+		p2.x = x2New;
+		p1.y = y1New;
+		p2.y = y2New;
 		this.dir = dir;
 		lastMove = current;
 		return true;
@@ -155,8 +160,8 @@ public class BasePlayer
 
 	public Coordinate getGridLoc()
 	{
-		int centerX = (int)((x1 + x2) / 2.0 / BasePlayer.pixelsPerBlock);
-		int centerY = (int)((y1 + y2) / 2.0 / BasePlayer.pixelsPerBlock);
+		int centerX = (int)((p1.x + p2.x) / 2.0 / BasePlayer.pixelsPerBlock);
+		int centerY = (int)((p1.y + p2.y) / 2.0 / BasePlayer.pixelsPerBlock);
 		return new Coordinate(centerX, centerY);
 	}
 }
