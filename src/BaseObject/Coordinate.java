@@ -1,6 +1,6 @@
 package BaseObject;
 
-import BasePlayer.BasePlayer.Indirect;
+import BasePlayer.Indirect;
 import static render.MainRenderer.BLOCK_UNIT;
 
 public class Coordinate implements Comparable<Coordinate>

@@ -11,18 +11,21 @@ import main.Game;
 
 public class AIPlayer extends BasePlayer
 {
-    public static int INIT_HP = 8000;
+    public static final int INIT_HP = 8000;
+    private static final int[][] directs = {{0, -1},{0, 1},{-1, 0},{1, 0}}; //姑且这样存着
+    private static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
     private Indirect lastDir;
     private int maxSaveDir = 3;          // 保存路径的最大数，即移动步数过多后要重算
     private Queue<Indirect> saveDir;     // 简单保存确定的一系列行动
-    private final int[][] directs = {{0,-1},{0,1},{-1,0},{1,0}}; //姑且这样存着
-    private final int UP=0, DOWN=1, LEFT=2, RIGHT=3;
     private long stopTime;           // 控制停止的时间
     private Coordinate curBombPlaceLoc;
     private Random randChoice;
+    private int atk;
 
-    public AIPlayer(int HP, Coordinate spawn, Indirect dir, String name, Game g) {
-        super(HP, spawn,  dir, name, g);
+    public AIPlayer(Game game, String name, int HP, Coordinate spawn, Indirect dir, int atk)
+	{
+        super(game, name, HP, spawn, dir, atk);
+		this.atk = atk;
         lastDir = Indirect.STOP;
         stopTime = System.currentTimeMillis(); //初始时默认停一下
         randChoice = new Random();
@@ -32,7 +35,8 @@ public class AIPlayer extends BasePlayer
         
     }
 
-    public Indirect decideMove() {
+    public Indirect decideMove()
+	{
         // 只有在时间间隔满足的时候才能move
         if (System.currentTimeMillis() - lastMove < BasePlayer.periodPerMove)
 			return Indirect.STOP;

@@ -16,6 +16,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	static final int speed = 2; // 每秒移动多少个格子
 	static final int periodPerMove = (int)(1000.0 / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
     protected int HP;
+	protected int atk;
 	protected Indirect dir;
 	protected String name = null;
 	protected Coordinate p1, p2;		// Bounding Box
@@ -23,16 +24,17 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected long lastMove;
 	protected Game game;
 
-	public BasePlayer(int HP, Coordinate spawn, Indirect dir, String name, Game game)
+	public BasePlayer(Game game, String name, int HP, Coordinate spawn, Indirect dir, int atk)
 	{
+		this.game = game;
 		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT, spawn.y * BLOCK_UNIT);
 		this.p2 = new Coordinate(p1.x + PLAYER_UNIT, p1.y + PLAYER_UNIT);
 		this.HP = HP;
+		this.atk = atk;
 		this.dir = dir;
 		this.name = name;
 		this.lastHurt = 0;
 		this.lastMove = 0;
-		this.game = game;
 	}
     
 	@Override
@@ -95,16 +97,16 @@ public class BasePlayer implements Comparable<BasePlayer>
         Coordinate center = getGridLoc();
 		if (game.getMap().get(center) != null)
 			return false;
-		Bomb bomb = new Bomb(center.x, center.y, this, game);
+		Bomb bomb = new Bomb(game, center.x, center.y, this, this.atk);
 		game.getMap().set(center, bomb);
 		game.getBombs().add(bomb);
 		return true;
     }
 
-	public void getHurt()
+	public void getHurt(int dmg)
 	{
 		long current = System.currentTimeMillis();
-		if (HP > 0 && isInvincible(current)) {HP--; lastHurt = current;}
+		if (HP > 0 && isInvincible(current)) {HP -= dmg; lastHurt = current;}
 	}
 
 	public Coordinate getGridLoc()

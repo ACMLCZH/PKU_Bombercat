@@ -3,15 +3,12 @@ package main;
 import static DEBUG.Dbg.*;
 
 import render.MainRenderer;
-import BaseObject.Barrier;
-import BaseObject.BaseObject;
-import BaseObject.Bomb;
-import BaseObject.Coordinate;
+import thread.GameKeyListener;
+import BaseObject.*;
 import BaseObject.Flow;
-import BaseObject.GameMap;
 import BaseObject.GameMap.FailureReadMapException;
 import BasePlayer.*;
-import BasePlayer.BasePlayer.Indirect;
+import BasePlayer.Indirect;
 
 import java.util.*;
 import java.util.concurrent.*;;
@@ -25,25 +22,25 @@ public class Game
 	private GameMap gameMap = null;
 	private Set<BasePlayer> players = new TreeSet<>();
 	private Set<AIPlayer> aiPlayers = new TreeSet<>();
-	private Set<Bomb> bombs = new TreeSet<>();
-	private Set<Flow> flows = new TreeSet<>();
-	private Set<Barrier> barriers = new TreeSet<>();
 	private HumanPlayer infoPlayer = null;
+	private ArrayList<Bomb> bombs = new ArrayList<>();
+	private ArrayList<Flow> flows = new ArrayList<>();
+	private ArrayList<Barrier> barriers = new ArrayList<>();
 	private boolean soundOn = true;
 	private boolean started = false;
 	private MainRenderer renderer = new MainRenderer(this);
+	private GameKeyListener gameKeyListener = new GameKeyListener(this);
 
+	public GameMap getMap() {return this.gameMap;}
 	public Set<BasePlayer> getPlayers() {return this.players;}
 	public Set<AIPlayer> getAIPlayers() {return this.aiPlayers;}
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
-	public Set<Bomb> getBombs() {return this.bombs;}
-	public GameMap getMap() {return this.gameMap;}
-	public Set<Flow> getFlows() {return this.flows;}
-	public Set<Barrier> getBarriers() {return this.barriers;};
+	public ArrayList<Bomb> getBombs() {return this.bombs;}
+	public ArrayList<Flow> getFlows() {return this.flows;}
+	public ArrayList<Barrier> getBarriers() {return this.barriers;};
 	public boolean isSoundOn() {return this.soundOn;}
 	public boolean isStarted() {return this.started;}
-
-	public void switchSound() {this.soundOn = !this.soundOn;}//
+	public void switchSound() {this.soundOn = !this.soundOn;}
 
     private void mainloop()
 	{
@@ -120,7 +117,7 @@ public class Game
 			{
 				String name = obj.getName();
 				if (name == "crossflow" || name == "vertflow" || name == "horiflow")
-					player.getHurt();
+					player.getHurt(((Flow)obj).getAtk());
 			}
 		}
 
@@ -129,7 +126,20 @@ public class Game
 	}
 	// public Game() {}// renderer = }
 
-	public void end() {}
+	public void end()
+	{
+		renderer.getGameScene().removeKeyListener(gameKeyListener);
+		gameMap = null;
+		infoPlayer = null;
+		aiPlayers.clear();
+		gameKeyListener.clearPlayer();
+		players.clear();
+		bombs.clear();
+		barriers.clear();
+		flows.clear();
+		
+		started = false;
+	}
 	public void start(String selChar, String selScene, int mode)	// 选择的人物，选择的场景，选择的游戏模式
 	{
 		int modeBias = mode == PVP ? 1 : 3;
@@ -139,14 +149,22 @@ public class Game
 			e.printStackTrace();
 			System.exit(0);
 		}
-		infoPlayer = new HumanPlayer(HumanPlayer.INIT_HP, gameMap.getSpawn(0), BasePlayer.Indirect.DOWN, selChar, this);
+		infoPlayer = new HumanPlayer(this, selChar, HumanPlayer.INIT_HP, gameMap.getSpawn(0), Indirect.DOWN);
 		players.add(infoPlayer);
 		for (int i = 1; i < 4; ++i)
 		{
-			AIPlayer aiPlayer = new AIPlayer(AIPlayer.INIT_HP, gameMap.getSpawn(i), BasePlayer.Indirect.DOWN, "enemy1", this);
+			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", AIPlayer.INIT_HP, gameMap.getSpawn(i), Indirect.DOWN, (int)(Math.random() * 1000) + 500);
 			aiPlayers.add(aiPlayer);
 			players.add(aiPlayer);
 		}
+		for (int i = 0; i < GameMap.HEIGHT; ++i)
+			for (int j = 0; j < GameMap.WIDTH; ++j)
+			{
+				BaseObject obj = gameMap.get(j, i);
+				if (obj != null) barriers.add((Barrier)obj);
+			}
+		renderer.getGameScene().addKeyListener(gameKeyListener);
+
 		started = true;
 	}
 
