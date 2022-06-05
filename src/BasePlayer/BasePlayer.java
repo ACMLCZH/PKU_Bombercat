@@ -1,4 +1,4 @@
-package BasePlayer;
+﻿package BasePlayer;
 
 import BaseObject.BaseObject;
 import BaseObject.Bomb;
@@ -10,13 +10,6 @@ import static render.MainRenderer.BLOCK_UNIT;
 
 public class BasePlayer implements Comparable<BasePlayer>
 {
-    public enum Indirect {					// 这个是必要的，最好别改
-        UP("up"), DOWN("down"), LEFT("left"), RIGHT("right"), STOP("stop");
-		private String s;
-		private Indirect(String s) {this.s = s;}
-		@Override
-		public String toString() {return s;}
-    };
 	public static final int PLAYER_UNIT = BLOCK_UNIT;
 	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
