@@ -3,7 +3,6 @@ package BasePlayer;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
-import java.util.random.*;
 
 import BaseObject.Coordinate;
 import BaseObject.GameMap;
@@ -14,8 +13,8 @@ public class AIPlayer extends BasePlayer
 {
     public static int INIT_HP = 8000;
     private Indirect lastDir;
-    private int maxSaveDir;          // 保存路径的最大数，即移动步数过多后要重算
-    private Queue<Indirect> saveDir; // 简单的保存确定的一系列行动
+    private int maxSaveDir = 3;          // 保存路径的最大数，即移动步数过多后要重算
+    private Queue<Indirect> saveDir;     // 简单保存确定的一系列行动
     private final int[][] directs = {{0,-1},{0,1},{-1,0},{1,0}}; //姑且这样存着
     private final int UP=0, DOWN=1, LEFT=2, RIGHT=3;
     private long stopTime;           // 控制停止的时间
