@@ -1,7 +1,9 @@
 package render;
+
+import static DEBUG.Dbg.msg;
+
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.swing.ImageIcon;
 import java.awt.Image;
 

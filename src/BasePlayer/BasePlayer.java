@@ -11,10 +11,11 @@ import static render.MainRenderer.BLOCK_UNIT;
 public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = BLOCK_UNIT;
+	public static final int STRIDE = 3;
 	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
-	static final int speed = 2; // 每秒移动多少个格子
-	static final int periodPerMove = (int)(1000.0 / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
+	static final int speed = 5; // 每秒移动多少个格子
+	static final int periodPerMove = (int)(1000.0 * STRIDE / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
     protected int HP;
 	protected int atk;
 	protected Indirect dir;
@@ -49,12 +50,12 @@ public class BasePlayer implements Comparable<BasePlayer>
 	public int getUp() {return p1.y;}
 	public String getName() {return name;}
 	public boolean isAlive() {return HP > 0;}
-	public boolean isInvincible(long cur) {return cur - lastHurt >= BasePlayer.invincibleTime;}
-	public boolean isInvincible() {return System.currentTimeMillis() - lastHurt >= BasePlayer.invincibleTime;}
+	public boolean isInvincible(long cur) {return cur - lastHurt < BasePlayer.invincibleTime;}
+	public boolean isInvincible() {return System.currentTimeMillis() - lastHurt < BasePlayer.invincibleTime;}
 
     public boolean move(Indirect dir) 
 	{
-		this.dir = dir;		// 不管成没成功都转个向
+		if (dir != Indirect.STOP) this.dir = dir;		// 不管成没成功都转个向
 
         // 判断move的时间间隔是否满足
 		long current = System.currentTimeMillis();
@@ -106,7 +107,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	public void getHurt(int dmg)
 	{
 		long current = System.currentTimeMillis();
-		if (HP > 0 && isInvincible(current)) {HP -= dmg; lastHurt = current;}
+		if (HP > 0 && !isInvincible(current)) {HP -= dmg; lastHurt = current;}
 	}
 
 	public Coordinate getGridLoc()

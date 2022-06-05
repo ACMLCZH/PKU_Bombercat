@@ -159,8 +159,8 @@ public class AIPlayer extends BasePlayer
                 if(smp[i][j] == -1) {
                     int t = ((Bomb) mp.get(j, i)).getBombRange();
                     for(int x=j-t; x<=j+t; ++x) {
-                        if(x<0 || x>=GameMap.WIDTH) continue;
-                        if(smp[i][x] <= 0) continue;
+                        if (x < 0 || x >= GameMap.WIDTH) continue;
+                        if (smp[i][x] <= 0) continue;
                         newMp[i][x] = -1;
                     }
                     for(int y=i-t; y<=i+t;++y) {
@@ -199,7 +199,8 @@ public class AIPlayer extends BasePlayer
         return saveDir.poll();
     }
     // 用于前期寻找能放炸弹的地方的函数，这个借用了宽搜的结果
-    private Coordinate findBombPlace(int[][] smp, GameMap mp) {
+    private Coordinate findBombPlace(int[][] smp, GameMap mp)
+	{
         int maxBreakable = -1;
         Coordinate maxBreakableLoc = null;
         for(int y=0; y<GameMap.HEIGHT; ++y) {

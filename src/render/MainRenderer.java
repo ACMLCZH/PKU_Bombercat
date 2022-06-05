@@ -74,6 +74,7 @@ public class MainRenderer extends JFrame
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			setResizable(false);
 			setBounds(100, 100, WINWIDTH, WINHEIGHT);
+			setFocusable(true);
 
 			titleScene.toLayout();
 			// System.out.print("\n");

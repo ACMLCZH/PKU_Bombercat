@@ -1,20 +1,15 @@
 package thread;
 
-/*
-import controller.GameController;
-import controller.ObjectController;
-import model.gamecharacter.MoveType;
-import model.gamecharacter.Player;
-import model.gameobject.SuperObject;
-*/
-import BasePlayer.BasePlayer;
+import static DEBUG.Dbg.msg;
+
+// import BasePlayer.BasePlayer;
 import BasePlayer.HumanPlayer;
 import BasePlayer.Indirect;
 import main.Game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
+// import java.util.List;
 import java.util.Stack;
 
 public class GameKeyListener implements KeyListener
@@ -29,7 +24,7 @@ public class GameKeyListener implements KeyListener
     @Override
     public void keyPressed(KeyEvent e)
 	{
-    	 // 想取出玩家指针，这句话咋写啊，不会
+		// msg("?????????");
         int code = e.getKeyCode();
         if (player.isAlive())
 		{

@@ -49,7 +49,6 @@ public class Game
 		{
 			Runnable cmd = commandQueue.poll();
 			if (cmd != null) cmd.run(); else break;
-			msg("?");
 		}
 
 		if (!started) return;
@@ -128,7 +127,7 @@ public class Game
 
 	public void end()
 	{
-		renderer.getGameScene().removeKeyListener(gameKeyListener);
+		renderer.removeKeyListener(gameKeyListener);
 		gameMap = null;
 		infoPlayer = null;
 		aiPlayers.clear();
@@ -163,7 +162,8 @@ public class Game
 				BaseObject obj = gameMap.get(j, i);
 				if (obj != null) barriers.add((Barrier)obj);
 			}
-		renderer.getGameScene().addKeyListener(gameKeyListener);
+		gameKeyListener.setPlayer(infoPlayer);
+		renderer.addKeyListener(gameKeyListener);
 
 		started = true;
 	}

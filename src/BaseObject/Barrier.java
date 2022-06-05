@@ -13,13 +13,11 @@ public class Barrier extends BaseObject
 
 	@Override
 	public String toString() {return name;}
-    // use for remove barrier?
-    public void interactWithBomb(Bomb bomb) 
+   
+    public boolean isDestroyed() {return durability == 0;}
+	
+    public void interactWithBomb(Bomb bomb)  // use for remove barrier
     {
         if (isBreakable) {durability = 0; isPassable = true;}
-    }
-    public boolean isDestroyed()
-    {
-        return durability > 0;
     }
 }

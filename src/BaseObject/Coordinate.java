@@ -2,6 +2,7 @@ package BaseObject;
 
 import BasePlayer.Indirect;
 import static render.MainRenderer.BLOCK_UNIT;
+import static BasePlayer.BasePlayer.STRIDE;
 
 public class Coordinate implements Comparable<Coordinate>
 {
@@ -25,10 +26,10 @@ public class Coordinate implements Comparable<Coordinate>
 	{
 		switch (dir)
 		{
-			case UP: --y; break;
-			case DOWN: ++y; break;
-			case LEFT: --x; break;
-			case RIGHT: ++x; break;
+			case UP: y -= STRIDE; break;
+			case DOWN: y += STRIDE; break;
+			case LEFT: x -= STRIDE; break;
+			case RIGHT: x += STRIDE; break;
 			default:
 		}
 	}
