@@ -112,7 +112,7 @@ public class Game
 		}
 
 		renderer.updateRender();
-		renderer.update(renderer.getGraphics());
+		renderer.getGameScene().repaint();
 	}
 	// public Game() {}// renderer = }
 

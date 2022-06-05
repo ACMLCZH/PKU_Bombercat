@@ -115,7 +115,7 @@ public class SelectPanel extends MyPanel
 				int selMode = toMode.get(btnGrpMode.getSelection().getActionCommand());
 				mainWindow.getGame().commandQueue.add(() -> {
 					mainWindow.getGame().start(selChar, selScene, selMode);
-					msg("OK!");
+					mainWindow.updateRender();
 					mainWindow.getGameScene().setVisible(true);
 					mainWindow.getGameScene().readyAnimation();
 				});

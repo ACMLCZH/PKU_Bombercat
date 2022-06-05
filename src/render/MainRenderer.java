@@ -1,6 +1,6 @@
 package render;
 import javax.swing.*;
-import java.awt.*;
+// import java.awt.*;
 
 // import Map;
 // import BaseObject.Bomb;
@@ -17,14 +17,14 @@ public class MainRenderer extends JFrame
 	public static final int WINWIDTH = SCENEWIDTH + 14;
 	public static final int WINHEIGHT = SCENEHEIGHT + 37;
 
-	private GamePanel gameScene = new GamePanel(this);
+	private GamePane gameScene = new GamePane(this);
 	private TitlePanel titleScene = new TitlePanel(this);
 	private InfoPanel infoScene = new InfoPanel(this);
 	private SelectPanel selectScene = new SelectPanel(this);
 
 	private Game game = null;
 	
-	public GamePanel getGameScene() {return this.gameScene;}
+	public GamePane getGameScene() {return this.gameScene;}
 	public TitlePanel getTitleScene() {return this.titleScene;}
 	public InfoPanel getInfoScene() {return this.infoScene;}
 	public SelectPanel getSelectPanel() {return this.selectScene;}
