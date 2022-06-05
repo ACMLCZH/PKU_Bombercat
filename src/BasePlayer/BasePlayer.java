@@ -1,6 +1,8 @@
 package BasePlayer;
 
+import BaseObject.BaseObject;
 import BaseObject.Coordinate;
+import BaseObject.GameMap;
 import main.Game;
 
 
@@ -51,12 +53,70 @@ public class BasePlayer {
 		long current = System.currentTimeMillis();
 		if (current - lastMove < BasePlayer.periodPerMove)
 			return false;
-		// 计算移动后四个角所在的格子, 向下取整
+		// 计算移动后四个角所在像素, 向下取整
+		int x1New = x1, x2New = x2, y1New = y1, y2New = y2;
+		if (dir == Indirect.UP)
+		{
+			y1New -= 1;
+			y2New -= 1;
+		}
+		else if (dir == Indirect.DOWN)
+		{
+			y1New += 1;
+			y2New += 1;
+		}
+		else if (dir == Indirect.LEFT)
+		{
+			x1New -= 1;
+			x2New -= 1;
+		}
+		else
+		{
+			x1New += 1;
+			x2New += 1;
+		}
+
+		// 计算移动前后所在格子
 		int x1Grid = x1 / BasePlayer.pixelsPerBlock;
 		int x2Grid = x2 / BasePlayer.pixelsPerBlock;
 		int y1Grid = y1 / BasePlayer.pixelsPerBlock;
 		int y2Grid = y2 / BasePlayer.pixelsPerBlock;
-		if (dir == UP)
+		int x1NewGrid = x1New / BasePlayer.pixelsPerBlock;
+		int x2NewGrid = x2New / BasePlayer.pixelsPerBlock;
+		int y1NewGrid = y1New / BasePlayer.pixelsPerBlock;
+		int y2NewGrid = y2New / BasePlayer.pixelsPerBlock;
+		// 判断是否会超出边界
+		if (x1Grid < 0 || x2Grid >= GameMap.WIDTH || y1Grid < 0 || y2Grid >= GameMap.HEIGHT)
+			return false;
+
+		// 检查碰撞
+		GameMap gameMap = game.getMap();
+		BaseObject obj = null, objNew = null;
+		obj = gameMap.get(new Coordinate(x1Grid, y1Grid));
+		objNew = gameMap.get(new Coordinate(x1NewGrid, y1NewGrid));
+		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
+			return false;
+		obj = gameMap.get(new Coordinate(x2Grid, y1Grid));
+		objNew = gameMap.get(new Coordinate(x2NewGrid, y1NewGrid));
+		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
+			return false;
+		obj = gameMap.get(new Coordinate(x1Grid, y2Grid));
+		objNew = gameMap.get(new Coordinate(x1NewGrid, y2NewGrid));
+		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
+			return false;
+		obj = gameMap.get(new Coordinate(x2Grid, y2Grid));
+		objNew = gameMap.get(new Coordinate(x2NewGrid, y2NewGrid));
+		if (objNew != null && !objNew.getIsPassable() && objNew != obj)
+			return false;
+		
+		// 移动成功
+		x1 = x1New;
+		x2 = x2New;
+		y1 = y1New;
+		y2 = y2New;
+		this.dir = dir;
+		lastMove = current;
+		return true;
     }
 
     public boolean placeBomb(Game g) {
