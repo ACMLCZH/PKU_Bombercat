@@ -1,5 +1,7 @@
 package main;
 
+import static DEBUG.Dbg.*;
+
 import render.MainRenderer;
 import BaseObject.Barrier;
 import BaseObject.BaseObject;
@@ -47,6 +49,7 @@ public class Game
 		{
 			Runnable cmd = commandQueue.poll();
 			if (cmd != null) cmd.run(); else break;
+			msg("?");
 		}
 
 		if (!started) return;
@@ -108,7 +111,8 @@ public class Game
 			}
 		}
 
-		renderer.repaint();
+		renderer.updateRender();
+		renderer.update(renderer.getGraphics());
 	}
 	// public Game() {}// renderer = }
 

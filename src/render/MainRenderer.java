@@ -30,6 +30,7 @@ public class MainRenderer extends JFrame
 	public SelectPanel getSelectPanel() {return this.selectScene;}
 	public Game getGame() {return game;}
 
+	public void updateRender() {gameScene.updateRender();}
 	// public void render(GameMap mp, BasePlayer[] ps, Bomb[] bs, BasePlayer infoPlayer)
 	// {
 	// }
@@ -75,19 +76,12 @@ public class MainRenderer extends JFrame
 			setBounds(100, 100, WINWIDTH, WINHEIGHT);
 
 			titleScene.toLayout();
-
-			System.out.print("\n");
-
+			// System.out.print("\n");
 			gameScene.toLayout();
-
-			System.out.print("\n");
-
+			// System.out.print("\n");
 			infoScene.toLayout();
-
-			System.out.print("\n");
-
+			// System.out.print("\n");
 			selectScene.toLayout();
-
 			setVisible(true);
 		});
 	}

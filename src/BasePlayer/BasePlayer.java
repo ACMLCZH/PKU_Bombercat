@@ -48,6 +48,8 @@ public class BasePlayer implements Comparable<BasePlayer>
     
 	@Override
 	public int compareTo(BasePlayer p) {return p1.compareTo(p.p1);}
+	@Override
+	public String toString() {return this.name + "_" + this.dir;}
 
 	public Indirect getDirection() {return dir;}
 	public int getBottom() {return p2.y;}
