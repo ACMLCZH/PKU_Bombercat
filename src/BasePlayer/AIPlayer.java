@@ -33,6 +33,9 @@ public class AIPlayer extends BasePlayer
     }
 
     public Indirect decideMove() {
+        // 只有在时间间隔满足的时候才能move
+        if (System.currentTimeMillis() - lastMove < BasePlayer.periodPerMove)
+			return Indirect.STOP;
         GameMap mp = this.game.getMap();
         // 计算中心所在的格点
         Coordinate curLoc = getGridLoc();
@@ -47,7 +50,7 @@ public class AIPlayer extends BasePlayer
         }
         if(lastDir == Indirect.STOP) {
             long current = System.currentTimeMillis();
-            if(current - stopTime >= 1000) return lastDir;
+            if(current - stopTime < 1000) return lastDir;
         }
         // return decideMoveRandom(); 
         // 宽搜
@@ -115,6 +118,9 @@ public class AIPlayer extends BasePlayer
         // 如果有炸弹数量的限制在这里加判断
 
         Coordinate curLoc = getGridLoc();
+        // 如果当前位置已经有炸弹了, 不放炸弹
+        if (game.getMap().get(curLoc) != null)
+            return false;
         Coordinate humanLoc = this.game.getInfoPlayer().getGridLoc();
         if(Math.abs(humanLoc.x- curLoc.x) + Math.abs(humanLoc.y-curLoc.y) <= 1) {
             return true; // 在玩家身边放炸弹

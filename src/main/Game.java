@@ -11,6 +11,7 @@ import BaseObject.Flow;
 import BaseObject.GameMap;
 import BaseObject.GameMap.FailureReadMapException;
 import BasePlayer.*;
+import BasePlayer.BasePlayer.Indirect;
 
 import java.util.*;
 import java.util.concurrent.*;;
@@ -23,6 +24,7 @@ public class Game
 	public Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
 	private GameMap gameMap = null;
 	private Set<BasePlayer> players = new TreeSet<>();
+	private Set<AIPlayer> aiPlayers = new TreeSet<>();
 	private Set<Bomb> bombs = new TreeSet<>();
 	private Set<Flow> flows = new TreeSet<>();
 	private Set<Barrier> barriers = new TreeSet<>();
@@ -32,6 +34,7 @@ public class Game
 	private MainRenderer renderer = new MainRenderer(this);
 
 	public Set<BasePlayer> getPlayers() {return this.players;}
+	public Set<AIPlayer> getAIPlayers() {return this.aiPlayers;}
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
 	public Set<Bomb> getBombs() {return this.bombs;}
 	public GameMap getMap() {return this.gameMap;}
@@ -53,6 +56,16 @@ public class Game
 		}
 
 		if (!started) return;
+
+		// 每个AI决定移动
+		for (AIPlayer aiPlayer: aiPlayers)
+		{
+			Indirect dir = aiPlayer.decideMove();
+			boolean placeBomb = aiPlayer.decidePlaceBomb();
+			aiPlayer.move(dir);
+			if (placeBomb)
+				aiPlayer.placeBomb();
+		}
 
 		// 为Flow做倒计时
 		Iterator<Flow> iterFlow = flows.iterator();
@@ -129,7 +142,11 @@ public class Game
 		infoPlayer = new HumanPlayer(HumanPlayer.INIT_HP, gameMap.getSpawn(0), BasePlayer.Indirect.DOWN, selChar, this);
 		players.add(infoPlayer);
 		for (int i = 1; i < 4; ++i)
-			players.add(new AIPlayer(AIPlayer.INIT_HP, gameMap.getSpawn(i), BasePlayer.Indirect.DOWN, "enemy1", this));
+		{
+			AIPlayer aiPlayer = new AIPlayer(AIPlayer.INIT_HP, gameMap.getSpawn(i), BasePlayer.Indirect.DOWN, "enemy1", this);
+			aiPlayers.add(aiPlayer);
+			players.add(aiPlayer);
+		}
 		started = true;
 	}
 
