@@ -1,6 +1,7 @@
 package BasePlayer;
 
 import BaseObject.BaseObject;
+import BaseObject.Bomb;
 import BaseObject.Coordinate;
 import BaseObject.GameMap;
 import main.Game;
@@ -119,8 +120,15 @@ public class BasePlayer {
 		return true;
     }
 
-    public boolean placeBomb(Game g) {
-        return false;
+    public boolean placeBomb() 
+	{
+        Coordinate center = getGridLoc();
+		if (game.getMap().get(center) != null)
+			return false;
+		Bomb bomb = new Bomb(center.x, center.y, this, game);
+		game.getMap().set(center, bomb);
+		game.getBombs().add(bomb);
+		return true;
     }
 
 	public boolean isAlive()
