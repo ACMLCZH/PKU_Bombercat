@@ -31,4 +31,5 @@ public abstract class BaseObject implements Comparable<BaseObject> {
     public boolean getIsPassable() {return this.isPassable;}
     public void bombExplode() {}
     public abstract void interactWithBomb(Bomb b);
+	public abstract String toString();
 }

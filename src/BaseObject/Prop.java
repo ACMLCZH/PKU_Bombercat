@@ -8,7 +8,7 @@ public class Prop extends BaseObject{
         isBreakable = true;
     }
     public Prop(int x, int y, int t) { //可以快速用随机数摇出来
-        super((t==0)?"Bombitem":((t==1)?"Flowitem":"Speeditem"), x, y);
+        super((t==0) ? "bombitem" : ((t==1) ? "flowitem" : "speeditem"), x, y);
         isPassable = true;
         isBreakable = true;
     }
@@ -18,4 +18,6 @@ public class Prop extends BaseObject{
         // TODO Auto-generated method stub
         // 可以在这里尝试重叠flow的贴图和道具的贴图？
     }
+	@Override
+	public String toString() {return this.name;}
 }

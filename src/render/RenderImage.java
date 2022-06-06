@@ -18,7 +18,7 @@ public class RenderImage
 		put("bomb_2", new ImageIcon(sceneDir + "bomb2.png"));
 		put("bomb_3", new ImageIcon(sceneDir + "bomb3.png"));
 		put("bomb_4", new ImageIcon(sceneDir + "bomb2.png"));
-		put("bomb_5", new ImageIcon(sceneDir + ".bomb1.png"));
+		put("bomb_5", new ImageIcon(sceneDir + "bomb1.png"));
 		put("horiflow", new ImageIcon(sceneDir + "horiflow.png"));
 		put("vertflow", new ImageIcon(sceneDir + "vertflow.png"));
 		put("crossflow", new ImageIcon(sceneDir + "crossflow.png"));

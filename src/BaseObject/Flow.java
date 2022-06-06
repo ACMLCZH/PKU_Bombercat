@@ -15,14 +15,9 @@ public class Flow extends BaseObject
         lastUpdated = System.currentTimeMillis();
     }
 
-	public int getAtk() {return this.atk;}
-
-    public boolean countDown()
-    {
-        long current = System.currentTimeMillis();
-        return current - lastUpdated >= flowTime;
-    }
-
+	@Override
+	public String toString() {return this.name;}
+	@Override
     public void interactWithBomb(Bomb bomb)
     {
         if (bomb.getPosX() == loc.x && bomb.getPosY() == loc.y)
@@ -33,4 +28,13 @@ public class Flow extends BaseObject
             name = "horiflow";
         lastUpdated = System.currentTimeMillis();
     }
+
+	public int getAtk() {return this.atk;}
+
+    public boolean countDown()
+    {
+        long current = System.currentTimeMillis();
+        return current - lastUpdated >= flowTime;
+    }
+
 }

@@ -52,13 +52,14 @@ public class GameMap //implements Serializable
 					switch (mapInput.nextInt()) 
 					{
 						case GROUND: mp[i][j] = null; break;
-						case DESTROYABLE: mp[i][j] = new Barrier(i, j, true); break;
-						case UNBREAKABLE: mp[i][j] = new Barrier(i, j, false); break;
+						case DESTROYABLE: mp[i][j] = new Barrier(j, i, true); break;
+						case UNBREAKABLE: mp[i][j] = new Barrier(j, i, false); break;
 						default: throw new OutOfMapIndexException();
 					}
 			for (int i = 0; i < NUM_SPAWN; ++i)
 			{
-				int x = mapInput.nextInt(), y = mapInput.nextInt();
+				int y = mapInput.nextInt();
+				int x = mapInput.nextInt();
 				spawnPoint[i] = new Coordinate(x, y);
 			}
 			mapInput.close();
@@ -73,9 +74,9 @@ public class GameMap //implements Serializable
 	public BaseObject get(int x, int y) {return mp[y][x];}
 	public void set(Coordinate loc, BaseObject obj)
 	{
-		BaseObject setmp = mp[loc.x][loc.y];
+		BaseObject setmp = mp[loc.y][loc.x];
 		// 不可被破坏的障碍无法被操作
 		if (setmp != null && !setmp.isBreakable && !setmp.isPassable) return ;
-		mp[loc.x][loc.y] = obj;
+		mp[loc.y][loc.x] = obj;
 	}
 }

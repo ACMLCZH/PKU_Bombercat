@@ -1,5 +1,7 @@
 package BaseObject;
 
+import static DEBUG.Dbg.msg;
+
 import BasePlayer.BasePlayer;
 import main.Game;
 
@@ -34,8 +36,9 @@ public class Bomb extends BaseObject
 
 	@Override
 	public String toString() {return name + "_" + getState();}
+		// msg(name + "_" + getState());
 	
-    public int getState() {return bombTime - timeBeforeBomb;}	// return the time bomb have placed.
+    public int getState() {return bombTime - timeBeforeBomb + 1;}	// return the time bomb have placed.
 
     // use for decrease and return true if bomb.
     public boolean countDown()
