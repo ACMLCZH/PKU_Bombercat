@@ -17,7 +17,10 @@ public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = 40;
 	public static final int STRIDE = 1;
-	public static final int SPEED = 5; // 每秒移动多少个格子
+	public static final double SPEED = 5; // 每秒移动多少个格子
+	public static final double SPEEDLIMIT = 7.0;
+	public static final int BOMBLIMIT = 6;
+	public static final int FLOWLIMIT = 10;
 	protected static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
 	private static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	private static final Map<Indirect, int[]> colliDetect = new HashMap<>() {{
@@ -28,7 +31,8 @@ public class BasePlayer implements Comparable<BasePlayer>
     protected int HP;
 	protected Coordinate p1, p2;		// Bounding Box
 	protected int atk;
-	protected int numBomb, bombRange, speed;
+	protected int numBomb, bombRange;
+	protected double speed;
 	protected int periodPerMove;        // 每次移动1像素后停多久
 	protected Indirect dir;
 	protected String name = null;
@@ -38,7 +42,8 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected Game game;
 	protected boolean hitBarrier = false; // 辅助校正用
 
-	public BasePlayer(Game game, String name, int gameMode, int HP, Coordinate spawn, int atk, int numBomb, int bombRange)
+	public BasePlayer(Game game, String name, int gameMode,
+					  int HP, Coordinate spawn, int atk, int numBomb, int bombRange, double speed)
 	{
 		this.dir = Indirect.DOWN;
 		this.game = game;

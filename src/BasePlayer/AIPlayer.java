@@ -31,7 +31,8 @@ public class AIPlayer extends BasePlayer
         super(
 			game, name, gameMode, INIT_HP, spawn, atk,
 			gameMode == Game.PVP ? 1 : 0,
-			gameMode == Game.PVP ? 1 : 0
+			gameMode == Game.PVP ? 1 : 0,
+			4.0
 		);
 		// this.atk = atk;
         // lastDir = dir;

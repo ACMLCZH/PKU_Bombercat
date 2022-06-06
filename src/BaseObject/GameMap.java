@@ -74,7 +74,7 @@ public class GameMap //implements Serializable
 	public BaseObject get(int x, int y) {return mp[y][x];}
 	public void set(Coordinate loc, BaseObject obj)
 	{
-		BaseObject setmp = mp[loc.y][loc.x];
+		// BaseObject setmp = mp[loc.y][loc.x];
 		// 不可被破坏的障碍无法被操作
 		// if (setmp != null && !setmp.isBreakable && !setmp.isPassable) return ;
 		mp[loc.y][loc.x] = obj;
