@@ -41,4 +41,15 @@ public class Coordinate implements Comparable<Coordinate>
 			default:
 		}
 	}
+	public void step(Indirect dir, int stride)
+	{
+		switch (dir)
+		{
+			case UP: y -= stride; break;
+			case DOWN: y += stride; break;
+			case LEFT: x -= stride; break;
+			case RIGHT: x += stride; break;
+			default:
+		}
+	}
 };

@@ -1,15 +1,21 @@
 package BaseObject;
 
+import main.Game;
+
 public class Flow extends BaseObject
 {
-    static int flowTime = 500; 	// 假设flow的寿命是0.5秒
+    private static final int flowTime = 500; 	// 假设flow的寿命是0.5秒
 	private int atk;
+	private boolean drop;
     private long lastUpdated;
+	private Game game;
 
-    public Flow(String name, int x, int y, int atk)
+    public Flow(Game game, String name, int x, int y, int atk, boolean drop)
     {
         super(name, x, y);
+		this.game = game;
 		this.atk = atk;
+		this.drop = drop;
         isBreakable = false;
         isPassable = true;
         lastUpdated = System.currentTimeMillis();
@@ -30,6 +36,14 @@ public class Flow extends BaseObject
     }
 
 	public int getAtk() {return this.atk;}
+	// public int 
+	public void crash()
+	{
+		BaseObject obj = null;
+		if (this.drop)
+			obj = new Prop(Prop.toItemName.get((int)(Math.random() * 3)), loc.x, loc.y);
+		game.getMap().set(loc, obj);
+	}
 
     public boolean countDown()
     {

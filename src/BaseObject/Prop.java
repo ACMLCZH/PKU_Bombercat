@@ -1,7 +1,14 @@
 package BaseObject;
-// 道具类
-public class Prop extends BaseObject{
 
+import java.util.HashMap;
+import java.util.Map;
+
+// 道具类
+public class Prop extends BaseObject
+{
+	public static Map<Integer, String> toItemName = new HashMap<>(){{
+		put(0, "bombitem"); put(1, "flowitem"); put(2, "speeditem");
+	}};
     public Prop(String name, int x, int y) {
         super(name, x, y);
         isPassable = true;

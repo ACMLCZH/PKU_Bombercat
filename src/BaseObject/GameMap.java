@@ -76,7 +76,7 @@ public class GameMap //implements Serializable
 	{
 		BaseObject setmp = mp[loc.y][loc.x];
 		// 不可被破坏的障碍无法被操作
-		if (setmp != null && !setmp.isBreakable && !setmp.isPassable) return ;
+		// if (setmp != null && !setmp.isBreakable && !setmp.isPassable) return ;
 		mp[loc.y][loc.x] = obj;
 	}
 }

@@ -72,7 +72,7 @@ public class Game
 			if (flow.countDown())
 			{
 				// 把flow从gameMap里去掉
-				gameMap.set(flow.getLoc(), null);
+				flow.crash();
 				// 把flow从flows里去掉
 				iterFlow.remove();
 			}
