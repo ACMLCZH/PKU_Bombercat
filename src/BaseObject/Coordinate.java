@@ -22,7 +22,13 @@ public class Coordinate implements Comparable<Coordinate>
 	}
 	public boolean equals(Coordinate o) {return this.x == o.x && this.y == o.y;}
 
-	public Coordinate toGrid() {return new Coordinate(x / BLOCK_UNIT, y / BLOCK_UNIT);}
+	public Coordinate toGrid()
+	{
+		return new Coordinate(
+			this.x / BLOCK_UNIT + (this.x >= 0 ? 0 : (this.x % BLOCK_UNIT == 0 ? 0 : -1)), 
+			this.y / BLOCK_UNIT + (this.y >= 0 ? 0 : (this.y % BLOCK_UNIT == 0 ? 0 : -1))
+		);
+	}
 
 	public void step(Indirect dir)
 	{

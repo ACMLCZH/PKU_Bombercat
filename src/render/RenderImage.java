@@ -5,6 +5,9 @@ import static DEBUG.Dbg.msg;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
+
+import BaseObject.Coordinate;
+
 import java.awt.Image;
 
 public class RenderImage
@@ -62,6 +65,27 @@ public class RenderImage
 		put("icon_sound_on", new ImageIcon(iconDir + "sound_on.png"));
 		put("icon_sound_off", new ImageIcon(iconDir + "sound_off.png"));
 	}};
+	private static Map<String, Coordinate> collision = new HashMap<>(){{
+		put("碎月_up", new Coordinate(5, 7));
+		put("碎月_down", new Coordinate(5, 7));
+		put("碎月_left", new Coordinate(4, 7));
+		put("碎月_right", new Coordinate(5, 7));
+		put("仙草_up", new Coordinate(5, 7));
+		put("仙草_down", new Coordinate(5, 7));
+		put("仙草_left", new Coordinate(4, 7));
+		put("仙草_right", new Coordinate(5, 7));
+		put("薏米_up", new Coordinate(5, 7));
+		put("薏米_down", new Coordinate(5, 7));
+		put("薏米_left", new Coordinate(4, 7));
+		put("薏米_right", new Coordinate(5, 7));
+		put("enemy1_up", new Coordinate(5, 7));
+		put("enemy1_down", new Coordinate(5, 7));
+		put("enemy1_left", new Coordinate(4, 7));
+		put("enemy1_right", new Coordinate(5, 7));
+		put("invincible", new Coordinate(5, 6));
+	}};
 	public static Image getImage(String name) {return toIcon.get(name).getImage();}
+		// msg(name);
+	public static Coordinate getCollsion(String name) {return collision.get(name);}
 	public static ImageIcon getIcon(String name) {return toIcon.get(name);}
 }
