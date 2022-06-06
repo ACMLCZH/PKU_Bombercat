@@ -51,7 +51,8 @@ public class Game
 			if (cmd != null) cmd.run(); else break;
 		}
 
-		if (!started) return;
+		if (!started) 
+			return;
 
 		// 人物及每个AI决定移动
 		infoPlayer.move();
@@ -90,7 +91,6 @@ public class Game
 				iterBomb.remove();
 			}
 		}
-
 		// 去掉被炸掉的Barrier
 		Iterator<Barrier> iterBarrier = barriers.iterator();
 		while (iterBarrier.hasNext())
@@ -117,9 +117,8 @@ public class Game
 					player.getHurt(((Flow)obj).getAtk());
 			}
 		}
-
-		renderer.updateRender();
-		renderer.getGameScene().repaint();
+		// 更新绘图
+		renderer.updateRender();			
 	}
 	// public Game() {}// renderer = }
 

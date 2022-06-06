@@ -17,6 +17,7 @@ public class GamePane extends JLayeredPane
 	private JPanel pnAnimate = new JPanel();
 	private JLabel lblCountDown = new JLabel("", JLabel.CENTER);
 	private Image gameImg = null;
+	private long lastRendered = 0;
 	// private int tt = 0;
 	// private MainRenderer mainWindow;
 

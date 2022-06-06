@@ -16,6 +16,7 @@ public class MainRenderer extends JFrame
 	public static final int BLOCK_UNIT = 40;
 	public static final int WINWIDTH = SCENEWIDTH + 14;
 	public static final int WINHEIGHT = SCENEHEIGHT + 37;
+	public static final int PeriodPerRender = 17; // 每17ms渲染一次
 
 	private GamePane gameScene = new GamePane(this);
 	private TitlePanel titleScene = new TitlePanel(this);
@@ -23,6 +24,7 @@ public class MainRenderer extends JFrame
 	private SelectPanel selectScene = new SelectPanel(this);
 
 	private Game game = null;
+	private long lastRendered = 0;
 	
 	public GamePane getGameScene() {return this.gameScene;}
 	public TitlePanel getTitleScene() {return this.titleScene;}
@@ -30,7 +32,16 @@ public class MainRenderer extends JFrame
 	public SelectPanel getSelectPanel() {return this.selectScene;}
 	public Game getGame() {return game;}
 
-	public void updateRender() {gameScene.updateRender();}
+	public void updateRender() 
+	{
+		long current = System.currentTimeMillis();
+		if (current - lastRendered >= MainRenderer.PeriodPerRender)
+		{
+			gameScene.updateRender(); 
+			gameScene.repaint();
+			lastRendered = current;
+		}
+	}
 	// public void render(GameMap mp, BasePlayer[] ps, Bomb[] bs, BasePlayer infoPlayer)
 	// {
 	// }
