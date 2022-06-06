@@ -21,8 +21,9 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected Indirect dir;
 	protected String name = null;
 	protected Coordinate p1, p2;		// Bounding Box
-	protected long lastHurt;
-	protected long lastMove;
+	protected boolean isMoving = false;
+	protected long lastHurt = 0;
+	protected long lastMove = 0;
 	protected Game game;
 
 	public BasePlayer(Game game, String name, int HP, Coordinate spawn, Indirect dir, int atk)
@@ -34,8 +35,6 @@ public class BasePlayer implements Comparable<BasePlayer>
 		this.atk = atk;
 		this.dir = dir;
 		this.name = name;
-		this.lastHurt = 0;
-		this.lastMove = 0;
 	}
     
 	@Override
@@ -53,9 +52,13 @@ public class BasePlayer implements Comparable<BasePlayer>
 	public boolean isInvincible(long cur) {return cur - lastHurt < BasePlayer.invincibleTime;}
 	public boolean isInvincible() {return System.currentTimeMillis() - lastHurt < BasePlayer.invincibleTime;}
 
-    public boolean move(Indirect dir) 
+	public void setIndirect(Indirect dir) {this.dir = dir;}
+	public void setMove(boolean isMoving) {this.isMoving = isMoving;}
+
+    public boolean move() 
 	{
-		if (dir != Indirect.STOP) this.dir = dir;		// 不管成没成功都转个向
+		// if (dir != Indirect.STOP) this.dir = dir;		// 不管成没成功都转个向
+		if (!isMoving) return false;
 
         // 判断move的时间间隔是否满足
 		long current = System.currentTimeMillis();
@@ -64,8 +67,8 @@ public class BasePlayer implements Comparable<BasePlayer>
 		// 计算移动后四个角所在像素, 向下取整
 		Coordinate p1New = new Coordinate(p1);
 		Coordinate p2New = new Coordinate(p2);
-		p1New.step(dir);
-		p2New.step(dir);
+		p1New.step(this.dir);
+		p2New.step(this.dir);
 
 		// 计算移动前后所在格子
 		Coordinate p1Grid = p1.toGrid(), p2Grid = p2.toGrid();

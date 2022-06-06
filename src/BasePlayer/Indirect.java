@@ -3,7 +3,7 @@ package BasePlayer;
 /* 方向 */
 public enum Indirect
 {
-    UP("up"), DOWN("down"), LEFT("left"), RIGHT("right"), STOP("stop");
+    UP("up"), DOWN("down"), LEFT("left"), RIGHT("right");//, STOP("stop");
 	private String s;
 	private Indirect(String s) {this.s = s;}
 	@Override
@@ -16,7 +16,8 @@ public enum Indirect
             case 38: case 87: return Indirect.UP;
             case 39: case 68: return Indirect.RIGHT;
             case 40: case 83: return Indirect.DOWN;
-            default: return Indirect.STOP;
+			default: return null;
+            // default: return Indirect.STOP;
         }
 	}
 };

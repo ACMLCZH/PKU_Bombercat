@@ -35,10 +35,14 @@ public class GameKeyListener implements KeyListener
 					break;
 				case 37: case 38: case 39: case 40: // 上下左右
                 // case 87: case 65: case 68: case 83: // wasd
-					if (!pressStack.contains(code)) pressStack.push(code);
-					if (pressStack.peek() == code)
-						g.commandQueue.add(() -> {player.move(Indirect.codeToIndirect(code));});
-						// player.setIndirect();
+					if (!pressStack.contains(code))
+					{
+						pressStack.push(code);
+						g.commandQueue.add(() -> {
+							player.setIndirect(Indirect.codeToIndirect(code));
+							player.setMove(true);
+						});
+					}
 					break;
                     // if (player.isKeepAttack()) {
                     //     player.setAttack(false);
@@ -56,6 +60,7 @@ public class GameKeyListener implements KeyListener
     public void keyReleased(KeyEvent e)
 	{
     	// HumanPlayer player = g.getInfoPlayer(); // 想取出玩家指针，这句话咋写啊，不会
+		// msg("???!!");
         int code = e.getKeyCode();
         if (player.isAlive())
 		{
@@ -68,18 +73,19 @@ public class GameKeyListener implements KeyListener
                     // player.setAttack(false);
                 case 37: case 38: case 39: case 40:
                 case 87: case 65: case 68: case 83:
-					pressStack.remove(Integer.valueOf(code));
+					if (pressStack.peek() == code)
+					{
+						pressStack.pop();
+						if (pressStack.size() == 0)
+							g.commandQueue.add(() -> {player.setMove(false);});
+						else
+							g.commandQueue.add(() -> {player.setIndirect(Indirect.codeToIndirect(pressStack.peek()));});
+					}
+					else
+						pressStack.remove(Integer.valueOf(code));
                     break;
                     // if(pressStack.peek() != code){ // 栈顶
                     //     pressStack.remove(Integer.valueOf(code)); //integer.valueof构造函数
-                    // }else {
-                    //     pressStack.pop();
-                    //     if(pressStack.size() == 0){
-                    //     	player.setIndirect(Indirect.STOP);
-                    //     }else {
-                    //     	player.setIndirect(Indirect.codeToIndirect(pressStack.peek()));
-                    //     }
-                    // }
             }
         }
     }

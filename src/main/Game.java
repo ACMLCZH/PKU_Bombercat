@@ -56,11 +56,10 @@ public class Game
 		// 每个AI决定移动
 		for (AIPlayer aiPlayer: aiPlayers)
 		{
-			Indirect dir = aiPlayer.decideMove();
+			aiPlayer.decideMove();
+			aiPlayer.move();
 			boolean placeBomb = aiPlayer.decidePlaceBomb();
-			aiPlayer.move(dir);
-			if (placeBomb)
-				aiPlayer.placeBomb();
+			if (placeBomb) aiPlayer.placeBomb();
 		}
 
 		// 为Flow做倒计时
