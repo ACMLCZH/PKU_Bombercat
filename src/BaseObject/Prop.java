@@ -33,7 +33,7 @@ public class Prop extends BaseObject
                 player.addRange();
                 break;
             case "speeditem":
-                player.addSpeed();
+                player.addSpeed(0.5);
                 break;
         }
     }
