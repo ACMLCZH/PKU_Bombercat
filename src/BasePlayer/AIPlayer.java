@@ -185,11 +185,11 @@ public class AIPlayer extends BasePlayer
             int k = lastMp[end.y][end.x];
             end.x = end.x - directs[k][0];
             end.y = end.y - directs[k][1];
-            switch(k) {   //这里是反推，所以对应的上下左右是反的
-                case 0: SaveList.addFirst(Indirect.DOWN); break;
-                case 1: SaveList.addFirst(Indirect.UP); break;
-                case 2: SaveList.addFirst(Indirect.RIGHT); break;
-                case 3: SaveList.addFirst(Indirect.LEFT); break;
+            switch(k) {
+                case UP:    SaveList.addFirst(Indirect.UP); break;
+                case DOWN:  SaveList.addFirst(Indirect.DOWN); break;
+                case LEFT:  SaveList.addFirst(Indirect.LEFT); break;
+                case RIGHT: SaveList.addFirst(Indirect.RIGHT); break;
                 default: 
             }
             dircnt += 1;
