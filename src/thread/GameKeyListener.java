@@ -2,7 +2,6 @@ package thread;
 
 import static DEBUG.Dbg.msg;
 
-// import BasePlayer.BasePlayer;
 import BasePlayer.HumanPlayer;
 import BasePlayer.Indirect;
 import main.Game;
@@ -43,14 +42,6 @@ public class GameKeyListener implements KeyListener
 						});
 					}
 					break;
-                    // if (player.isKeepAttack()) {
-                    //     player.setAttack(false);
-                    // } else {
-                    //     if(!player.isDying()){
-                    //         player.setAttack(true);
-                    //         player.setKeepAttack(true);
-                    //     }
-                    // }
             }
         }
     }
@@ -83,8 +74,6 @@ public class GameKeyListener implements KeyListener
 					else
 						pressStack.remove(Integer.valueOf(code));
                     break;
-                    // if(pressStack.peek() != code){ // Õ»¶¥
-                    //     pressStack.remove(Integer.valueOf(code)); //integer.valueof¹¹Ôìº¯Êý
             }
         }
     }

@@ -36,6 +36,7 @@ public class GameMap //implements Serializable
 	public static final int GROUND = 0, DESTROYABLE = 1, UNBREAKABLE = 2;
 	public static final int NUM_SPAWN = 4;
 	private String type = null;
+	private double renderRate;
 	private BaseObject[][] mp = null;
 	private Coordinate[] spawnPoint = new Coordinate[NUM_SPAWN];
 	
@@ -62,6 +63,7 @@ public class GameMap //implements Serializable
 				int x = mapInput.nextInt();
 				spawnPoint[i] = new Coordinate(x, y);
 			}
+			renderRate = mapInput.nextDouble();
 			mapInput.close();
 		} catch (Exception ex) {
 			throw new FailureReadMapException(ex);
@@ -69,6 +71,7 @@ public class GameMap //implements Serializable
 	}
 
 	public String getType() {return this.type;}
+	public double getRate() {return this.renderRate;}
 	public Coordinate getSpawn(int idx) {return this.spawnPoint[idx];}
 	public BaseObject get(Coordinate loc) {return mp[loc.y][loc.x];}	// 注意loc.x是横向
 	public BaseObject get(int x, int y) {return mp[y][x];}

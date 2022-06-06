@@ -11,13 +11,13 @@ public class HumanPlayer extends BasePlayer
 	public static final int MOVE_TOLERANCE = 10;
 	private boolean placing = false;
 
-	public HumanPlayer(Game game, String name, int gameMode, Coordinate spawn)
+	public HumanPlayer(Game game, String name, Coordinate spawn)
 	{
 		super(
-			game, name, gameMode, INIT_HP, spawn, ATK,
-			gameMode == Game.PVP ? 1 : 6,
-			gameMode == Game.PVP ? 1 : 4,
-			gameMode == Game.PVP ? 3.0 : 5.0
+			game, name, INIT_HP, spawn, ATK,
+			game.getMode() == Game.PVP ? 1 : 6,
+			game.getMode() == Game.PVP ? 1 : 3,
+			game.getMode() == Game.PVP ? 4.0 : 5.0
 		);
 	}
 

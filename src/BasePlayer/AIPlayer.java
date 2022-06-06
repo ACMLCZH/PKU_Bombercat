@@ -26,13 +26,13 @@ public class AIPlayer extends BasePlayer
     private Random randChoice;
     // private int atk;
 
-    public AIPlayer(Game game, String name, int gameMode, Coordinate spawn, int atk)
+    public AIPlayer(Game game, String name, Coordinate spawn, int atk)
 	{
         super(
-			game, name, gameMode, INIT_HP[gameMode], spawn, atk,
-			gameMode == Game.PVP ? 1 : 0,
-			gameMode == Game.PVP ? 1 : 0,
-			4.0
+			game, name, INIT_HP[game.getMode()], spawn, atk,
+			game.getMode() == Game.PVP ? 1 : 0,
+			game.getMode() == Game.PVP ? 1 : 0,
+			game.getMode() == Game.PVP ? 4.0 : 3.0
 		);
 		// this.atk = atk;
         // lastDir = dir;

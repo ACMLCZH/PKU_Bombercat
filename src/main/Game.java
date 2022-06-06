@@ -16,8 +16,8 @@ public class Game
 {
 	public static final int PVP = 0, PVE = 1;
 
-	public int mode;
 	public Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
+	private int mode;
 	private GameMap gameMap = null;
 	private Set<BasePlayer> players = new TreeSet<>();
 	private List<AIPlayer> aiPlayers = new LinkedList<>();
@@ -29,6 +29,7 @@ public class Game
 	private MainRenderer renderer = new MainRenderer(this);
 	private GameKeyListener gameKeyListener = new GameKeyListener(this);
 
+	public int getMode() {return mode;}
 	public GameMap getMap() {return this.gameMap;}
 	public Set<BasePlayer> getPlayers() {return this.players;}
 	public List<AIPlayer> getAIPlayers() {return this.aiPlayers;}
@@ -142,17 +143,18 @@ public class Game
 	public void start(String selChar, String selScene, int mode)	// 选择的人物，选择的场景，选择的游戏模式
 	{
 		int modeBias = mode == PVP ? 1 : 3;
+		this.mode = mode;
 		try {
 			gameMap = new GameMap(selScene, (int)(Math.random() * 2) + modeBias);
 		} catch (FailureReadMapException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		infoPlayer = new HumanPlayer(this, selChar, mode, gameMap.getSpawn(0));
+		infoPlayer = new HumanPlayer(this, selChar, gameMap.getSpawn(0));
 		players.add(infoPlayer);
 		for (int i = 1; i < 4; ++i)
 		{
-			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", mode, gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
+			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
 			aiPlayers.add(aiPlayer);
 			players.add(aiPlayer);
 		}

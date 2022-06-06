@@ -85,7 +85,9 @@ public class Bomb extends BaseObject
 				if (obj != null)
 				{
 					obj.interactWithBomb(this);
-					if (obj.isBreakable) createFlow(toFlowName.get(dir), curLoc, Math.random() < 0.3);
+					if (obj instanceof Barrier && obj.isBreakable) createFlow(
+						toFlowName.get(dir), curLoc, Math.random() < game.getMap().getRate()
+					);
 					// Flow flow = new Flow(toFlowName.get(dir), x, y, atk);
 					if (!obj.isPassable) break;
 				}

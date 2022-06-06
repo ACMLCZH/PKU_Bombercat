@@ -18,17 +18,16 @@ public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = 40;
 	public static final int STRIDE = 1;
-	public static final double SPEED = 5; // 每秒移动多少个格子
 	public static final double SPEEDLIMIT = 7.0;
 	public static final int BOMBLIMIT = 6;
 	public static final int FLOWLIMIT = 10;
 	protected static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
-	private static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
+	private static final int invincibleTime = 1500; 			// 收到攻击后无敌1.5s
 	private static final Map<Indirect, int[]> colliDetect = new HashMap<>() {{
 		put(Indirect.UP, new int[] {0, 1}); put(Indirect.DOWN, new int[] {2, 3});
 		put(Indirect.LEFT, new int[] {0, 2}); put(Indirect.RIGHT, new int[] {1, 3});
 	}};
-	protected int gameMode;
+	// protected int gameMode;
     protected int HP;
 	protected Coordinate p1, p2;		// Bounding Box
 	protected int atk;
@@ -38,18 +37,19 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected Indirect dir;
 	protected String name = null;
 	protected boolean isMoving = false;
+	protected int numPutBomb = 0;
 	protected long lastHurt = 0;
 	protected long lastMove = 0;
 	protected Game game;
 	protected boolean hitBarrier = false; // 辅助校正用
 
-	public BasePlayer(Game game, String name, int gameMode,
+	public BasePlayer(Game game, String name,
 					  int HP, Coordinate spawn, int atk, int numBomb, int bombRange, double speed)
 	{
 		this.dir = Indirect.DOWN;
 		this.game = game;
 		this.name = name;
-		this.gameMode = gameMode;
+		// this.gameMode = gameMode;
 		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT + (BLOCK_UNIT - PLAYER_UNIT) / 2,
 								 spawn.y * BLOCK_UNIT + (BLOCK_UNIT - PLAYER_UNIT) / 2);
 		this.p2 = new Coordinate(p1.x + PLAYER_UNIT - 1, p1.y + PLAYER_UNIT - 1);
@@ -57,7 +57,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 		this.atk = atk;
 		this.numBomb = numBomb;
 		this.bombRange = bombRange;
-		this.speed = SPEED;
+		this.speed = speed;
 		this.periodPerMove = (int)(1000.0 * STRIDE / (this.speed * pixelsPerBlock));
 	}
     
@@ -78,9 +78,9 @@ public class BasePlayer implements Comparable<BasePlayer>
 
 	public void setIndirect(Indirect dir) {this.dir = dir;}
 	public void setMove(boolean isMoving) {this.isMoving = isMoving;}
-	public void addSpeed(double ad) {this.speed += ad;}
-	public void addRange() {++this.bombRange;}
-	public void addBomb() {++this.numBomb;}
+	public void addSpeed(double ad) {this.speed = Math.min(this.speed + ad, SPEEDLIMIT);}
+	public void addRange() {++this.bombRange; if (this.bombRange > FLOWLIMIT) this.bombRange = FLOWLIMIT;}
+	public void addBomb() {++this.numBomb; if (this.numBomb > BOMBLIMIT) this.numBomb = BOMBLIMIT;}
 
     public boolean move() 
 	{
@@ -143,16 +143,16 @@ public class BasePlayer implements Comparable<BasePlayer>
     public boolean placeBomb() 
 	{
         Coordinate center = getGridLoc();
-		if (numBomb == 0) return false;
+		if (numPutBomb == numBomb) return false;
 		if (game.getMap().get(center) != null) return false;
 		Bomb bomb = new Bomb(game, center.x, center.y, this, this.atk, this.bombRange);
 		game.getMap().set(center, bomb);
 		game.getBombs().add(bomb);
-		--numBomb;
+		++numPutBomb;
 		return true;
     }
 
-	public void recoverBomb() {++numBomb;}
+	public void recoverBomb() {--numPutBomb;}
 
 	public void getHurt(int dmg)
 	{
