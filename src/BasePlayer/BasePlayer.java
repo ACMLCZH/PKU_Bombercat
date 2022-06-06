@@ -159,7 +159,8 @@ public class BasePlayer implements Comparable<BasePlayer>
 		long current = System.currentTimeMillis();
 		if (HP > 0 && !isInvincible(current))
 		{
-			HP -= dmg; lastHurt = current;
+			HP -= dmg;
+			lastHurt = current;
 		}
 	}
 

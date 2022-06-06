@@ -6,10 +6,8 @@ import BasePlayer.BasePlayer;
 import BasePlayer.Indirect;
 import main.Game;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-// import java.util.Set;
 
 
 public class Bomb extends BaseObject
@@ -97,10 +95,6 @@ public class Bomb extends BaseObject
 		createFlow("crossflow", loc, false);
 		master.recoverBomb();
 	}
-    //     Flow flow = new Flow("crossflow", loc.x, loc.y, atk);
-    //     flows.add(flow);
-    //     gameMap.set(loc, flow);
-    // }
 
     public void interactWithBomb(Bomb bomb)
     {

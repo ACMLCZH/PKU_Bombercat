@@ -57,12 +57,18 @@ public class Game
 		// 人物及每个AI决定移动
 		infoPlayer.move();
 		for (AIPlayer aiPlayer: aiPlayers)
-		{
-			aiPlayer.decideMove();
-			aiPlayer.move();
-			boolean placeBomb = aiPlayer.decidePlaceBomb();
-			if (placeBomb) aiPlayer.placeBomb();
-		}
+			if (mode == PVP)
+			{
+				aiPlayer.decideMove();
+				aiPlayer.move();
+				boolean placeBomb = aiPlayer.decidePlaceBomb();
+				if (placeBomb) aiPlayer.placeBomb();
+			}
+			else if (mode == PVE)
+			{
+				aiPlayer.decideCharge();
+				aiPlayer.move();
+			}
 
 		// 为Flow做倒计时
 		Iterator<Flow> iterFlow = flows.iterator();
@@ -112,6 +118,14 @@ public class Game
 				iterPlayer.remove();
 			}
 		}
+		if (mode == PVE)
+		{
+			for (AIPlayer player : aiPlayers)
+			{
+				if (infoPlayer.contacts(player))
+					infoPlayer.getHurt(player.getAtk());
+			}
+		}
 
 		if (infoPlayer == null) commandQueue.add(() -> {
 			end(); renderer.getGameScene().failAnimation();
@@ -126,7 +140,6 @@ public class Game
 		// 更新绘图
 		renderer.updateRender();
 	}
-	// public Game() {}// renderer = }
 
 	public void end()
 	{
@@ -140,6 +153,7 @@ public class Game
 		flows.clear();
 		commandQueue.clear();
 		musicPlayer.stops();
+		
 		started = false;
 	}
 	public void start(String selChar, String selScene, int mode)	// 选择的人物，选择的场景，选择的游戏模式
@@ -154,21 +168,18 @@ public class Game
 		}
 		infoPlayer = new HumanPlayer(this, selChar, gameMap.getSpawn(0));
 		players.add(infoPlayer);
-		
-		if(musicPlayer.getState() == Thread.State.NEW){ // 如果多次start，不会重新播放音乐
-			musicPlayer.start();
-        	}else {
-        		musicPlayer.continues();
-        	}
-
 		for (int i = 1; i < 4; ++i)
 		{
-			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
+			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", gameMap.getSpawn(i));
 			aiPlayers.add(aiPlayer);
 			players.add(aiPlayer);
 		}
 		gameKeyListener.setPlayer(infoPlayer);
 		renderer.addKeyListener(gameKeyListener);
+		
+		if (musicPlayer.getState() == Thread.State.NEW) 	// 如果多次start，不会重新播放音乐
+			musicPlayer.start();
+		else musicPlayer.continues();
 
 		started = true;
 	}

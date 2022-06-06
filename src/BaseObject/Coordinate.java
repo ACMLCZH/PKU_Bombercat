@@ -29,6 +29,7 @@ public class Coordinate implements Comparable<Coordinate>
 			this.y / BLOCK_UNIT + (this.y >= 0 ? 0 : (this.y % BLOCK_UNIT == 0 ? 0 : -1))
 		);
 	}
+	public Coordinate toPixel() {return new Coordinate(this.x * BLOCK_UNIT, this.y * BLOCK_UNIT);}
 
 	public void step(Indirect dir)
 	{

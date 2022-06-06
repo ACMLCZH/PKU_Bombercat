@@ -12,7 +12,6 @@ import static render.MainRenderer.BLOCK_UNIT;
 import static BasePlayer.BasePlayer.PLAYER_UNIT;
 import render.RenderImage;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
 // import java.util.ArrayList;
