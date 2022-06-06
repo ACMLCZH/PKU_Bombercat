@@ -1,5 +1,6 @@
 package BasePlayer;
 
+import java.lang.annotation.Target;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -16,7 +17,7 @@ public class AIPlayer extends BasePlayer
     private static final int[][] directs = {{0, -1},{0, 1},{-1, 0},{1, 0}}; //姑且这样存着
     private static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
     // private Indirect lastDir;
-    private int maxSaveDir = 3;          // 保存路径的最大数，即移动步数过多后要重算
+    private int maxSaveDir = 1;          // 保存路径的最大数，即移动步数过多后要重算
     private Queue<Indirect> saveDir;     // 简单保存确定的一系列行动
     private long stopTime;               // 控制停止的时间
     private boolean stopFlag = false;    // 标记目前的停止状态是否是必要的
@@ -38,8 +39,7 @@ public class AIPlayer extends BasePlayer
 
     // void mainloop() {}
     public boolean inGridCenter(Coordinate tarGrid) {
-        return Math.abs((p1.x+p2.x)/2-tarGrid.x*BasePlayer.pixelsPerBlock-BasePlayer.pixelsPerBlock/2) <= 4 &&
-        Math.abs((p1.y+p2.y)/2-tarGrid.y*BasePlayer.pixelsPerBlock-BasePlayer.pixelsPerBlock/2) <= 4 ;
+        return p1.x == tarGrid.x*BasePlayer.pixelsPerBlock && p1.y == tarGrid.y * BasePlayer.pixelsPerBlock;
     }
 
     public void decideMove()
@@ -60,7 +60,7 @@ public class AIPlayer extends BasePlayer
             return;
         // 每次会完成保存的路径
         if(!saveDir.isEmpty())
-		{		// TODO: 目前savedir里的存储最多3条，在针对玩家的时候可以适当缩减这一限制？
+		{
 			this.dir = saveDir.poll();
             curTarget = nextLocation(curLoc, this.dir);
 			this.isMoving = true;		// savedir里面只有上下左右
