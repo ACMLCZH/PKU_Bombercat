@@ -71,7 +71,7 @@ public class GamePane extends JLayeredPane
 			ex.printStackTrace();
 		}
 	}	
-	public void FailAnimation()
+	public void failAnimation()
 	{
 		try {
 			pnAnimate.setVisible(true);

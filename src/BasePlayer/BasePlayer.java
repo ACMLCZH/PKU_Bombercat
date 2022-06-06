@@ -9,15 +9,22 @@ import BaseObject.GameMap;
 import main.Game;
 import static render.MainRenderer.BLOCK_UNIT;
 
+import java.util.Map;
+import java.util.HashMap;
+
 
 public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = 40;
 	public static final int STRIDE = 1;
-	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
-	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
-	static final int speed = 5; // 每秒移动多少个格子
-	static final int periodPerMove = (int)(1000.0 * STRIDE / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
+	protected static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
+	private static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
+	private static final int speed = 5; // 每秒移动多少个格子
+	private static final int periodPerMove = (int)(1000.0 * STRIDE / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
+	private static final Map<Indirect, int[]> colliDetect = new HashMap<>() {{
+		put(Indirect.UP, new int[] {0, 1}); put(Indirect.DOWN, new int[] {2, 3});
+		put(Indirect.LEFT, new int[] {0, 2}); put(Indirect.RIGHT, new int[] {1, 3});
+	}};
     protected int HP;
 	protected int atk;
 	protected Indirect dir;
@@ -29,7 +36,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected Game game;
 	protected boolean hitBarrier = false; // 辅助校正用
 
-	public BasePlayer(Game game, String name, int HP, Coordinate spawn, Indirect dir, int atk)
+	public BasePlayer(Game game, String name, int HP, Coordinate spawn, int atk)
 	{
 		this.game = game;
 		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT + (BLOCK_UNIT - PLAYER_UNIT) / 2,
@@ -37,7 +44,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 		this.p2 = new Coordinate(p1.x + PLAYER_UNIT - 1, p1.y + PLAYER_UNIT - 1);
 		this.HP = HP;
 		this.atk = atk;
-		this.dir = dir;
+		this.dir = Indirect.DOWN;
 		this.name = name;
 	}
     
@@ -90,9 +97,10 @@ public class BasePlayer implements Comparable<BasePlayer>
 			{p1Grid, p1NewGrid}, {new Coordinate(p2Grid.x, p1Grid.y), new Coordinate(p2NewGrid.x, p1NewGrid.y)},
 			{new Coordinate(p1Grid.x, p2Grid.y), new Coordinate(p1NewGrid.x, p2NewGrid.y)}, {p2Grid, p2NewGrid}
 		};
-		for (int i = 0; i < 4; ++ i)
+		for (int i = 0; i < 2; ++ i)
 		{
-			BaseObject obj = gameMap.get(ca[i][0]), objNew = gameMap.get(ca[i][1]);
+			BaseObject obj = gameMap.get(ca[colliDetect.get(dir)[i]][0]);
+			BaseObject objNew = gameMap.get(ca[colliDetect.get(dir)[i]][1]);
 			if (objNew != null && !objNew.getIsPassable() && objNew != obj)
 			{
 				hitBarrier = true;
@@ -121,7 +129,10 @@ public class BasePlayer implements Comparable<BasePlayer>
 	public void getHurt(int dmg)
 	{
 		long current = System.currentTimeMillis();
-		if (HP > 0 && !isInvincible(current)) {HP -= dmg; lastHurt = current;}
+		if (HP > 0 && !isInvincible(current))
+		{
+			HP -= dmg; lastHurt = current;
+		}
 	}
 
 	public Coordinate getGridLoc()

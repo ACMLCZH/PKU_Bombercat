@@ -99,15 +99,16 @@ public class Game
 			if (barrier.isDestroyed())
 			{
 				// 把barrier从barriers里去掉
+				// barrier.crash();
 				iterBarrier.remove();
 			}
 		}
 
 		// 计算玩家收到伤害
-		for (BasePlayer player: players)
+		Iterator<BasePlayer> iterPlayer = players.iterator();
+		while (iterPlayer.hasNext())
 		{
-			if (!player.isAlive())
-				continue;
+			BasePlayer player = iterPlayer.next();
 			Coordinate loc = player.getGridLoc();
 			BaseObject obj = gameMap.get(loc);
 			if (obj != null)
@@ -116,9 +117,26 @@ public class Game
 				if (name == "crossflow" || name == "vertflow" || name == "horiflow")
 					player.getHurt(((Flow)obj).getAtk());
 			}
+			if (!player.isAlive())
+			{
+				if (player instanceof AIPlayer) aiPlayers.remove(player);
+				else infoPlayer = null;
+				iterPlayer.remove();
+			}
 		}
+
+		if (infoPlayer == null) commandQueue.add(() -> {
+			end(); renderer.getGameScene().failAnimation();
+			renderer.getGameScene().setVisible(false);
+			renderer.getTitleScene().setVisible(true);
+		});
+		if (aiPlayers.size() == 0) commandQueue.add(() -> {
+			end(); renderer.getGameScene().successAnimation();
+			renderer.getGameScene().setVisible(false);
+			renderer.getTitleScene().setVisible(true);
+		});
 		// 更新绘图
-		renderer.updateRender();			
+		renderer.updateRender();
 	}
 	// public Game() {}// renderer = }
 
@@ -133,6 +151,7 @@ public class Game
 		bombs.clear();
 		barriers.clear();
 		flows.clear();
+		commandQueue.clear();
 		
 		started = false;
 	}
@@ -145,11 +164,11 @@ public class Game
 			e.printStackTrace();
 			System.exit(0);
 		}
-		infoPlayer = new HumanPlayer(this, selChar, HumanPlayer.INIT_HP, gameMap.getSpawn(0), Indirect.DOWN);
+		infoPlayer = new HumanPlayer(this, selChar, HumanPlayer.INIT_HP, gameMap.getSpawn(0));
 		players.add(infoPlayer);
 		for (int i = 1; i < 4; ++i)
 		{
-			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", AIPlayer.INIT_HP, gameMap.getSpawn(i), Indirect.DOWN, (int)(Math.random() * 1000) + 500);
+			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", AIPlayer.INIT_HP, gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
 			aiPlayers.add(aiPlayer);
 			players.add(aiPlayer);
 		}

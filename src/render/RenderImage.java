@@ -86,6 +86,6 @@ public class RenderImage
 	}};
 	public static Image getImage(String name) {return toIcon.get(name).getImage();}
 		// msg(name);
-	public static Coordinate getCollsion(String name) {return collision.get(name);}
+	// public static Coordinate getCollsion(String name) {return collision.get(name);}
 	public static ImageIcon getIcon(String name) {return toIcon.get(name);}
 }

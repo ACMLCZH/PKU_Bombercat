@@ -26,7 +26,7 @@ public class Bomb extends BaseObject
 		this.atk = atk;
         master = m;
         game = g;
-        bombRange = 1;   // 如果有道具影响的话再作更改
+        bombRange = 2;   // 如果有道具影响的话再作更改
         timeBeforeBomb = bombTime;
         isBreakable = true;
         isPassable = false;

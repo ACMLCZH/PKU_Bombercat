@@ -25,9 +25,9 @@ public class AIPlayer extends BasePlayer
     private Random randChoice;
     // private int atk;
 
-    public AIPlayer(Game game, String name, int HP, Coordinate spawn, Indirect dir, int atk)
+    public AIPlayer(Game game, String name, int HP, Coordinate spawn, int atk)
 	{
-        super(game, name, HP, spawn, dir, atk);
+        super(game, name, HP, spawn, atk);
 		// this.atk = atk;
         // lastDir = dir;
         stopTime = System.currentTimeMillis(); // 初始时默认停一下

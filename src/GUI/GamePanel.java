@@ -9,6 +9,7 @@ import BasePlayer.BasePlayer;
 import BasePlayer.HumanPlayer;
 import render.MainRenderer;
 import static render.MainRenderer.BLOCK_UNIT;
+import static BasePlayer.BasePlayer.PLAYER_UNIT;
 import render.RenderImage;
 
 import javax.swing.*;
@@ -34,7 +35,7 @@ public class GamePanel extends MyPanel
 	public static final int GAMEWIDTH = GameMap.WIDTH * BLOCK_UNIT;
 	public static final int GAMEHEIGHT = GameMap.HEIGHT * BLOCK_UNIT;
 	public static final int GAMETOPBIAS = 60;
-	private static final Coordinate invBias = RenderImage.getCollsion("invincible");
+	// private static final Coordinate invBias = RenderImage.getCollsion("invincible");
 	private java.util.List<DrawTask> drawList = new Vector<>();
 	private HumanPlayer infoPlayer = null;
 
@@ -59,15 +60,15 @@ public class GamePanel extends MyPanel
 	private void showPlayer(BasePlayer curP)
 	{
 		Image pImg = RenderImage.getImage(curP.toString());
-		Coordinate bias = RenderImage.getCollsion(curP.toString());
-		putTexture(pImg, curP.getLeft() - bias.x, curP.getUp() - bias.y, false, true);
+		// Coordinate bias = RenderImage.getCollsion(curP.toString());
+		putTexture(pImg, curP.getLeft(), curP.getUp(), false, true);
 		if (curP.isInvincible())
 		{
 			pImg = RenderImage.getImage(curP.toString());
-			putTexture(RenderImage.getImage("invincible"), curP.getLeft() - invBias.x, curP.getUp() - invBias.y, false, true);
+			putTexture(RenderImage.getImage("invincible"), curP.getLeft(), curP.getUp(), false, true);
 		}
 		if (curP == infoPlayer)
-			putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + 10, curP.getUp(), true, true);
+			putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + (PLAYER_UNIT - 10) / 2, curP.getUp(), true, true);
 	}
 
 	public void updateRender()

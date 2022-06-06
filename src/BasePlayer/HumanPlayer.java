@@ -11,9 +11,9 @@ public class HumanPlayer extends BasePlayer
 	public static final int MOVE_TOLERANCE = 10;
 	private boolean placing = false;
 
-	public HumanPlayer(Game game, String name, int HP, Coordinate spawn, Indirect dir)
+	public HumanPlayer(Game game, String name, int HP, Coordinate spawn)
 	{
-		super(game, name, HP, spawn, dir, ATK);
+		super(game, name, HP, spawn, ATK);
 	}
 
 	@Override
