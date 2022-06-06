@@ -8,7 +8,6 @@ import BaseObject.*;
 import BaseObject.Flow;
 import BaseObject.GameMap.FailureReadMapException;
 import BasePlayer.*;
-import BasePlayer.Indirect;
 
 import java.util.*;
 import java.util.concurrent.*;;
@@ -21,7 +20,7 @@ public class Game
 	public Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
 	private GameMap gameMap = null;
 	private Set<BasePlayer> players = new TreeSet<>();
-	private Set<AIPlayer> aiPlayers = new TreeSet<>();
+	private List<AIPlayer> aiPlayers = new LinkedList<>();
 	private HumanPlayer infoPlayer = null;
 	private List<Bomb> bombs = new LinkedList<>();
 	private List<Flow> flows = new LinkedList<>();
@@ -32,7 +31,7 @@ public class Game
 
 	public GameMap getMap() {return this.gameMap;}
 	public Set<BasePlayer> getPlayers() {return this.players;}
-	public Set<AIPlayer> getAIPlayers() {return this.aiPlayers;}
+	public List<AIPlayer> getAIPlayers() {return this.aiPlayers;}
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
 	public List<Bomb> getBombs() {return this.bombs;}
 	public List<Flow> getFlows() {return this.flows;}
@@ -132,8 +131,8 @@ public class Game
 		gameMap = null;
 		infoPlayer = null;
 		aiPlayers.clear();
-		gameKeyListener.clearPlayer();
 		players.clear();
+		gameKeyListener.clearPlayer();
 		bombs.clear();
 		flows.clear();
 		commandQueue.clear();

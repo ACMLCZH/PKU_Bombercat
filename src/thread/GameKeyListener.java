@@ -9,7 +9,6 @@ import main.Game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-// import java.util.List;
 import java.util.Stack;
 
 public class GameKeyListener implements KeyListener

@@ -13,8 +13,8 @@ import main.Game;
 
 public class AIPlayer extends BasePlayer
 {
-    public static final int INIT_HP = 8000;
-    private static final int[][] directs = {{0, -1},{0, 1},{-1, 0},{1, 0}}; //姑且这样存着
+    public static final int[] INIT_HP = new int[] {4000, 8000};
+    private static final int[][] directs = {{0, -1},{0, 1},{-1, 0},{1, 0}}; // 姑且这样存着
     private static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
     // private Indirect lastDir;
     private int maxSaveDir = 1;          // 保存路径的最大数，即移动步数过多后要重算
@@ -29,7 +29,7 @@ public class AIPlayer extends BasePlayer
     public AIPlayer(Game game, String name, int gameMode, Coordinate spawn, int atk)
 	{
         super(
-			game, name, gameMode, INIT_HP, spawn, atk,
+			game, name, gameMode, INIT_HP[gameMode], spawn, atk,
 			gameMode == Game.PVP ? 1 : 0,
 			gameMode == Game.PVP ? 1 : 0,
 			4.0
