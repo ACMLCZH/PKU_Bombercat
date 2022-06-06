@@ -1,9 +1,10 @@
-package main;
+﻿package main;
 
 import static DEBUG.Dbg.*;
 
 import render.MainRenderer;
 import thread.GameKeyListener;
+import thread.MusicPlayer;
 import BaseObject.*;
 import BaseObject.Flow;
 import BaseObject.GameMap.FailureReadMapException;
@@ -28,6 +29,7 @@ public class Game
 	private boolean started = false;
 	private MainRenderer renderer = new MainRenderer(this);
 	private GameKeyListener gameKeyListener = new GameKeyListener(this);
+	private MusicPlayer musicPlayer = new MusicPlayer();
 
 	public int getMode() {return mode;}
 	public GameMap getMap() {return this.gameMap;}
@@ -137,7 +139,7 @@ public class Game
 		bombs.clear();
 		flows.clear();
 		commandQueue.clear();
-		
+		musicPlayer.stops();
 		started = false;
 	}
 	public void start(String selChar, String selScene, int mode)	// 选择的人物，选择的场景，选择的游戏模式
@@ -152,6 +154,13 @@ public class Game
 		}
 		infoPlayer = new HumanPlayer(this, selChar, gameMap.getSpawn(0));
 		players.add(infoPlayer);
+		
+		if(musicPlayer.getState() == Thread.State.NEW){ // 如果多次start，不会重新播放音乐
+			musicPlayer.start();
+        	}else {
+        		musicPlayer.continues();
+        	}
+
 		for (int i = 1; i < 4; ++i)
 		{
 			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
