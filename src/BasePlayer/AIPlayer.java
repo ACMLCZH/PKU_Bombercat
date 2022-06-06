@@ -147,10 +147,6 @@ public class AIPlayer extends BasePlayer
                 return ;
                 // return lastDir;
             }
-            else 
-            {
-                
-            }
         }
         // 下面是向玩家前行的路
         Coordinate humanP = this.game.getInfoPlayer().getGridLoc();
@@ -214,7 +210,7 @@ public class AIPlayer extends BasePlayer
                 if(newMp[i][j] == -1 && smp[i][j] != -1) continue;
                 newMp[i][j] = smp[i][j];
                 if(smp[i][j] == 0) continue;
-                if(smp[i][j] == -1 && mp.get(j,i).getName() == "bomb") {
+                if(smp[i][j] == -1 && (mp.get(j,i).getName() == "bomb")) {
                     int t = ((Bomb) mp.get(j, i)).getBombRange();
                     for(int x = j - t; x <= j + t; ++x) {
                         if (x < 0 || x >= GameMap.WIDTH) continue;
@@ -236,7 +232,7 @@ public class AIPlayer extends BasePlayer
 	{
         LinkedList<Indirect> SaveList = new LinkedList<>();
         BaseObject endObj = this.game.getMap().get(end);
-        if (endObj != null && endObj.getName() == "bomb") 
+        if (endObj != null && (endObj.getName() == "bomb" || endObj.toString().contains("flow")))
         {  //冷静一下再去放炸弹...
             stopTime = System.currentTimeMillis() - 500;
             this.isMoving = false;
