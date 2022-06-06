@@ -6,6 +6,7 @@ import java.util.Random;
 
 import BaseObject.Coordinate;
 import BaseObject.GameMap;
+import BaseObject.BaseObject;
 import BaseObject.Bomb;
 import main.Game;
 
@@ -17,7 +18,9 @@ public class AIPlayer extends BasePlayer
     // private Indirect lastDir;
     private int maxSaveDir = 3;          // 保存路径的最大数，即移动步数过多后要重算
     private Queue<Indirect> saveDir;     // 简单保存确定的一系列行动
-    private long stopTime;           	 // 控制停止的时间
+    private long stopTime;               // 控制停止的时间
+    private boolean stopFlag = false;    // 标记目前的停止状态是否是必要的
+    private Coordinate curTarget;        // 当前移动的目标地点
     private Coordinate curBombPlaceLoc;
     private Random randChoice;
     // private int atk;
@@ -28,10 +31,16 @@ public class AIPlayer extends BasePlayer
 		// this.atk = atk;
         // lastDir = dir;
         stopTime = System.currentTimeMillis(); // 初始时默认停一下
+        curTarget = spawn;
+        saveDir = new LinkedList<>();
         randChoice = new Random();
     }
 
     // void mainloop() {}
+    public boolean inGridCenter(Coordinate tarGrid) {
+        return Math.abs((p1.x+p2.x)/2-tarGrid.x*BasePlayer.pixelsPerBlock-BasePlayer.pixelsPerBlock/2) <= 4 &&
+        Math.abs((p1.y+p2.y)/2-tarGrid.y*BasePlayer.pixelsPerBlock-BasePlayer.pixelsPerBlock/2) <= 4 ;
+    }
 
     public void decideMove()
 	{
@@ -41,19 +50,20 @@ public class AIPlayer extends BasePlayer
         // 计算中心所在的格点
         GameMap mp = this.game.getMap();
         Coordinate curLoc = getGridLoc();
-        // 不在中心时沿用前一步的移动
-		/* TODO: 这里和 minskip > 1的地方冲突了吧，就算我改代码之前也是这样？
-			之前是lastDir = Indirect.STOP，也会出问题，你看着改一改？
-		*/
-        if ((p1.x + p2.x) / 2 != curLoc.x * pixelsPerBlock || 
-			(p1.y + p2.y) / 2 != curLoc.y * pixelsPerBlock)
-			return;
-            // return lastDir;
+		// 先处理停止状况，目前stopTime的操作只在这个函数里进行
+        if(!this.isMoving) {
+            long current = System.currentTimeMillis();
+            if(current - stopTime < 1000) return;
+        }
+        // 这个是判断是否走到目标格子中心点的，
+        if(!inGridCenter(curTarget))
+            return;
         // 每次会完成保存的路径
         if(!saveDir.isEmpty())
-		{			// TODO:但是玩家也会移动啊，只完成之前的路径是不是不太好？需要重新规划一下？
+		{		// TODO: 目前savedir里的存储最多3条，在针对玩家的时候可以适当缩减这一限制？
 			this.dir = saveDir.poll();
-			this.isMoving = true;		// 看起来savedir里面只有上下左右？
+            curTarget = nextLocation(curLoc, this.dir);
+			this.isMoving = true;		// savedir里面只有上下左右
 			return;
         }
             // lastDir = saveDir.poll();
@@ -66,6 +76,7 @@ public class AIPlayer extends BasePlayer
         // 宽搜
         int[][] smp = new int[GameMap.HEIGHT][];
         int[][] lastMp = new int[GameMap.HEIGHT][];
+        boolean haveBombFlag = false;
         for(int i = 0; i < GameMap.HEIGHT; ++i)
 		{
             smp[i] = new int[GameMap.WIDTH]; 
@@ -79,36 +90,46 @@ public class AIPlayer extends BasePlayer
             for(int k = 0; k < 4; ++k) {
                 nextGrid = new Coordinate(cur.x+directs[k][0], cur.y+directs[k][1]);
                 if (nextGrid.x < 0 || nextGrid.x >= GameMap.WIDTH || nextGrid.y < 0 || nextGrid.y >= GameMap.HEIGHT) continue;
-                if (mp.get(nextGrid).getName() == "bomb") smp[nextGrid.y][nextGrid.x] = -1;
-                if (smp[nextGrid.y][nextGrid.x] != 0 || !mp.get(nextGrid).getIsPassable()) continue;
+                BaseObject nextObject = mp.get(nextGrid);
+                if (nextObject != null && nextObject.getName() == "bomb") {
+                    smp[nextGrid.y][nextGrid.x] = -1;  haveBombFlag = true;
+                    continue;
+                }
+                if (smp[nextGrid.y][nextGrid.x] != 0 ||(nextObject!=null && !nextObject.getIsPassable())) continue;
                 queue.add(nextGrid);
                 smp[nextGrid.y][nextGrid.x] = smp[cur.y][cur.x]+1;
                 lastMp[nextGrid.y][nextGrid.x] = k;
             }
         }
         // 首先躲避炸弹
-        int[][] newMp = removeBombRange(smp, mp);
-        int minSkip = 100000;
-        Coordinate nearestP = curLoc;
-        for(int i = 0; i < GameMap.HEIGHT; ++i) 
-            for(int j = 0; j < GameMap.WIDTH; ++j) {
-                if(newMp[i][j] > 0) {
-                    if(newMp[i][j] < minSkip) {
-                        minSkip = newMp[i][j];
-                        nearestP = new Coordinate(j, i);
+        if(mp.get(curLoc) != null && mp.get(curLoc).getName() == "bomb") {
+            haveBombFlag = true; 
+            smp[curLoc.y][curLoc.x] = -1; //即在这个位置刚放了一个炸弹
+        }
+        if(haveBombFlag) {
+            int[][] newMp = removeBombRange(smp, mp);
+            int minSkip = 100000;
+            Coordinate nearestP = curLoc;
+            for(int i = 0; i < GameMap.HEIGHT; ++i) 
+                for(int j = 0; j < GameMap.WIDTH; ++j) {
+                    if(newMp[i][j] > 1) {
+                        if(newMp[i][j] < minSkip) {
+                            minSkip = newMp[i][j];
+                            nearestP = new Coordinate(j, i);
+                        }
                     }
                 }
+            if(newMp[curLoc.y][curLoc.x] == -1)
+            { 	// 在炸弹范围内
+                findWay(curLoc, nearestP, lastMp);
+                return;
             }
-        if(newMp[curLoc.y][curLoc.x] == -1)
-		{ 	// 在炸弹范围内
-            findWay(curLoc, nearestP, lastMp);
-            return;
-        }
-        else if (minSkip > 1)
-		{ 	//走一步的地方都被锁定，等炸弹
-            this.isMoving = false; //ndirect.STOP;
-            stopTime = System.currentTimeMillis();
-            // return lastDir;
+            else if (minSkip > 2)
+            { 	//走一步的地方都被锁定，等炸弹
+                this.isMoving = false; //ndirect.STOP;
+                stopTime = System.currentTimeMillis();
+                // return lastDir;
+            }
         }
         // 下面是向玩家前行的路
         Coordinate humanP = this.game.getInfoPlayer().getGridLoc();
@@ -118,8 +139,10 @@ public class AIPlayer extends BasePlayer
             return;
         }
         // 最后寻找一个可以放炸弹的地方
-        if(curBombPlaceLoc == null)
-            findWay(curLoc, findBombPlace(smp, mp), lastMp);
+        if(curBombPlaceLoc == null) {
+            curBombPlaceLoc = findBombPlace(smp, mp); //这是必要的更新
+            findWay(curLoc, curBombPlaceLoc, lastMp);
+        }
         else
 			findWay(curLoc, curBombPlaceLoc, lastMp);
     }
@@ -136,7 +159,7 @@ public class AIPlayer extends BasePlayer
         if(Math.abs(humanLoc.x- curLoc.x) + Math.abs(humanLoc.y-curLoc.y) <= 1) {
             return true; // 在玩家身边放炸弹
         }
-        if(curBombPlaceLoc != null && curLoc == curBombPlaceLoc) {
+        if(curBombPlaceLoc != null && inGridCenter(curBombPlaceLoc)) {
             curBombPlaceLoc = null;
             return true;
         }
@@ -154,6 +177,7 @@ public class AIPlayer extends BasePlayer
             case RIGHT: this.dir = Indirect.RIGHT; break;
             default: this.isMoving = false; return;
         }
+        curTarget = nextLocation(getGridLoc(), this.dir);
 		this.isMoving = true;
     }
 
@@ -166,6 +190,7 @@ public class AIPlayer extends BasePlayer
 		{
             for(int j=0; j<GameMap.WIDTH; ++j)
 			{
+                if(newMp[i][j] == -1 && smp[i][j] != -1) continue;
                 newMp[i][j] = smp[i][j];
                 if(smp[i][j] == 0) continue;
                 if(smp[i][j] == -1) {
@@ -195,23 +220,24 @@ public class AIPlayer extends BasePlayer
             this.isMoving = false;
 			return;
         }
-        int dircnt = 0;
-        for(; end.equals(start); ) {
-            int k = lastMp[end.y][end.x];
-            end.x = end.x - directs[k][0];
-            end.y = end.y - directs[k][1];
-            switch (k) {   //这里是反推，所以对应的上下左右是反的
+        Coordinate tar = new Coordinate(end);
+        for(; !tar.equals(start); ) {
+            int k = lastMp[tar.y][tar.x];
+            tar.x = tar.x - directs[k][0];
+            tar.y = tar.y - directs[k][1];
+            switch (k) {
                 case UP: SaveList.addFirst(Indirect.UP); break;
                 case DOWN: SaveList.addFirst(Indirect.DOWN); break;
                 case LEFT: SaveList.addFirst(Indirect.LEFT); break;
                 case RIGHT: SaveList.addFirst(Indirect.RIGHT); break;
                 default: 
             }
-            dircnt += 1;
-            if (dircnt == maxSaveDir) break;
         }
-        saveDir = SaveList;
+        for(int i=0; i<maxSaveDir && i<SaveList.size(); ++i) {
+            saveDir.add(SaveList.get(i));
+        }
 		this.dir = saveDir.poll();
+        curTarget = nextLocation(start, this.dir);
 		this.isMoving = true;
     }
     // 用于前期寻找能放炸弹的地方的函数，这个借用了宽搜的结果
@@ -226,6 +252,8 @@ public class AIPlayer extends BasePlayer
                 for(int k = 0; k < 4; ++k) {
                     int xNear = x + directs[k][0];
                     int yNear = y + directs[k][1];
+                    if(xNear < 0 || xNear>=GameMap.WIDTH || yNear < 0 || yNear >= GameMap.HEIGHT) continue;
+                    if(mp.get(xNear, yNear) == null) continue;
                     tmp += (mp.get(xNear, yNear).getName() == "destroyable") ? 1 : 0;
                 }
                 if(tmp > maxBreakable) {
@@ -235,5 +263,16 @@ public class AIPlayer extends BasePlayer
             }
         }
         return maxBreakableLoc;
+    }
+    private Coordinate nextLocation(Coordinate start, Indirect chg) {
+        int x = start.x, y = start.y;
+        switch(chg) {
+            case UP:    y -= 1; break;
+            case DOWN:  y += 1; break;
+            case LEFT:  x -= 1; break;
+            case RIGHT: x += 1; break;
+            default:
+        }
+        return new Coordinate(x, y);
     }
 }
