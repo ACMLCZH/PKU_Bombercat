@@ -1,5 +1,7 @@
 ﻿package BasePlayer;
 
+import static DEBUG.Dbg.msg;
+
 import BaseObject.BaseObject;
 import BaseObject.Bomb;
 import BaseObject.Coordinate;
@@ -69,10 +71,11 @@ public class BasePlayer implements Comparable<BasePlayer>
 		Coordinate p2New = new Coordinate(p2);
 		p1New.step(this.dir);
 		p2New.step(this.dir);
-
 		// 计算移动前后所在格子
 		Coordinate p1Grid = p1.toGrid(), p2Grid = p2.toGrid();
 		Coordinate p1NewGrid = p1New.toGrid(), p2NewGrid = p2New.toGrid();
+		// msg(new Object[] {p1, p2, p1New, p2New});
+		// msg(new Object[] {p1Grid, p2Grid, p1NewGrid, p2NewGrid});
 		// 判断是否会超出边界
 		if (p1NewGrid.x < 0 || p2NewGrid.x >= GameMap.WIDTH || p1NewGrid.y < 0 || p2NewGrid.y >= GameMap.HEIGHT)
 			return false;
