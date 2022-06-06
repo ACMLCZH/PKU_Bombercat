@@ -77,7 +77,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 		// msg(new Object[] {p1, p2, p1New, p2New});
 		// msg(new Object[] {p1Grid, p2Grid, p1NewGrid, p2NewGrid});
 		// 判断是否会超出边界
-		if (p1NewGrid.x < 0 || p2NewGrid.x >= GameMap.WIDTH || p1NewGrid.y < 0 || p2NewGrid.y >= GameMap.HEIGHT)
+		if (p1New.x < 0 || p2New.x >= GameMap.WIDTH * BasePlayer.PLAYER_UNIT || p1New.y < 0 || p2New.y >= GameMap.HEIGHT * BasePlayer.PLAYER_UNIT)
 			return false;
 
 		// 检查碰撞
