@@ -6,6 +6,7 @@ import BaseObject.BaseObject;
 import BaseObject.Bomb;
 import BaseObject.Coordinate;
 import BaseObject.GameMap;
+import BaseObject.Prop;
 import main.Game;
 import static render.MainRenderer.BLOCK_UNIT;
 
@@ -77,6 +78,9 @@ public class BasePlayer implements Comparable<BasePlayer>
 
 	public void setIndirect(Indirect dir) {this.dir = dir;}
 	public void setMove(boolean isMoving) {this.isMoving = isMoving;}
+	public void addSpeed(double ad) {this.speed += ad;}
+	public void addRange() {++this.bombRange;}
+	public void addBomb() {++this.numBomb;}
 
     public boolean move() 
 	{
@@ -109,7 +113,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 			{p1Grid, p1NewGrid}, {new Coordinate(p2Grid.x, p1Grid.y), new Coordinate(p2NewGrid.x, p1NewGrid.y)},
 			{new Coordinate(p1Grid.x, p2Grid.y), new Coordinate(p1NewGrid.x, p2NewGrid.y)}, {p2Grid, p2NewGrid}
 		};
-		for (int i = 0; i < 2; ++ i)
+		for (int i = 0; i < 2; ++i)		// 只要判断人物前面的两个角就行
 		{
 			BaseObject obj = gameMap.get(ca[colliDetect.get(dir)[i]][0]);
 			BaseObject objNew = gameMap.get(ca[colliDetect.get(dir)[i]][1]);
@@ -119,7 +123,16 @@ public class BasePlayer implements Comparable<BasePlayer>
 				return false;
 			}
 		}
-
+		for (int i = 0; i < 2; ++i)
+		{
+			Coordinate co = ca[colliDetect.get(dir)[i]][1];
+			BaseObject objNew = gameMap.get(co);
+			if (objNew != null && objNew instanceof Prop)
+			{
+				if (this instanceof HumanPlayer) ((Prop)objNew).buff(this);
+				gameMap.set(co, null);
+			}
+		}
 		// 移动成功
 		this.p1 = p1New;
 		this.p2 = p2New;
