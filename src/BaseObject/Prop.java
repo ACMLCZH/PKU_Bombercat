@@ -8,7 +8,6 @@ import BasePlayer.BasePlayer;
 // 道具类
 public class Prop extends BaseObject
 {
-	private boolean destroyed = false;
     public static Map<Integer, String> toItemName = new HashMap<>(){{
 		put(0, "bombitem"); put(1, "flowitem"); put(2, "speeditem");
 	}};
@@ -21,11 +20,6 @@ public class Prop extends BaseObject
         super(toItemName.get(t), x, y);
         isPassable = true;
         isBreakable = true;
-    }
-
-    public boolean isDestroyed()
-    {
-        return destroyed;
     }
 
     public void buff(BasePlayer player)
@@ -42,13 +36,10 @@ public class Prop extends BaseObject
                 player.addSpeed();
                 break;
         }
-        destroyed = true;
     }
 
     @Override
-    public void interactWithBomb(Bomb b) {
-        destroyed = true;
-    }
+    public void interactWithBomb(Bomb b) {}
 	@Override
 	public String toString() {return this.name;}
 }
