@@ -67,7 +67,16 @@ public class Bomb extends BaseObject
             if (x >= 0 && x < GameMap.WIDTH)
             {
                 BaseObject obj = gameMap.get(new Coordinate(x, y));
-                if (obj != null) obj.interactWithBomb(this);
+                if (obj != null) 
+                {
+                    obj.interactWithBomb(this);
+                    if (obj.isBreakable)
+                    {
+                        Flow flow = new Flow("horiflow", x, y, atk);
+                        flows.add(flow);
+                        gameMap.set(new Coordinate(x, y), flow);
+                    }
+                }
                 else
                 {
                     Flow flow = new Flow("horiflow", x, y, atk);
@@ -84,7 +93,15 @@ public class Bomb extends BaseObject
             {
                 BaseObject obj = gameMap.get(new Coordinate(x, y));
                 if (obj != null)
+                {
                     obj.interactWithBomb(this);
+                    if (obj.isBreakable)
+                    {
+                        Flow flow = new Flow("vertflow", x, y, atk);
+                        flows.add(flow);
+                        gameMap.set(new Coordinate(x, y), flow);
+                    }
+                }
                 else
                 {
                     Flow flow = new Flow("vertflow", x, y, atk);

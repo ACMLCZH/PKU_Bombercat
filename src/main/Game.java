@@ -98,8 +98,6 @@ public class Game
 			Barrier barrier = iterBarrier.next();
 			if (barrier.isDestroyed())
 			{
-				// 把barrier从gameMap里去掉
-				gameMap.set(barrier.getLoc(), null);
 				// 把barrier从barriers里去掉
 				iterBarrier.remove();
 			}

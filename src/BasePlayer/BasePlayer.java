@@ -12,7 +12,7 @@ import static render.MainRenderer.BLOCK_UNIT;
 
 public class BasePlayer implements Comparable<BasePlayer>
 {
-	public static final int PLAYER_UNIT = 35;
+	public static final int PLAYER_UNIT = 30;
 	public static final int STRIDE = 1;
 	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
