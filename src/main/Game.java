@@ -53,7 +53,8 @@ public class Game
 
 		if (!started) return;
 
-		// 每个AI决定移动
+		// 人物及每个AI决定移动
+		infoPlayer.move();
 		for (AIPlayer aiPlayer: aiPlayers)
 		{
 			aiPlayer.decideMove();
