@@ -23,9 +23,8 @@ public class Game
 	private Set<BasePlayer> players = new TreeSet<>();
 	private Set<AIPlayer> aiPlayers = new TreeSet<>();
 	private HumanPlayer infoPlayer = null;
-	private ArrayList<Bomb> bombs = new ArrayList<>();
-	private ArrayList<Flow> flows = new ArrayList<>();
-	private ArrayList<Barrier> barriers = new ArrayList<>();
+	private List<Bomb> bombs = new LinkedList<>();
+	private List<Flow> flows = new LinkedList<>();
 	private boolean soundOn = true;
 	private boolean started = false;
 	private MainRenderer renderer = new MainRenderer(this);
@@ -35,9 +34,8 @@ public class Game
 	public Set<BasePlayer> getPlayers() {return this.players;}
 	public Set<AIPlayer> getAIPlayers() {return this.aiPlayers;}
 	public HumanPlayer getInfoPlayer() {return this.infoPlayer;}
-	public ArrayList<Bomb> getBombs() {return this.bombs;}
-	public ArrayList<Flow> getFlows() {return this.flows;}
-	public ArrayList<Barrier> getBarriers() {return this.barriers;};
+	public List<Bomb> getBombs() {return this.bombs;}
+	public List<Flow> getFlows() {return this.flows;}
 	public boolean isSoundOn() {return this.soundOn;}
 	public boolean isStarted() {return this.started;}
 	public void switchSound() {this.soundOn = !this.soundOn;}
@@ -91,18 +89,6 @@ public class Game
 				iterBomb.remove();
 			}
 		}
-		// 去掉被炸掉的Barrier
-		Iterator<Barrier> iterBarrier = barriers.iterator();
-		while (iterBarrier.hasNext())
-		{
-			Barrier barrier = iterBarrier.next();
-			if (barrier.isDestroyed())
-			{
-				// 把barrier从barriers里去掉
-				// barrier.crash();
-				iterBarrier.remove();
-			}
-		}
 
 		// 计算玩家收到伤害
 		Iterator<BasePlayer> iterPlayer = players.iterator();
@@ -149,7 +135,6 @@ public class Game
 		gameKeyListener.clearPlayer();
 		players.clear();
 		bombs.clear();
-		barriers.clear();
 		flows.clear();
 		commandQueue.clear();
 		
@@ -172,12 +157,6 @@ public class Game
 			aiPlayers.add(aiPlayer);
 			players.add(aiPlayer);
 		}
-		for (int i = 0; i < GameMap.HEIGHT; ++i)
-			for (int j = 0; j < GameMap.WIDTH; ++j)
-			{
-				BaseObject obj = gameMap.get(j, i);
-				if (obj != null) barriers.add((Barrier)obj);
-			}
 		gameKeyListener.setPlayer(infoPlayer);
 		renderer.addKeyListener(gameKeyListener);
 

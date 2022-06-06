@@ -39,10 +39,10 @@ public class Flow extends BaseObject
 	// public int 
 	public void crash()
 	{
-		BaseObject obj = null;
+		Prop prop = null;
 		if (this.drop)
-			obj = new Prop(Prop.toItemName.get((int)(Math.random() * 3)), loc.x, loc.y);
-		game.getMap().set(loc, obj);
+            prop = new Prop(Prop.toItemName.get((int)(Math.random() * 3)), loc.x, loc.y);
+		game.getMap().set(loc, prop);
 	}
 
     public boolean countDown()
