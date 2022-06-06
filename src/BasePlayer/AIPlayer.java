@@ -91,7 +91,7 @@ public class AIPlayer extends BasePlayer
                 nextGrid = new Coordinate(cur.x+directs[k][0], cur.y+directs[k][1]);
                 if (nextGrid.x < 0 || nextGrid.x >= GameMap.WIDTH || nextGrid.y < 0 || nextGrid.y >= GameMap.HEIGHT) continue;
                 BaseObject nextObject = mp.get(nextGrid);
-                if (nextObject != null && nextObject.getName() == "bomb") {
+                if (nextObject != null && (nextObject.getName() == "bomb" || nextObject.toString().contains("flow"))) {
                     smp[nextGrid.y][nextGrid.x] = -1;  haveBombFlag = true;
                     continue;
                 }
@@ -117,6 +117,9 @@ public class AIPlayer extends BasePlayer
                             minSkip = newMp[i][j];
                             nearestP = new Coordinate(j, i);
                         }
+                        else if(newMp[i][j] == minSkip && randChoice.nextInt(10)<5) {
+                            nearestP = new Coordinate(j, i);
+                        }
                     }
                 }
             if(newMp[curLoc.y][curLoc.x] == -1)
@@ -128,7 +131,12 @@ public class AIPlayer extends BasePlayer
             { 	//走一步的地方都被锁定，等炸弹
                 this.isMoving = false; //ndirect.STOP;
                 stopTime = System.currentTimeMillis();
+                return ;
                 // return lastDir;
+            }
+            else 
+            {
+                
             }
         }
         // 下面是向玩家前行的路
@@ -139,12 +147,12 @@ public class AIPlayer extends BasePlayer
             return;
         }
         // 最后寻找一个可以放炸弹的地方
-        if(curBombPlaceLoc == null) {
+        //if(curBombPlaceLoc == null) {
             curBombPlaceLoc = findBombPlace(smp, mp); //这是必要的更新
             findWay(curLoc, curBombPlaceLoc, lastMp);
-        }
-        else
-			findWay(curLoc, curBombPlaceLoc, lastMp);
+        //}
+        //else
+		//	findWay(curLoc, curBombPlaceLoc, lastMp);
     }
 
     public boolean decidePlaceBomb()
@@ -193,7 +201,7 @@ public class AIPlayer extends BasePlayer
                 if(newMp[i][j] == -1 && smp[i][j] != -1) continue;
                 newMp[i][j] = smp[i][j];
                 if(smp[i][j] == 0) continue;
-                if(smp[i][j] == -1) {
+                if(smp[i][j] == -1 && mp.get(j,i).getName() == "bomb") {
                     int t = ((Bomb) mp.get(j, i)).getBombRange();
                     for(int x = j - t; x <= j + t; ++x) {
                         if (x < 0 || x >= GameMap.WIDTH) continue;
@@ -214,6 +222,13 @@ public class AIPlayer extends BasePlayer
     private void findWay(Coordinate start, Coordinate end, int[][] lastMp)
 	{
         LinkedList<Indirect> SaveList = new LinkedList<>();
+        BaseObject endObj = this.game.getMap().get(end);
+        if (endObj != null && endObj.getName() == "bomb") 
+        {  //冷静一下再去放炸弹...
+            stopTime = System.currentTimeMillis() - 500;
+            this.isMoving = false;
+            return ;
+        }
         if (end.equals(start))
 		{
             stopTime = System.currentTimeMillis();
@@ -259,6 +274,9 @@ public class AIPlayer extends BasePlayer
                 if(tmp > maxBreakable) {
                     maxBreakable = tmp;
                     maxBreakableLoc = new Coordinate(x, y);
+                }
+                else if(tmp == maxBreakable && randChoice.nextInt(10) < 5) {
+                    maxBreakableLoc = new Coordinate(x,y);
                 }
             }
         }
