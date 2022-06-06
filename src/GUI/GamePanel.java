@@ -36,23 +36,15 @@ public class GamePanel extends MyPanel
 	public static final int GAMETOPBIAS = 60;
 	private static final Coordinate invBias = RenderImage.getCollsion("invincible");
 	private java.util.List<DrawTask> drawList = new Vector<>();
-	// private Image gameImg = null;
+	private HumanPlayer infoPlayer = null;
 
 	public GamePanel(MainRenderer mainWindow) {super(mainWindow);}
 
 	@Override
 	public void toLayout() {}
-	// @Override
-	// public void update(Graphics g)
-	// {
-	// 	if (gameImg == null) gameImg = this.createImage(SCENEWIDTH, SCENEHEIGHT);
-	// 	paint(gameImg.getGraphics());
-	// 	g.drawImage(gameImg, 0, 0, this);
-	// }
 	@Override
-	public void paintComponent(Graphics g)
+	public void paint(Graphics g)
 	{
-		// super.paint(gr);
 		synchronized (drawList) {
 			// msg(drawList.size());
 			for (DrawTask dt: drawList)
@@ -64,12 +56,25 @@ public class GamePanel extends MyPanel
 	{
 		drawList.add(new DrawTask(img, x, y - (yBottom ? img.getHeight(this) : 0) + (addTop ? GAMETOPBIAS : 0)));
 	}
-	
+	private void showPlayer(BasePlayer curP)
+	{
+		Image pImg = RenderImage.getImage(curP.toString());
+		Coordinate bias = RenderImage.getCollsion(curP.toString());
+		putTexture(pImg, curP.getLeft() - bias.x, curP.getUp() - bias.y, false, true);
+		if (curP.isInvincible())
+		{
+			pImg = RenderImage.getImage(curP.toString());
+			putTexture(RenderImage.getImage("invincible"), curP.getLeft() - invBias.x, curP.getUp() - invBias.y, false, true);
+		}
+		if (curP == infoPlayer)
+			putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + 10, curP.getUp(), true, true);
+	}
+
 	public void updateRender()
 	{
+		infoPlayer = mainWindow.getGame().getInfoPlayer();
 		synchronized (drawList) {
 			drawList.clear();
-			HumanPlayer infoPlayer = mainWindow.getGame().getInfoPlayer();
 			Set<BasePlayer> ps = mainWindow.getGame().getPlayers();
 			GameMap mp = mainWindow.getGame().getMap();
 			putTexture(RenderImage.getImage("background"), 0, 0, false, false);
@@ -81,16 +86,7 @@ public class GamePanel extends MyPanel
 			{
 				while (curP != null && nowy >= curP.getBottom())	// 加载人物
 				{
-					Image pImg = RenderImage.getImage(curP.toString());
-					Coordinate bias = RenderImage.getCollsion(curP.toString());
-					putTexture(pImg, curP.getLeft() - bias.x, curP.getUp() - bias.y, false, true);
-					if (curP.isInvincible())
-					{
-						pImg = RenderImage.getImage(curP.toString());
-						putTexture(RenderImage.getImage("invincible"), curP.getLeft() - invBias.x, curP.getUp() - invBias.y, false, true);
-					}
-					if (curP == infoPlayer)
-						putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + 10, curP.getUp(), true, true);
+					showPlayer(curP);
 					curP = pIt.hasNext() ? pIt.next() : null;
 				}
 				for (int j = 0; j < GameMap.WIDTH; ++j)				// 加载场景
@@ -114,6 +110,7 @@ public class GamePanel extends MyPanel
 				}
 				nowy += BLOCK_UNIT;
 			}
+			while (curP != null) {showPlayer(curP); curP = pIt.hasNext() ? pIt.next() : null;}
 		}
 	}
 }
