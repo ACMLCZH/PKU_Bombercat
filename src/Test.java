@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
+import java.awt.image.BufferedImage;
 
 class SPanel extends GUI.MyPanel
 {
@@ -116,6 +117,8 @@ class SPanel extends GUI.MyPanel
 public class Test extends JFrame
 {
 	SPanel sp = new SPanel(this);
+	private static final int HPWIDTH = 200;
+	private static final int HPHEIGHT = 50;
 	public Test()
 	{
 		setTitle("泡泡堂 in PKU");
@@ -123,15 +126,44 @@ public class Test extends JFrame
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 		setBounds(100, 100, WINWIDTH, WINHEIGHT);
-		SwingUtilities.invokeLater(() -> {
-			sp.toLayout();
-		});
+		// SwingUtilities.invokeLater(() -> {
+		// 	sp.toLayout();
+		// });
 		setVisible(true);
 	}
+	
+	public static BufferedImage drawTranslucentStringPic(int width, int height, Integer fontHeight,String drawStr)
+	{
+		BufferedImage buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D gd = buffImg.createGraphics();
+		//设置透明  start
+		buffImg = gd.getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+		gd=buffImg.createGraphics();
+		//设置透明  end
+		gd.setFont(new Font("微软雅黑", Font.PLAIN, fontHeight)); //设置字体
+		gd.setColor(Color.ORANGE); //设置颜色
+		// gd.drawRect(0, 0, width - 1, height - 1); //画边框
+		gd.drawString("HP-1000", width/2-fontHeight*drawStr.length()/2,fontHeight); //输出文字（中文横向居中）
+		return buffImg;
+	}
+
+	@Override
+	public void paint(Graphics g)
+	{
+		// BufferedImage sImg = new BufferedImage(HPWIDTH, HPHEIGHT, BufferedImage.TYPE_INT_RGB);
+		// Graphics2D sg = sImg.createGraphics();
+		// sImg = sg.getDeviceConfiguration().createCompatibleImage(HPWIDTH, HPHEIGHT, Transparency.TRANSLUCENT);
+		// sg = sImg.createGraphics();
+		// sg.setFont(HPFont);
+		// sg.setColor(Color.ORANGE);
+		// sg.drawRect(0, 0, HPWIDTH - 1, HPHEIGHT - 1);
+		// sg.drawString("？？哈！", 0, 0);
+		g.drawImage(drawTranslucentStringPic(80, 30, 15,"欢迎访问我的博客"), 50, 50, this);
+		// g.drawString("？？de", 50, 50);
+	}
+
 	public static void main(String[] args)
 	{
 		new Test();
-		ImageIcon ic = new ImageIcon("./res/texture/icon/start.png");
-		
 	}
 }

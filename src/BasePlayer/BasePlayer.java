@@ -38,6 +38,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected String name = null;
 	protected boolean isMoving = false;
 	protected int numPutBomb = 0;
+	protected int curDmg = 0;
 	protected long lastHurt = 0;
 	protected long lastMove = 0;
 	protected Game game;
@@ -72,6 +73,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	public int getLeft() {return p1.x;}
 	public int getUp() {return p1.y;}
 	public String getName() {return name;}
+	public int getDmg() {return curDmg;}
 	public boolean isAlive() {return HP > 0;}
 	public boolean isInvincible(long cur) {return cur - lastHurt < BasePlayer.invincibleTime;}
 	public boolean isInvincible() {return System.currentTimeMillis() - lastHurt < BasePlayer.invincibleTime;}
@@ -161,6 +163,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 		{
 			HP -= dmg;
 			lastHurt = current;
+			curDmg = dmg;
 		}
 	}
 

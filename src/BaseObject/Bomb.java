@@ -41,9 +41,10 @@ public class Bomb extends BaseObject
 
 	@Override
 	public String toString() {return name + "_" + getState();}
-		// msg(name + "_" + getState());
+	// msg(name + "_" + getState());
 	
-		public int getState() {return Math.min(bombTime - timeBeforeBomb + 1, 5);}	// return the time bomb have placed.
+	public int getState() {return Math.min(bombTime - timeBeforeBomb + 1, 5);}	// return the time bomb have placed.
+	public int getAtk() {return atk;}
 
     // use for decrease and return true if bomb.
     public boolean countDown()

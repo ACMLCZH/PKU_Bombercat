@@ -13,6 +13,7 @@ import static BasePlayer.BasePlayer.PLAYER_UNIT;
 import render.RenderImage;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Vector;
 // import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,6 +35,9 @@ public class GamePanel extends MyPanel
 	public static final int GAMEWIDTH = GameMap.WIDTH * BLOCK_UNIT;
 	public static final int GAMEHEIGHT = GameMap.HEIGHT * BLOCK_UNIT;
 	public static final int GAMETOPBIAS = 60;
+	private static final Font HPFont = new Font("Times New Roman", Font.PLAIN, 12);
+	private static final int HPWIDTH = 50;
+	private static final int HPHEIGHT = 15;
 	// private static final Coordinate invBias = RenderImage.getCollsion("invincible");
 	private java.util.List<DrawTask> drawList = new Vector<>();
 	private HumanPlayer infoPlayer = null;
@@ -61,13 +65,22 @@ public class GamePanel extends MyPanel
 		Image pImg = RenderImage.getImage(curP.toString());
 		// Coordinate bias = RenderImage.getCollsion(curP.toString());
 		putTexture(pImg, curP.getLeft(), curP.getUp(), false, true);
+		if (curP == infoPlayer)
+			putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + (PLAYER_UNIT - 10) / 2, curP.getUp(), true, true);
 		if (curP.isInvincible())
 		{
 			pImg = RenderImage.getImage(curP.toString());
 			putTexture(RenderImage.getImage("invincible"), curP.getLeft(), curP.getUp(), false, true);
+			BufferedImage sImg = new BufferedImage(HPWIDTH, HPHEIGHT, BufferedImage.TYPE_INT_RGB);
+			Graphics2D sg = sImg.createGraphics();
+			sImg = sg.getDeviceConfiguration().createCompatibleImage(HPWIDTH, HPHEIGHT, Transparency.TRANSLUCENT);
+			sg = sImg.createGraphics();
+			sg.setFont(HPFont);
+			sg.setColor(Color.BLUE);
+			// sg.drawRect(0, 0, HPWIDTH - 1, HPHEIGHT - 1);
+			sg.drawString("HP-" + curP.getDmg(), 0, HPHEIGHT - 1);
+			putTexture(sImg, curP.getLeft() - (HPWIDTH - PLAYER_UNIT) / 2, curP.getUp(), true, true);
 		}
-		if (curP == infoPlayer)
-			putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + (PLAYER_UNIT - 10) / 2, curP.getUp(), true, true);
 	}
 
 	public void updateRender()

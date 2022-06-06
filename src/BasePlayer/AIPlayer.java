@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class AIPlayer extends BasePlayer
 {
-    public static final int[] INIT_HP = new int[] {4000, 8000};
+    public static final int[] INIT_HP = new int[] {700, 2000, 8000};
     private static final int[][] directs = {{0, -1},{0, 1},{-1, 0},{1, 0}}; // 姑且这样存着
     private static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
 	// private static final int MAX_DIS = 1000;
@@ -32,11 +32,13 @@ public class AIPlayer extends BasePlayer
     public AIPlayer(Game game, String name, Coordinate spawn)
 	{
         super(
-			game, name, INIT_HP[game.getMode()], spawn,
+			game, name,
+			game.getMode() == Game.PVP ? 4000 : INIT_HP[(int)(Math.random() * 3)],
+			spawn,
 			game.getMode() == Game.PVP ? ((int)(Math.random() * 1000) + 500) : 400,
 			game.getMode() == Game.PVP ? 1 : 0,
 			game.getMode() == Game.PVP ? 1 : 0,
-			game.getMode() == Game.PVP ? 4.0 : 3.0
+			game.getMode() == Game.PVP ? 4.0 : 2.5
 		);
 		// this.atk = atk;
         // lastDir = dir;
@@ -44,7 +46,15 @@ public class AIPlayer extends BasePlayer
         this.curTarget = spawn;
         this.saveDir = new LinkedList<>();
         this.randChoice = new Random();
-		this.def = game.getMode() == Game.PVP ? 0 : ((int)(Math.random() * 3000));
+		if (game.getMode() == Game.PVP)
+			this.def = 0;
+		else
+			switch (this.HP)
+			{
+				case 700: this.def = (int)(Math.random() * 500) + 2000; break;
+				case 2000: this.def = (int)(Math.random() * 1000) + 1000; break;
+				case 8000: this.def = (int)(Math.random() * 1000); break;
+			}
 	}
 
     // void mainloop() {}
@@ -52,6 +62,9 @@ public class AIPlayer extends BasePlayer
         return p1.x == tarGrid.x * BasePlayer.pixelsPerBlock && p1.y == tarGrid.y * BasePlayer.pixelsPerBlock;
     }
 	public int getAtk() {return this.atk;}
+	
+	@Override
+	public void getHurt(int dmg) {if (dmg > def) super.getHurt(dmg - def);}
 
 	public void decideCharge()
 	{

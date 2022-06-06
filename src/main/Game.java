@@ -99,10 +99,8 @@ public class Game
 		}
 
 		// 计算玩家收到伤害
-		Iterator<BasePlayer> iterPlayer = players.iterator();
-		while (iterPlayer.hasNext())
+		for (BasePlayer player: players)
 		{
-			BasePlayer player = iterPlayer.next();
 			Coordinate loc = player.getGridLoc();
 			BaseObject obj = gameMap.get(loc);
 			if (obj != null)
@@ -111,19 +109,22 @@ public class Game
 				if (name == "crossflow" || name == "vertflow" || name == "horiflow")
 					player.getHurt(((Flow)obj).getAtk());
 			}
+		}
+		if (mode == PVE)
+			for (AIPlayer player : aiPlayers)
+				if (infoPlayer.contacts(player))
+					infoPlayer.getHurt(player.getAtk());
+
+		// 移除生命值归零的玩家
+		Iterator<BasePlayer> iterPlayer = players.iterator();
+		while (iterPlayer.hasNext())
+		{
+			BasePlayer player = iterPlayer.next();
 			if (!player.isAlive())
 			{
 				if (player instanceof AIPlayer) aiPlayers.remove(player);
 				else infoPlayer = null;
 				iterPlayer.remove();
-			}
-		}
-		if (mode == PVE)
-		{
-			for (AIPlayer player : aiPlayers)
-			{
-				if (infoPlayer.contacts(player))
-					infoPlayer.getHurt(player.getAtk());
 			}
 		}
 
