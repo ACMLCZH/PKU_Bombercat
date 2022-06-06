@@ -26,9 +26,13 @@ public class AIPlayer extends BasePlayer
     private Random randChoice;
     // private int atk;
 
-    public AIPlayer(Game game, String name, int HP, Coordinate spawn, int atk)
+    public AIPlayer(Game game, String name, int gameMode, Coordinate spawn, int atk)
 	{
-        super(game, name, HP, spawn, atk);
+        super(
+			game, name, gameMode, INIT_HP, spawn, atk,
+			gameMode == Game.PVP ? 1 : 0,
+			gameMode == Game.PVP ? 1 : 0
+		);
 		// this.atk = atk;
         // lastDir = dir;
         stopTime = System.currentTimeMillis(); // 初始时默认停一下
@@ -36,6 +40,14 @@ public class AIPlayer extends BasePlayer
         saveDir = new LinkedList<>();
         randChoice = new Random();
     }
+
+		// this.atk = atk;
+        // lastDir = dir;
+    //     stopTime = System.currentTimeMillis(); // 初始时默认停一下
+    //     curTarget = spawn;
+    //     saveDir = new LinkedList<>();
+    //     randChoice = new Random();
+    // }
 
     // void mainloop() {}
     public boolean inGridCenter(Coordinate tarGrid) {

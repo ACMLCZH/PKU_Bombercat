@@ -164,11 +164,11 @@ public class Game
 			e.printStackTrace();
 			System.exit(0);
 		}
-		infoPlayer = new HumanPlayer(this, selChar, HumanPlayer.INIT_HP, gameMap.getSpawn(0));
+		infoPlayer = new HumanPlayer(this, selChar, mode, gameMap.getSpawn(0));
 		players.add(infoPlayer);
 		for (int i = 1; i < 4; ++i)
 		{
-			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", AIPlayer.INIT_HP, gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
+			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", mode, gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
 			aiPlayers.add(aiPlayer);
 			players.add(aiPlayer);
 		}

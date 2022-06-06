@@ -63,6 +63,7 @@ public class GamePane extends JLayeredPane
 	{
 		try {
 			pnAnimate.setVisible(true);
+			Thread.sleep(1000);
 			modifyCount("成功通关！", true);
 			Thread.sleep(3000);
 			modifyCount("", false);
@@ -75,6 +76,7 @@ public class GamePane extends JLayeredPane
 	{
 		try {
 			pnAnimate.setVisible(true);
+			Thread.sleep(1000);
 			modifyCount("通关失败！", true);
 			Thread.sleep(3000);
 			modifyCount("", false);

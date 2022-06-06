@@ -6,14 +6,18 @@ import main.Game;
 
 public class HumanPlayer extends BasePlayer
 {
-	public static final int INIT_HP = 10000;
+	public static final int INIT_HP = 2000;
 	public static final int ATK = 1000;
 	public static final int MOVE_TOLERANCE = 10;
 	private boolean placing = false;
 
-	public HumanPlayer(Game game, String name, int HP, Coordinate spawn)
+	public HumanPlayer(Game game, String name, int gameMode, Coordinate spawn)
 	{
-		super(game, name, HP, spawn, ATK);
+		super(
+			game, name, gameMode, INIT_HP, spawn, ATK,
+			gameMode == Game.PVP ? 1 : 6,
+			gameMode == Game.PVP ? 1 : 4
+		);
 	}
 
 	@Override

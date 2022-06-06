@@ -27,19 +27,18 @@ public class Bomb extends BaseObject
     private long lastUpdated;
     private boolean exploded;
 
-    public Bomb(Game g, int x, int y, BasePlayer m, int atk)
+    public Bomb(Game g, int x, int y, BasePlayer m, int atk, int bombRange)
 	{
         super("bomb", x, y);
+        this.game = g;
 		this.atk = atk;
-        master = m;
-        game = g;
-        bombRange = 2;   // 如果有道具影响的话再作更改
-        timeBeforeBomb = bombTime;
-        // isBreakable = true;
-		isBreakable = false;
-        isPassable = false;
-        exploded = false;
-        lastUpdated = System.currentTimeMillis();
+        this.master = m;
+        this.bombRange = bombRange;   // 如果有道具影响的话再作更改
+        this.timeBeforeBomb = bombTime;
+		this.isBreakable = false;
+        this.isPassable = false;
+        this.exploded = false;
+        this.lastUpdated = System.currentTimeMillis();
     }
 
 	@Override
@@ -97,6 +96,7 @@ public class Bomb extends BaseObject
 			}
 		}
 		createFlow("crossflow", loc, false);
+		master.recoverBomb();
 	}
     //     for (x = loc.x - bombRange; x <= loc.x + bombRange; ++x)
     //     {

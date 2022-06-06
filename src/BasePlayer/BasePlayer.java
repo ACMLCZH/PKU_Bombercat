@@ -17,35 +17,42 @@ public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = 40;
 	public static final int STRIDE = 1;
+	public static final int SPEED = 5; // 每秒移动多少个格子
 	protected static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
 	private static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
-	private static final int speed = 5; // 每秒移动多少个格子
-	private static final int periodPerMove = (int)(1000.0 * STRIDE / (speed * pixelsPerBlock)); // 每次移动1像素后停多久
 	private static final Map<Indirect, int[]> colliDetect = new HashMap<>() {{
 		put(Indirect.UP, new int[] {0, 1}); put(Indirect.DOWN, new int[] {2, 3});
 		put(Indirect.LEFT, new int[] {0, 2}); put(Indirect.RIGHT, new int[] {1, 3});
 	}};
+	protected int gameMode;
     protected int HP;
+	protected Coordinate p1, p2;		// Bounding Box
 	protected int atk;
+	protected int numBomb, bombRange, speed;
+	protected int periodPerMove;        // 每次移动1像素后停多久
 	protected Indirect dir;
 	protected String name = null;
-	protected Coordinate p1, p2;		// Bounding Box
 	protected boolean isMoving = false;
 	protected long lastHurt = 0;
 	protected long lastMove = 0;
 	protected Game game;
 	protected boolean hitBarrier = false; // 辅助校正用
 
-	public BasePlayer(Game game, String name, int HP, Coordinate spawn, int atk)
+	public BasePlayer(Game game, String name, int gameMode, int HP, Coordinate spawn, int atk, int numBomb, int bombRange)
 	{
+		this.dir = Indirect.DOWN;
 		this.game = game;
+		this.name = name;
+		this.gameMode = gameMode;
 		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT + (BLOCK_UNIT - PLAYER_UNIT) / 2,
 								 spawn.y * BLOCK_UNIT + (BLOCK_UNIT - PLAYER_UNIT) / 2);
 		this.p2 = new Coordinate(p1.x + PLAYER_UNIT - 1, p1.y + PLAYER_UNIT - 1);
 		this.HP = HP;
 		this.atk = atk;
-		this.dir = Indirect.DOWN;
-		this.name = name;
+		this.numBomb = numBomb;
+		this.bombRange = bombRange;
+		this.speed = SPEED;
+		this.periodPerMove = (int)(1000.0 * STRIDE / (this.speed * pixelsPerBlock));
 	}
     
 	@Override
@@ -73,7 +80,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 
         // 判断move的时间间隔是否满足
 		long current = System.currentTimeMillis();
-		if (current - lastMove < BasePlayer.periodPerMove)
+		if (current - lastMove < this.periodPerMove)
 			return false;
 		// 计算移动后四个角所在像素, 向下取整
 		Coordinate p1New = new Coordinate(p1);
@@ -118,13 +125,16 @@ public class BasePlayer implements Comparable<BasePlayer>
     public boolean placeBomb() 
 	{
         Coordinate center = getGridLoc();
-		if (game.getMap().get(center) != null)
-			return false;
-		Bomb bomb = new Bomb(game, center.x, center.y, this, this.atk);
+		if (numBomb == 0) return false;
+		if (game.getMap().get(center) != null) return false;
+		Bomb bomb = new Bomb(game, center.x, center.y, this, this.atk, this.bombRange);
 		game.getMap().set(center, bomb);
 		game.getBombs().add(bomb);
+		--numBomb;
 		return true;
     }
+
+	public void recoverBomb() {++numBomb;}
 
 	public void getHurt(int dmg)
 	{
