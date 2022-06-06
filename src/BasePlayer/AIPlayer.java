@@ -17,7 +17,6 @@ public class AIPlayer extends BasePlayer
     // private Indirect lastDir;
     private int maxSaveDir = 3;          // 保存路径的最大数，即移动步数过多后要重算
     private Queue<Indirect> saveDir;     // 简单保存确定的一系列行动
-	private Queue<Boolean> saveMoving;	 // 简单保存确定的一系列行动
     private long stopTime;           	 // 控制停止的时间
     private Coordinate curBombPlaceLoc;
     private Random randChoice;
@@ -54,7 +53,7 @@ public class AIPlayer extends BasePlayer
         if(!saveDir.isEmpty())
 		{			// TODO:但是玩家也会移动啊，只完成之前的路径是不是不太好？需要重新规划一下？
 			this.dir = saveDir.poll();
-			this.isMoving = saveMoving.poll();
+			this.isMoving = true;		// 看起来savedir里面只有上下左右？
 			return;
         }
             // lastDir = saveDir.poll();
