@@ -12,6 +12,8 @@ public class Coordinate implements Comparable<Coordinate>
 	public Coordinate(Coordinate p) {this.x = p.x; this.y = p.y;}
 
 	@Override
+	public String toString() {return x + " " + y;}
+	@Override
 	public int compareTo(Coordinate o)
 	{
         int r = this.y - o.y;

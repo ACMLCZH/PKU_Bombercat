@@ -1,5 +1,7 @@
 ﻿package BasePlayer;
 
+import static DEBUG.Dbg.msg;
+
 import BaseObject.BaseObject;
 import BaseObject.Bomb;
 import BaseObject.Coordinate;
@@ -11,7 +13,7 @@ import static render.MainRenderer.BLOCK_UNIT;
 public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = BLOCK_UNIT;
-	public static final int STRIDE = 3;
+	public static final int STRIDE = 1;
 	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
 	static final int speed = 5; // 每秒移动多少个格子
@@ -69,10 +71,11 @@ public class BasePlayer implements Comparable<BasePlayer>
 		Coordinate p2New = new Coordinate(p2);
 		p1New.step(this.dir);
 		p2New.step(this.dir);
-
 		// 计算移动前后所在格子
 		Coordinate p1Grid = p1.toGrid(), p2Grid = p2.toGrid();
 		Coordinate p1NewGrid = p1New.toGrid(), p2NewGrid = p2New.toGrid();
+		// msg(new Object[] {p1, p2, p1New, p2New});
+		// msg(new Object[] {p1Grid, p2Grid, p1NewGrid, p2NewGrid});
 		// 判断是否会超出边界
 		if (p1NewGrid.x < 0 || p2NewGrid.x >= GameMap.WIDTH || p1NewGrid.y < 0 || p2NewGrid.y >= GameMap.HEIGHT)
 			return false;
