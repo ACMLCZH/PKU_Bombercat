@@ -12,7 +12,7 @@ import static render.MainRenderer.BLOCK_UNIT;
 
 public class BasePlayer implements Comparable<BasePlayer>
 {
-	public static final int PLAYER_UNIT = 31;
+	public static final int PLAYER_UNIT = 40;
 	public static final int STRIDE = 1;
 	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
@@ -27,6 +27,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected long lastHurt = 0;
 	protected long lastMove = 0;
 	protected Game game;
+	protected boolean hitBarrier = false; // 辅助校正用
 
 	public BasePlayer(Game game, String name, int HP, Coordinate spawn, Indirect dir, int atk)
 	{
@@ -92,8 +93,11 @@ public class BasePlayer implements Comparable<BasePlayer>
 		for (int i = 0; i < 4; ++ i)
 		{
 			BaseObject obj = gameMap.get(ca[i][0]), objNew = gameMap.get(ca[i][1]);
-			if (objNew != null && !objNew.getIsPassable() && objNew != obj) 
+			if (objNew != null && !objNew.getIsPassable() && objNew != obj)
+			{
+				hitBarrier = true;
 				return false;
+			}
 		}
 
 		// 移动成功
