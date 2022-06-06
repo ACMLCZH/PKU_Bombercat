@@ -93,7 +93,7 @@ public class Bomb extends BaseObject
                 }
             }
         }
-        Flow flow = new Flow("crossflow", x, y, atk);
+        Flow flow = new Flow("crossflow", loc.x, loc.y, atk);
         flows.add(flow);
         gameMap.set(loc, flow);
     }
