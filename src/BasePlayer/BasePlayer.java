@@ -11,7 +11,7 @@ import static render.MainRenderer.BLOCK_UNIT;
 public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = BLOCK_UNIT;
-	public static final int STRIDE = 3;
+	public static final int STRIDE = 1;
 	static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
 	static final int speed = 5; // 每秒移动多少个格子
@@ -30,7 +30,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	{
 		this.game = game;
 		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT, spawn.y * BLOCK_UNIT);
-		this.p2 = new Coordinate(p1.x + PLAYER_UNIT, p1.y + PLAYER_UNIT);
+		this.p2 = new Coordinate(p1.x + PLAYER_UNIT - 1, p1.y + PLAYER_UNIT - 1);
 		this.HP = HP;
 		this.atk = atk;
 		this.dir = dir;
@@ -86,7 +86,8 @@ public class BasePlayer implements Comparable<BasePlayer>
 		for (int i = 0; i < 4; ++ i)
 		{
 			BaseObject obj = gameMap.get(ca[i][0]), objNew = gameMap.get(ca[i][1]);
-			if (objNew != null && !objNew.getIsPassable() && objNew != obj) return false;
+			if (objNew != null && !objNew.getIsPassable() && objNew != obj) 
+				return false;
 		}
 
 		// 移动成功
