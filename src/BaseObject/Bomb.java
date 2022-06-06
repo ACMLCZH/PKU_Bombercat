@@ -72,9 +72,6 @@ public class Bomb extends BaseObject
     public void explode() 
     {
         // 对周围的障碍物造成影响, 并且在范围内创建Flow对象
-        // GameMap gameMap = game.getMap();
-        // ArrayList<Flow> flows = game.getFlows();
-        // int x = 0, y = 0;
 		for (Indirect dir: Indirect.values())
 		{
 			Coordinate curLoc = new Coordinate(loc);
@@ -98,56 +95,6 @@ public class Bomb extends BaseObject
 		createFlow("crossflow", loc, false);
 		master.recoverBomb();
 	}
-    //     for (x = loc.x - bombRange; x <= loc.x + bombRange; ++x)
-    //     {
-    //         if (x == loc.x) continue;
-    //         y = loc.y;
-    //         if (x >= 0 && x < GameMap.WIDTH)
-    //         {
-    //             BaseObject obj = gameMap.get(new Coordinate(x, y));
-    //             if (obj != null) 
-    //             {
-    //                 obj.interactWithBomb(this);
-    //                 if (obj.isBreakable)
-    //                 {
-    //                     Flow flow = new Flow("horiflow", x, y, atk);
-    //                     flows.add(flow);
-    //                     gameMap.set(new Coordinate(x, y), flow);
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 Flow flow = new Flow("horiflow", x, y, atk);
-    //                 flows.add(flow);
-    //                 gameMap.set(new Coordinate(x, y), flow);
-    //             }
-    //         }
-    //     }
-    //     for (y = loc.y - bombRange; y <= loc.y + bombRange; ++y)
-    //     {
-    //         if (y == loc.y) continue;
-    //         x = loc.x;
-    //         if (y >= 0 && y < GameMap.HEIGHT)
-    //         {
-    //             BaseObject obj = gameMap.get(new Coordinate(x, y));
-    //             if (obj != null)
-    //             {
-    //                 obj.interactWithBomb(this);
-    //                 if (obj.isBreakable)
-    //                 {
-    //                     Flow flow = new Flow("vertflow", x, y, atk);
-    //                     flows.add(flow);
-    //                     gameMap.set(new Coordinate(x, y), flow);
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 Flow flow = new Flow("vertflow", x, y, atk);
-    //                 flows.add(flow);
-    //                 gameMap.set(new Coordinate(x, y), flow);
-    //             }
-    //         }
-    //     }
     //     Flow flow = new Flow("crossflow", loc.x, loc.y, atk);
     //     flows.add(flow);
     //     gameMap.set(loc, flow);

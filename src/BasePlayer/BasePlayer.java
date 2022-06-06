@@ -6,6 +6,7 @@ import BaseObject.BaseObject;
 import BaseObject.Bomb;
 import BaseObject.Coordinate;
 import BaseObject.GameMap;
+import BaseObject.Prop;
 import main.Game;
 import static render.MainRenderer.BLOCK_UNIT;
 
@@ -17,7 +18,10 @@ public class BasePlayer implements Comparable<BasePlayer>
 {
 	public static final int PLAYER_UNIT = 40;
 	public static final int STRIDE = 1;
-	public static final int SPEED = 5; // 每秒移动多少个格子
+	public static final double SPEED = 5; // 每秒移动多少个格子
+	public static final double SPEEDLIMIT = 7.0;
+	public static final int BOMBLIMIT = 6;
+	public static final int FLOWLIMIT = 10;
 	protected static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
 	private static final int invincibleTime = 1500; 		// 收到攻击后无敌1.5s
 	private static final Map<Indirect, int[]> colliDetect = new HashMap<>() {{
@@ -28,7 +32,8 @@ public class BasePlayer implements Comparable<BasePlayer>
     protected int HP;
 	protected Coordinate p1, p2;		// Bounding Box
 	protected int atk;
-	protected int numBomb, bombRange, speed;
+	protected int numBomb, bombRange;
+	protected double speed;
 	protected int periodPerMove;        // 每次移动1像素后停多久
 	protected Indirect dir;
 	protected String name = null;
@@ -38,7 +43,8 @@ public class BasePlayer implements Comparable<BasePlayer>
 	protected Game game;
 	protected boolean hitBarrier = false; // 辅助校正用
 
-	public BasePlayer(Game game, String name, int gameMode, int HP, Coordinate spawn, int atk, int numBomb, int bombRange)
+	public BasePlayer(Game game, String name, int gameMode,
+					  int HP, Coordinate spawn, int atk, int numBomb, int bombRange, double speed)
 	{
 		this.dir = Indirect.DOWN;
 		this.game = game;
@@ -72,6 +78,9 @@ public class BasePlayer implements Comparable<BasePlayer>
 
 	public void setIndirect(Indirect dir) {this.dir = dir;}
 	public void setMove(boolean isMoving) {this.isMoving = isMoving;}
+	public void addSpeed(double ad) {this.speed += ad;}
+	public void addRange() {++this.bombRange;}
+	public void addBomb() {++this.numBomb;}
 
     public boolean move() 
 	{
@@ -104,7 +113,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 			{p1Grid, p1NewGrid}, {new Coordinate(p2Grid.x, p1Grid.y), new Coordinate(p2NewGrid.x, p1NewGrid.y)},
 			{new Coordinate(p1Grid.x, p2Grid.y), new Coordinate(p1NewGrid.x, p2NewGrid.y)}, {p2Grid, p2NewGrid}
 		};
-		for (int i = 0; i < 2; ++ i)
+		for (int i = 0; i < 2; ++i)		// 只要判断人物前面的两个角就行
 		{
 			BaseObject obj = gameMap.get(ca[colliDetect.get(dir)[i]][0]);
 			BaseObject objNew = gameMap.get(ca[colliDetect.get(dir)[i]][1]);
@@ -114,7 +123,16 @@ public class BasePlayer implements Comparable<BasePlayer>
 				return false;
 			}
 		}
-
+		for (int i = 0; i < 2; ++i)
+		{
+			Coordinate co = ca[colliDetect.get(dir)[i]][1];
+			BaseObject objNew = gameMap.get(co);
+			if (objNew != null && objNew instanceof Prop)
+			{
+				if (this instanceof HumanPlayer) ((Prop)objNew).buff(this);
+				gameMap.set(co, null);
+			}
+		}
 		// 移动成功
 		this.p1 = p1New;
 		this.p2 = p2New;

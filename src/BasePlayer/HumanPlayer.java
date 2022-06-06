@@ -16,7 +16,8 @@ public class HumanPlayer extends BasePlayer
 		super(
 			game, name, gameMode, INIT_HP, spawn, ATK,
 			gameMode == Game.PVP ? 1 : 6,
-			gameMode == Game.PVP ? 1 : 4
+			gameMode == Game.PVP ? 1 : 4,
+			gameMode == Game.PVP ? 3.0 : 5.0
 		);
 	}
 
