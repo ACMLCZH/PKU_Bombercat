@@ -29,7 +29,7 @@ public class Game
 	private boolean started = false;
 	private MainRenderer renderer = new MainRenderer(this);
 	private GameKeyListener gameKeyListener = new GameKeyListener(this);
-	private MusicPlayer musicPlayer = new MusicPlayer();
+	private MusicPlayer musicPlayer = new MusicPlayer("music\\music01.wav",true); //music01.wav
 
 	public int getMode() {return mode;}
 	public GameMap getMap() {return this.gameMap;}

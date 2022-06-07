@@ -8,7 +8,7 @@ import BasePlayer.BasePlayer;
 // 道具类
 public class Prop extends BaseObject
 {
-    public static Map<Integer, String> toItemName = new HashMap<>(){{
+    public static Map<Integer, String> toItemName = new HashMap<Integer, String>(){{
 		put(0, "bombitem"); put(1, "flowitem"); put(2, "speeditem");
 	}};
     public Prop(String name, int x, int y) {

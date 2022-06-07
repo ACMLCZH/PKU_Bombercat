@@ -13,13 +13,15 @@ public class MusicPlayer extends Thread{
     private boolean run = true;
     private AudioFormat audioFormat;
     private AudioInputStream audioStream;
-    private SourceDataLine sourceDataLine; // Ô´Êý¾ÝÏß
+    private SourceDataLine sourceDataLine; // Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private boolean isLoop = true;
     //private Game g = null;
 
-    public MusicPlayer(){
+    public MusicPlayer(String msc,boolean isLoop){
     	//this.g=g;
+    	this.isLoop=isLoop;
         musicFiles = new ArrayList<String>();
-        musicFiles.add("music\\music01.wav");
+        musicFiles.add(msc);
         try {
         	System.out.print(musicFiles.get(0)+"\n");
             audioStream = AudioSystem.getAudioInputStream(new File(musicFiles.get(0)));
@@ -34,8 +36,32 @@ public class MusicPlayer extends Thread{
     }
 
     private void play(){
-        while (true){
-            try{
+    	if(isLoop)
+    	{
+	        while (true){
+	            try{
+	                synchronized (this){
+	                    run=true;
+	                }
+	                audioStream = AudioSystem.getAudioInputStream(new File(musicFiles.get(0)));
+	                int count;
+	                byte tempBuff[] = new byte[1024];
+	
+	                while((count = audioStream.read(tempBuff,0,tempBuff.length)) != -1) {
+	                    synchronized (this) {
+	                        while (!run)
+	                            wait();
+	                    }
+	                    sourceDataLine.write(tempBuff, 0, count);
+	                }
+	            }catch (Exception e){
+	                e.printStackTrace();
+	            }
+	        }
+    	}
+    	else
+    	{
+    		try{
                 synchronized (this){
                     run=true;
                 }
@@ -53,36 +79,36 @@ public class MusicPlayer extends Thread{
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }
+    	}
     }
 
     @Override
-    public void run() { // ¿ªÊ¼½ø³Ì
+    public void run() { // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
         play();
     }
 
-    private void stopMusic(){ //ÔÝÍ£
+    private void stopMusic(){ //ï¿½ï¿½Í£
         synchronized(this){
             run = false;
             notifyAll();
         }
     }
-    //¼ÌÐø²¥·ÅÒôÀÖ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void continueMusic(){
         synchronized(this){
             run = true;
             notifyAll();
         }
     }
-
-    public void stops(){ //Íâ²¿µ÷ÓÃ£¬Í£Ö¹ÒôÀÖ
+    
+    public void stops(){ //ï¿½â²¿ï¿½ï¿½ï¿½Ã£ï¿½Í£Ö¹ï¿½ï¿½ï¿½ï¿½
         new Thread(new Runnable(){
             public void run(){
                 stopMusic();
             }
         }).start();
     }
-    //Íâ²¿µ÷ÓÃ¿ØÖÆ·½·¨£º¼ÌÐøÒôÆµÏß³Ì
+    //ï¿½â²¿ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ß³ï¿½
     public void continues(){
         new Thread(new Runnable(){
             public void run(){

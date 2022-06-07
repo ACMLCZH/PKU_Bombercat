@@ -16,7 +16,7 @@ public class RenderImage
 	private static final String mapDir = "./res/texture/map/";
 	private static final String charDir = "./res/texture/character/";
 	private static final String iconDir = "./res/texture/icon/";
-	private static final Map<String, ImageIcon> toIcon = new HashMap<>(){{
+	private static final Map<String, ImageIcon> toIcon = new HashMap<String, ImageIcon>(){{
 		put("bomb_1", new ImageIcon(sceneDir + "bomb1.png"));
 		put("bomb_2", new ImageIcon(sceneDir + "bomb2.png"));
 		put("bomb_3", new ImageIcon(sceneDir + "bomb3.png"));
@@ -65,7 +65,7 @@ public class RenderImage
 		put("icon_sound_on", new ImageIcon(iconDir + "sound_on.png"));
 		put("icon_sound_off", new ImageIcon(iconDir + "sound_off.png"));
 	}};
-	private static Map<String, Coordinate> collision = new HashMap<>(){{
+	private static Map<String, Coordinate> collision = new HashMap<String, Coordinate>(){{
 		put("碎月_up", new Coordinate(5, 7));
 		put("碎月_down", new Coordinate(5, 7));
 		put("碎月_left", new Coordinate(4, 7));

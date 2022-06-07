@@ -23,7 +23,7 @@ public class BasePlayer implements Comparable<BasePlayer>
 	public static final int FLOWLIMIT = 10;
 	protected static final int pixelsPerBlock = BLOCK_UNIT; 	// 每个格子40个像素
 	private static final int invincibleTime = 1500; 			// 收到攻击后无敌1.5s
-	private static final Map<Indirect, int[]> colliDetect = new HashMap<>() {{
+	private static final Map<Indirect, int[]> colliDetect = new HashMap<Indirect, int[]>() {{
 		put(Indirect.UP, new int[] {0, 1}); put(Indirect.DOWN, new int[] {2, 3});
 		put(Indirect.LEFT, new int[] {0, 2}); put(Indirect.RIGHT, new int[] {1, 3});
 	}};

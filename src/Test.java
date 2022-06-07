@@ -14,10 +14,10 @@ import java.util.HashMap;
 class SPanel extends GUI.MyPanel
 {
 	JFrame jf = null;
-	private static final Map<String, String> toScene = new HashMap<>() {
+	private static final Map<String, String> toScene = new HashMap<String, String>() {
 		{put("草地", "forest"); put("雪地", "snowfield");}
 	};
-	private static final Map<String, Integer> toMode = new HashMap<>() {
+	private static final Map<String, Integer> toMode = new HashMap<String, Integer>() {
 		{put("道具模式", Game.PVP); put("挑战模式", Game.PVE);}
 	};
 

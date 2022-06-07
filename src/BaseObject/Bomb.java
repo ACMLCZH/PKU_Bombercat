@@ -5,6 +5,7 @@ import static DEBUG.Dbg.msg;
 import BasePlayer.BasePlayer;
 import BasePlayer.Indirect;
 import main.Game;
+import thread.MusicPlayer;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 public class Bomb extends BaseObject
 {
     private static final int bombTime = 5;  // change if need.
-	private static final Map<Indirect, String> toFlowName = new HashMap<>() {{
+	private static final Map<Indirect, String> toFlowName = new HashMap<Indirect, String>() {{
 		put(Indirect.UP, "vertflow"); put(Indirect.DOWN, "vertflow");
 		put(Indirect.LEFT, "horiflow"); put(Indirect.RIGHT, "horiflow");
 	}};
@@ -26,6 +27,7 @@ public class Bomb extends BaseObject
     private Game game;
     private long lastUpdated;
     private boolean exploded;
+    private MusicPlayer boom = new MusicPlayer("music\\baozha.wav",false);
 
     public Bomb(Game g, int x, int y, BasePlayer m, int atk, int bombRange)
 	{
@@ -72,6 +74,12 @@ public class Bomb extends BaseObject
     public void explode() 
     {
         // 对周围的障碍物造成影响, 并且在范围内创建Flow对象
+    	if(boom.getState() == Thread.State.NEW){ // 如果多次start，不会重新播放音乐
+    		boom.start();
+        	}else {
+        		boom.continues();
+        	}
+        	
 		for (Indirect dir: Indirect.values())
 		{
 			Coordinate curLoc = new Coordinate(loc);
