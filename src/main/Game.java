@@ -57,12 +57,18 @@ public class Game
 		// 人物及每个AI决定移动
 		infoPlayer.move();
 		for (AIPlayer aiPlayer: aiPlayers)
-		{
-			aiPlayer.decideMove();
-			aiPlayer.move();
-			boolean placeBomb = aiPlayer.decidePlaceBomb();
-			if (placeBomb) aiPlayer.placeBomb();
-		}
+			if (mode == PVP)
+			{
+				aiPlayer.decideMove();
+				aiPlayer.move();
+				boolean placeBomb = aiPlayer.decidePlaceBomb();
+				if (placeBomb) aiPlayer.placeBomb();
+			}
+			else if (mode == PVE)
+			{
+				aiPlayer.decideCharge();
+				aiPlayer.move();
+			}
 
 		// 为Flow做倒计时
 		Iterator<Flow> iterFlow = flows.iterator();
@@ -93,10 +99,8 @@ public class Game
 		}
 
 		// 计算玩家收到伤害
-		Iterator<BasePlayer> iterPlayer = players.iterator();
-		while (iterPlayer.hasNext())
+		for (BasePlayer player: players)
 		{
-			BasePlayer player = iterPlayer.next();
 			Coordinate loc = player.getGridLoc();
 			BaseObject obj = gameMap.get(loc);
 			if (obj != null)
@@ -105,6 +109,17 @@ public class Game
 				if (name == "crossflow" || name == "vertflow" || name == "horiflow")
 					player.getHurt(((Flow)obj).getAtk());
 			}
+		}
+		if (mode == PVE)
+			for (AIPlayer player : aiPlayers)
+				if (infoPlayer.contacts(player))
+					infoPlayer.getHurt(player.getAtk());
+
+		// 移除生命值归零的玩家
+		Iterator<BasePlayer> iterPlayer = players.iterator();
+		while (iterPlayer.hasNext())
+		{
+			BasePlayer player = iterPlayer.next();
 			if (!player.isAlive())
 			{
 				if (player instanceof AIPlayer) aiPlayers.remove(player);
@@ -126,7 +141,6 @@ public class Game
 		// 更新绘图
 		renderer.updateRender();
 	}
-	// public Game() {}// renderer = }
 
 	public void end()
 	{
@@ -140,6 +154,7 @@ public class Game
 		flows.clear();
 		commandQueue.clear();
 		musicPlayer.stops();
+		
 		started = false;
 	}
 	public void start(String selChar, String selScene, int mode)	// 选择的人物，选择的场景，选择的游戏模式
@@ -154,21 +169,18 @@ public class Game
 		}
 		infoPlayer = new HumanPlayer(this, selChar, gameMap.getSpawn(0));
 		players.add(infoPlayer);
-		
-		if(musicPlayer.getState() == Thread.State.NEW){ // 如果多次start，不会重新播放音乐
-			musicPlayer.start();
-        	}else {
-        		musicPlayer.continues();
-        	}
-
 		for (int i = 1; i < 4; ++i)
 		{
-			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", gameMap.getSpawn(i), (int)(Math.random() * 1000) + 500);
+			AIPlayer aiPlayer = new AIPlayer(this, "enemy1", gameMap.getSpawn(i));
 			aiPlayers.add(aiPlayer);
 			players.add(aiPlayer);
 		}
 		gameKeyListener.setPlayer(infoPlayer);
 		renderer.addKeyListener(gameKeyListener);
+		
+		if (musicPlayer.getState() == Thread.State.NEW) 	// 如果多次start，不会重新播放音乐
+			musicPlayer.start();
+		else musicPlayer.continues();
 
 		started = true;
 	}

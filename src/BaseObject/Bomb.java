@@ -7,10 +7,8 @@ import BasePlayer.Indirect;
 import main.Game;
 import thread.MusicPlayer;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-// import java.util.Set;
 
 
 public class Bomb extends BaseObject
@@ -45,9 +43,10 @@ public class Bomb extends BaseObject
 
 	@Override
 	public String toString() {return name + "_" + getState();}
-		// msg(name + "_" + getState());
+	// msg(name + "_" + getState());
 	
-		public int getState() {return Math.min(bombTime - timeBeforeBomb + 1, 5);}	// return the time bomb have placed.
+	public int getState() {return Math.min(bombTime - timeBeforeBomb + 1, 5);}	// return the time bomb have placed.
+	public int getAtk() {return atk;}
 
     // use for decrease and return true if bomb.
     public boolean countDown()
@@ -95,7 +94,8 @@ public class Bomb extends BaseObject
 					obj.interactWithBomb(this);
 					if (obj instanceof Barrier && obj.isBreakable) createFlow(
 						toFlowName.get(dir), curLoc, Math.random() < game.getMap().getRate()
-					);
+					); else if (obj instanceof Prop)
+						createFlow(toFlowName.get(dir), curLoc, false);
 					// Flow flow = new Flow(toFlowName.get(dir), x, y, atk);
 					if (!obj.isPassable) break;
 				}
@@ -105,10 +105,6 @@ public class Bomb extends BaseObject
 		createFlow("crossflow", loc, false);
 		master.recoverBomb();
 	}
-    //     Flow flow = new Flow("crossflow", loc.x, loc.y, atk);
-    //     flows.add(flow);
-    //     gameMap.set(loc, flow);
-    // }
 
     public void interactWithBomb(Bomb bomb)
     {

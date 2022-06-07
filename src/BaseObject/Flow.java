@@ -32,6 +32,7 @@ public class Flow extends BaseObject
             name = "vertflow";
         else if (bomb.getPosY() == loc.y)
             name = "horiflow";
+		if (game.getMode() == Game.PVE) this.atk += bomb.getAtk();
         lastUpdated = System.currentTimeMillis();
     }
 

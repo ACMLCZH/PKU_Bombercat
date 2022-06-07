@@ -76,5 +76,17 @@ public class HumanPlayer extends BasePlayer
 		else return false;
 	}
 	public void release() {placing = false;}
+
+	public boolean contacts(AIPlayer player)
+	{
+		Coordinate[] ps = new Coordinate[] {
+			new Coordinate(player.getLeft(), player.getUp()), new Coordinate(player.getLeft(), player.getBottom()),
+			new Coordinate(player.getRight(), player.getUp()), new Coordinate(player.getRight(), player.getBottom())
+		};
+		for (int i = 0; i < 4; ++i)
+			if (p1.x <= ps[i].x && ps[i].x <= p2.x && p1.y <= ps[i].y && ps[i].y <= p2.y)
+				return true;
+		return false;
+	}
 	// public boolean isPlacing() {return this.placing;}
 }
