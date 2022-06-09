@@ -1,7 +1,5 @@
 ﻿package BasePlayer;
 
-import static DEBUG.Dbg.msg;
-
 import BaseObject.BaseObject;
 import BaseObject.Bomb;
 import BaseObject.Coordinate;
@@ -27,7 +25,6 @@ public class BasePlayer implements Comparable<BasePlayer>
 		put(Indirect.UP, new int[] {0, 1}); put(Indirect.DOWN, new int[] {2, 3});
 		put(Indirect.LEFT, new int[] {0, 2}); put(Indirect.RIGHT, new int[] {1, 3});
 	}};
-	// protected int gameMode;
     protected int HP;
 	protected Coordinate p1, p2;		// Bounding Box
 	protected int atk;
@@ -50,7 +47,6 @@ public class BasePlayer implements Comparable<BasePlayer>
 		this.dir = Indirect.DOWN;
 		this.game = game;
 		this.name = name;
-		// this.gameMode = gameMode;
 		this.p1 = new Coordinate(spawn.x * BLOCK_UNIT + (BLOCK_UNIT - PLAYER_UNIT) / 2,
 								 spawn.y * BLOCK_UNIT + (BLOCK_UNIT - PLAYER_UNIT) / 2);
 		this.p2 = new Coordinate(p1.x + PLAYER_UNIT - 1, p1.y + PLAYER_UNIT - 1);
@@ -101,13 +97,9 @@ public class BasePlayer implements Comparable<BasePlayer>
 		// 计算移动前后所在格子
 		Coordinate p1Grid = p1.toGrid(), p2Grid = p2.toGrid();
 		Coordinate p1NewGrid = p1New.toGrid(), p2NewGrid = p2New.toGrid();
-		// msg(new Object[] {p1, p2, p1New, p2New});
-		// msg(new Object[] {p1Grid, p2Grid, p1NewGrid, p2NewGrid});
 		// 判断是否会超出边界
 		if (p1NewGrid.x < 0 || p2NewGrid.x >= GameMap.WIDTH || p1NewGrid.y < 0 || p2NewGrid.y >= GameMap.HEIGHT)
 			return false;
-		// if (p1New.x < 0 || p2New.x >= GameMap.WIDTH * BasePlayer.PLAYER_UNIT || p1New.y < 0 || p2New.y >= GameMap.HEIGHT * BasePlayer.PLAYER_UNIT)
-		// 	return false;
 
 		// 检查碰撞
 		GameMap gameMap = game.getMap();

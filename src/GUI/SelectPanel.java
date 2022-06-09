@@ -1,7 +1,5 @@
 package GUI;
 
-import static DEBUG.Dbg.msg;
-
 import main.Game;
 import render.MainRenderer;
 import render.RenderImage;
@@ -45,8 +43,6 @@ public class SelectPanel extends MyPanel
 	private ButtonGroup btnGrpScene = new ButtonGroup() {{add(btnScene1); add(btnScene2);}};
 	private ButtonGroup btnGrpMode = new ButtonGroup() {{add(btnMode1); add(btnMode2);}};
 	private static final Font titleFont = new Font("黑体", Font.PLAIN, 22);
-	// private ButtonGroup btnGrpChar = 
-	// private ButtonGroup btnGrpScene = 
 
 	public SelectPanel(MainRenderer mainWindow) {super(mainWindow);}
 
@@ -56,7 +52,6 @@ public class SelectPanel extends MyPanel
 		icon.setImage(RenderImage.getImage(name).getScaledInstance(len, len, Image.SCALE_DEFAULT));
 		JLabel lbl = new JLabel(icon);
 		lbl.setSize(icon.getIconWidth(), icon.getIconHeight());
-		// System.out.println(icon.getIconWidth() + " " + icon.getIconHeight());
 		JPanel pn = new JPanel();
 		pn.setLayout(new BorderLayout());
 		pn.add(lbl, BorderLayout.CENTER);
@@ -122,8 +117,6 @@ public class SelectPanel extends MyPanel
 			});
 		});
 		JPanel line4 = setRowPanel(new Component[]{btnOK});
-		// setBackground(Color.red);
-		// System.out.println("OK!!!!!!!!!!!!!!!");
 		setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
 		addPanel(new Component[]{line1, line2, line3, line4}, false, new GridLayout(4, 1));
 	}

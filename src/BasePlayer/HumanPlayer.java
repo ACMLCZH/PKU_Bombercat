@@ -1,7 +1,6 @@
 package BasePlayer;
 
 import BaseObject.Coordinate;
-import BaseObject.GameMap;
 import main.Game;
 
 public class HumanPlayer extends BasePlayer
@@ -88,5 +87,4 @@ public class HumanPlayer extends BasePlayer
 				return true;
 		return false;
 	}
-	// public boolean isPlacing() {return this.placing;}
 }

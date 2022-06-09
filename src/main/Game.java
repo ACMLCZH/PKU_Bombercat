@@ -1,7 +1,5 @@
 ﻿package main;
 
-import static DEBUG.Dbg.*;
-
 import render.MainRenderer;
 import thread.GameKeyListener;
 import thread.MusicPlayer;
@@ -77,10 +75,8 @@ public class Game
 			Flow flow = iterFlow.next();
 			if (flow.countDown())
 			{
-				// 把flow从gameMap里去掉
-				flow.crash();
-				// 把flow从flows里去掉
-				iterFlow.remove();
+				flow.crash();			// 把flow从gameMap里去掉
+				iterFlow.remove();		// 把flow从flows里去掉
 			}
 		}
 
@@ -91,10 +87,8 @@ public class Game
 			Bomb bomb = iterBomb.next();
 			if (bomb.countDown())
 			{
-				// 和其他物体的交互, 并且把炸弹从gameMap里去掉
-				bomb.explode();
-				// 把炸弹从bombs里去掉
-				iterBomb.remove();
+				bomb.explode();  		// 和其他物体的交互, 并且把炸弹从gameMap里去掉
+				iterBomb.remove();  	// 把炸弹从bombs里去掉
 			}
 		}
 
@@ -142,7 +136,7 @@ public class Game
 		renderer.updateRender();
 	}
 
-	public void end()
+	public void end()	// 游戏结束
 	{
 		renderer.removeKeyListener(gameKeyListener);
 		gameMap = null;

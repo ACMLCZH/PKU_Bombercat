@@ -1,13 +1,10 @@
 package render;
 
-import static DEBUG.Dbg.msg;
+import BaseObject.Coordinate;
 
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
-
-import BaseObject.Coordinate;
-
 import java.awt.Image;
 
 public class RenderImage
@@ -85,7 +82,5 @@ public class RenderImage
 		put("invincible", new Coordinate(5, 6));
 	}};
 	public static Image getImage(String name) {return toIcon.get(name).getImage();}
-		// msg(name);
-	// public static Coordinate getCollsion(String name) {return collision.get(name);}
 	public static ImageIcon getIcon(String name) {return toIcon.get(name);}
 }

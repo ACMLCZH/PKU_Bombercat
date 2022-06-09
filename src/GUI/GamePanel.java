@@ -1,7 +1,5 @@
 package GUI;
 
-import static DEBUG.Dbg.msg;
-
 import BaseObject.BaseObject;
 import BaseObject.GameMap;
 import BaseObject.Coordinate;
@@ -15,7 +13,6 @@ import render.RenderImage;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
-// import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -38,7 +35,6 @@ public class GamePanel extends MyPanel
 	private static final Font HPFont = new Font("Times New Roman", Font.PLAIN, 12);
 	private static final int HPWIDTH = 50;
 	private static final int HPHEIGHT = 15;
-	// private static final Coordinate invBias = RenderImage.getCollsion("invincible");
 	private java.util.List<DrawTask> drawList = new Vector<>();
 	private HumanPlayer infoPlayer = null;
 
@@ -50,7 +46,6 @@ public class GamePanel extends MyPanel
 	public void paint(Graphics g)
 	{
 		synchronized (drawList) {
-			// msg(drawList.size());
 			for (DrawTask dt: drawList)
 				g.drawImage(dt.img, dt.loc.x, dt.loc.y, this);
 		}
@@ -63,7 +58,6 @@ public class GamePanel extends MyPanel
 	private void showPlayer(BasePlayer curP)
 	{
 		Image pImg = RenderImage.getImage(curP.toString());
-		// Coordinate bias = RenderImage.getCollsion(curP.toString());
 		putTexture(pImg, curP.getLeft(), curP.getUp(), false, true);
 		if (curP == infoPlayer)
 			putTexture(RenderImage.getImage("infoarrow"), curP.getLeft() + (PLAYER_UNIT - 10) / 2, curP.getUp(), true, true);
@@ -77,7 +71,6 @@ public class GamePanel extends MyPanel
 			sg = sImg.createGraphics();
 			sg.setFont(HPFont);
 			sg.setColor(Color.BLUE);
-			// sg.drawRect(0, 0, HPWIDTH - 1, HPHEIGHT - 1);
 			sg.drawString("HP-" + curP.getDmg(), 0, HPHEIGHT - 1);
 			putTexture(sImg, curP.getLeft() - (HPWIDTH - PLAYER_UNIT) / 2, curP.getUp(), true, true);
 		}

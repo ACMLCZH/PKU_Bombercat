@@ -1,7 +1,5 @@
 package BaseObject;
 
-import static DEBUG.Dbg.msg;
-
 import BasePlayer.BasePlayer;
 import BasePlayer.Indirect;
 import main.Game;
@@ -43,7 +41,6 @@ public class Bomb extends BaseObject
 
 	@Override
 	public String toString() {return name + "_" + getState();}
-	// msg(name + "_" + getState());
 	
 	public int getState() {return Math.min(bombTime - timeBeforeBomb + 1, 5);}	// return the time bomb have placed.
 	public int getAtk() {return atk;}
@@ -65,7 +62,6 @@ public class Bomb extends BaseObject
 	private void createFlow(String name, Coordinate co, boolean drop)
 	{
 		Flow flow = new Flow(game, name, co.x, co.y, atk, drop);
-		// msg(name);
 		game.getFlows().add(flow);
 		game.getMap().set(co, flow);
 	}
@@ -96,7 +92,6 @@ public class Bomb extends BaseObject
 						toFlowName.get(dir), curLoc, Math.random() < game.getMap().getRate()
 					); else if (obj instanceof Prop)
 						createFlow(toFlowName.get(dir), curLoc, false);
-					// Flow flow = new Flow(toFlowName.get(dir), x, y, atk);
 					if (!obj.isPassable) break;
 				}
 				else createFlow(toFlowName.get(dir), curLoc, false);

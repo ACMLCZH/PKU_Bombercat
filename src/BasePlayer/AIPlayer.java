@@ -1,7 +1,5 @@
 package BasePlayer;
 
-// import static DEBUG.Dbg.msg;
-
 import BaseObject.Coordinate;
 import BaseObject.GameMap;
 import BaseObject.BaseObject;
@@ -17,17 +15,13 @@ public class AIPlayer extends BasePlayer
     public static final int[] INIT_HP = new int[] {700, 2000, 8000};
     private static final int[][] directs = {{0, -1},{0, 1},{-1, 0},{1, 0}}; // 姑且这样存着
     private static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
-	// private static final int MAX_DIS = 1000;
-    // private Indirect lastDir;
     private int maxSaveDir = 1;          // 保存路径的最大数，即移动步数过多后要重算
 	private int def;
     private Queue<Indirect> saveDir;     // 简单保存确定的一系列行动
     private long stopTime;               // 控制停止的时间
-    private boolean stopFlag = false;    // 标记目前的停止状态是否是必要的
     private Coordinate curTarget;        // 当前移动的目标地点
     private Coordinate curBombPlaceLoc;
     private Random randChoice;
-    // private int atk;
 
     public AIPlayer(Game game, String name, Coordinate spawn)
 	{
@@ -40,8 +34,6 @@ public class AIPlayer extends BasePlayer
 			game.getMode() == Game.PVP ? 1 : 0,
 			game.getMode() == Game.PVP ? 4.0 : 2.5
 		);
-		// this.atk = atk;
-        // lastDir = dir;
         this.stopTime = System.currentTimeMillis(); // 初始时默认停一下
         this.curTarget = spawn;
         this.saveDir = new LinkedList<>();
@@ -57,7 +49,6 @@ public class AIPlayer extends BasePlayer
 			}
 	}
 
-    // void mainloop() {}
     public boolean inGridCenter(Coordinate tarGrid) {
         return p1.x == tarGrid.x * BasePlayer.pixelsPerBlock && p1.y == tarGrid.y * BasePlayer.pixelsPerBlock;
     }
@@ -85,7 +76,6 @@ public class AIPlayer extends BasePlayer
 				smp[locs[i].y][locs[i].x] = 1;
 				queue.add(locs[i]);
 			}
-		// msg(locs);
 		while (!queue.isEmpty())
 		{
 			Coordinate cur = queue.poll();
@@ -114,7 +104,6 @@ public class AIPlayer extends BasePlayer
 			this.dir = lastMp[humanP.y][humanP.x];
 		if (inGridCenter(humanP)) return;
 		humanP = humanP.toPixel();
-		// msg(new Object[] {"NO!", humanP, p1});
 		if (p1.y < humanP.y) this.dir = Indirect.DOWN;
 		else if (p1.y > humanP.y) this.dir = Indirect.UP;
 		else
@@ -125,8 +114,6 @@ public class AIPlayer extends BasePlayer
     public void decideMove()
 	{
         // 只有在时间间隔满足的时候才能move（这个应该不归他管）
-        // if (System.currentTimeMillis() - lastMove < BasePlayer.periodPerMove)
-		// 	return; 	// Indirect.STOP;
         if (!this.isMoving)		// 先处理停止状况，目前stopTime的操作只在这个函数里进行
 		{
             long current = System.currentTimeMillis();
@@ -178,7 +165,7 @@ public class AIPlayer extends BasePlayer
         // 首先躲避炸弹
         if(mp.get(curLoc) != null && mp.get(curLoc).getName() == "bomb") {
             haveBombFlag = true; 
-            smp[curLoc.y][curLoc.x] = -1; //即在这个位置刚放了一个炸弹
+            smp[curLoc.y][curLoc.x] = -1; 	//即在这个位置刚放了一个炸弹
         }
         if(haveBombFlag) {
             int[][] newMp = removeBombRange(smp, mp);
@@ -217,12 +204,8 @@ public class AIPlayer extends BasePlayer
             return;
         }
         // 最后寻找一个可以放炸弹的地方
-        //if(curBombPlaceLoc == null) {
-            curBombPlaceLoc = findBombPlace(smp, mp); //这是必要的更新
-            findWay(curLoc, curBombPlaceLoc, lastMp);
-        //}
-        //else
-		//	findWay(curLoc, curBombPlaceLoc, lastMp);
+		curBombPlaceLoc = findBombPlace(smp, mp); //这是必要的更新
+		findWay(curLoc, curBombPlaceLoc, lastMp);
     }
 
     public boolean decidePlaceBomb()
