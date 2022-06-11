@@ -24,10 +24,10 @@ public class GameKeyListener implements KeyListener
 		{
             switch (code)
 			{
-                case 32: // ©у╦Яё╛╥ежцещещ
+                case 32: // О©╫у╦Яё╛╥О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 					g.commandQueue.add(() -> {player.placeBomb();});
 					break;
-				case 37: case 38: case 39: case 40: // иообвСср
+				case 37: case 38: case 39: case 40: // О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
                 // case 87: case 65: case 68: case 83: // wasd
 					if (!pressStack.contains(code))
 					{

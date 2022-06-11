@@ -1,4 +1,4 @@
-﻿package BasePlayer;
+package BasePlayer;
 
 import BaseObject.BaseObject;
 import BaseObject.Bomb;
