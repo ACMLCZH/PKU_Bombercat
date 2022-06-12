@@ -23,7 +23,7 @@ public class Bomb extends BaseObject
     private Game game;
     private long lastUpdated;
     private boolean exploded;
-    private MusicPlayer boom = new MusicPlayer("music\\baozha.wav",false);
+    private MusicPlayer boom = new MusicPlayer("res/music/baozha.wav",false);
 
     public Bomb(Game g, int x, int y, BasePlayer m, int atk, int bombRange)
 	{
