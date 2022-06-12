@@ -1,4 +1,4 @@
-﻿package main;
+package main;
 
 import render.MainRenderer;
 import thread.GameKeyListener;
